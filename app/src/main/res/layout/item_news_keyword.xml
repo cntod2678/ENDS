@@ -1,6 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/news_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="@dimen/cardView_radius"
+    android:layout_margin="@dimen/news_item_margin"
+    android:paddingLeft="8dp"
+    android:paddingStart="8dp">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/txtSource"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"/>
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:maxLines="4"/>
+
+                <TextView
+                    android:id="@+id/txtAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="@color/light_gray"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/txtPublished"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgNews"
+                android:layout_width="@dimen/news_item_img_size"
+                android:layout_height="@dimen/news_item_img_size"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="@dimen/news_item_img_margin"
+                android:layout_marginStart="@dimen/news_item_img_margin"
+                android:layout_marginRight="@dimen/news_item_img_margin"
+                android:layout_marginEnd="@dimen/news_item_img_margin"
+                android:scaleType="fitCenter"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textColor="@color/light_gray"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

@@ -18,8 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cdj.ends.R;
+import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
+import com.cdj.ends.ui.newskeyword.viewmodel.NewsItemViewModel;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModel;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModelImpl;
+
+import java.util.List;
 
 public class NewsKeywordFragment extends Fragment {
 
@@ -67,6 +71,12 @@ public class NewsKeywordFragment extends Fragment {
         super.onCreate(savedInstanceState);
         newsKeywordAdapter = new NewsKeywordAdapter();
         newsViewModel = new NewsViewModelImpl();
+        newsViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
+            @Override
+            public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
+                newsKeywordAdapter.replaceData(viewModel);
+            }
+        });
     }
 
     @Nullable
@@ -106,38 +116,30 @@ public class NewsKeywordFragment extends Fragment {
         recvNewsKeyword.setAdapter(newsKeywordAdapter);
 
         /***/
-        recvNewsKeyword.addOnScrollListener(recyclerViewOnScrollListener);
+       //recvNewsKeyword.addOnScrollListener(recyclerViewOnScrollListener);
     }
 
     /***/
-    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            int visibleItemCount = layoutManager.getChildCount();
-            int totalItemCount = layoutManager.getItemCount();
-            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-
-            if (!isLoading && !isLastPage) {
-                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                        && firstVisibleItemPosition >= 0
-                        && totalItemCount >= PAGE_SIZE) {
-                    loadMoreItems();
-                }
-            }
-        }
-    };
-
-    // region Helper Methods
-    private void loadMoreItems() {
-        isLoading = true;
-
-        currentPage += 1;
-    }
-
+//    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+//        @Override
+//        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//            super.onScrollStateChanged(recyclerView, newState);
+//        }
+//
+//        @Override
+//        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//            super.onScrolled(recyclerView, dx, dy);
+//            int visibleItemCount = layoutManager.getChildCount();
+//            int totalItemCount = layoutManager.getItemCount();
+//            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+//
+//            if (!isLoading && !isLastPage) {
+//                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+//                        && firstVisibleItemPosition >= 0
+//                        && totalItemCount >= PAGE_SIZE) {
+//                    loadMoreItems();
+//                }
+//            }
+//        }
+//    };
 }

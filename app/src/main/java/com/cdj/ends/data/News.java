@@ -1,13 +1,17 @@
 package com.cdj.ends.data;
 
+import org.parceler.Parcel;
+
 /**
  * Created by Dongjin on 2017. 8. 8..
  */
 
+@Parcel
 public class News {
     private String id;
     private int number;
     private String owner;
+    private String source;
 
     private String author;
     private String description;
@@ -15,6 +19,21 @@ public class News {
     private String url;
     private String urlToImage;
     private String publishedAt;
+
+    public News(){}
+
+    public News(String id, int number, String owner, String source, String author, String description, String title, String url, String urlToImage, String publishedAt) {
+        this.id = id;
+        this.number = number;
+        this.owner = owner;
+        this.source = source;
+        this.author = author;
+        this.description = description;
+        this.title = title;
+        this.url = url;
+        this.urlToImage = urlToImage;
+        this.publishedAt = publishedAt;
+    }
 
     public String getId() {
         return id;
@@ -38,6 +57,14 @@ public class News {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getAuthor() {

@@ -3,7 +3,12 @@ package com.cdj.ends.ui.newskeyword.viewmodel;
 import android.util.Log;
 
 import com.cdj.ends.api.NewsCallService;
+import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
+import com.cdj.ends.data.News;
 import com.cdj.ends.dto.NewsDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +25,8 @@ import static com.cdj.ends.Config.BASE_URL;
 public class NewsViewModelImpl implements NewsViewModel {
 
     private static final String TAG = "NewsViewModelImpl";
+
+    private NotifyUpdateViewModelListener notifyUpdateViewModelListener;
 
     public NewsViewModelImpl() {}
 
@@ -43,9 +50,18 @@ public class NewsViewModelImpl implements NewsViewModel {
             @Override
             public void onResponse(Call<NewsDTO> call, Response<NewsDTO> response) {
                 NewsDTO newsDTO = response.body();
-                Log.d(TAG, newsDTO.toString());
                 Log.d(TAG, "" + response.headers());
-                Log.d(TAG, newsDTO.getStatus());
+
+                List<NewsItemViewModel> itemVMList = new ArrayList<NewsItemViewModel>();
+                for(News news : newsDTO.getArticles()) {
+                    itemVMList.add(new NewsItemViewModelImpl(news));
+                }
+
+                Log.d(TAG, itemVMList.size() + " ");
+                if(notifyUpdateViewModelListener != null) {
+                    notifyUpdateViewModelListener.onUpdatedViewModel(itemVMList);
+                }
+
             }
 
             @Override
@@ -54,5 +70,10 @@ public class NewsViewModelImpl implements NewsViewModel {
                 Log.d(TAG, t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void setUpdateViewModelListener(NotifyUpdateViewModelListener listener) {
+        notifyUpdateViewModelListener = listener;
     }
 }

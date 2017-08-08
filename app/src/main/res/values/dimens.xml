@@ -15,7 +15,10 @@
 
 
     <!-- NewsKeyword Item -->
-    <dimen name="news_keyword_item_height">300dp</dimen>
+    <dimen name="news_keyword_item_height">240dp</dimen>
+    <dimen name="news_item_margin">5dp</dimen>
+    <dimen name="news_item_img_size">80dp</dimen>
+    <dimen name="news_item_img_margin">16dp</dimen>
 
     <!-- NewsSource Item -->
     <dimen name="news_source_item_height">80dp</dimen>

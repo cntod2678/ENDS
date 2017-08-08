@@ -18,12 +18,10 @@ import android.view.ViewGroup;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
-import com.cdj.ends.data.NewsSource;
 import com.cdj.ends.ui.newssource.viewmodel.SourceItemViewModel;
 import com.cdj.ends.ui.newssource.viewmodel.SourceViewModel;
 import com.cdj.ends.ui.newssource.viewmodel.SourceViewModelImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsSourceFragment extends Fragment {
@@ -33,8 +31,6 @@ public class NewsSourceFragment extends Fragment {
     private RecyclerView recvNewsSource;
 
     private SourceViewModel sourceViewModel;
-
-    private List<NewsSource> sourceList;
 
     private NewsSourceAdapter newsSourceAdapter;
 
@@ -52,8 +48,6 @@ public class NewsSourceFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         newsSourceAdapter = new NewsSourceAdapter();
-
-        sourceList = new ArrayList<>();
 
         sourceViewModel = new SourceViewModelImpl();
         sourceViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<SourceItemViewModel>>() {

@@ -11,6 +11,7 @@ public interface NewsItemViewModel {
     int getNumber();
     String getOwner();
 
+    String getSource();
     String getAuthor();
     String getDescription();
     String getTitle();

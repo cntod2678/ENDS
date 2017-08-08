@@ -13,7 +13,7 @@ import retrofit2.http.QueryMap;
  */
 
 public interface NewsSourceCallService {
+
     @GET("sources/")
-//    Call<NewsSourceDTO> newsSource(@QueryMap(encoded = true) Map<String, String> map);
     Call<NewsSourceDTO> newsSource(@Query("language") String language);
 }

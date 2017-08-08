@@ -56,7 +56,6 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
         notifyDataSetChanged();
     }
 
-
     static class NewsSourceViewHolder extends RecyclerView.ViewHolder {
         ImageView imgSourceLogo;
         TextView txtSourceTitle;
