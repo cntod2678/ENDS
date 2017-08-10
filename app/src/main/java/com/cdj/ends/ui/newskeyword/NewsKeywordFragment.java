@@ -70,7 +70,7 @@ public class NewsKeywordFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         newsKeywordAdapter = new NewsKeywordAdapter();
-        newsViewModel = new NewsViewModelImpl();
+        newsViewModel = new NewsViewModelImpl(getContext());
         newsViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
             @Override
             public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
@@ -115,8 +115,7 @@ public class NewsKeywordFragment extends Fragment {
         recvNewsKeyword.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recvNewsKeyword.setAdapter(newsKeywordAdapter);
 
-        /***/
-       //recvNewsKeyword.addOnScrollListener(recyclerViewOnScrollListener);
+
     }
 
     /***/

@@ -1,4 +1,4 @@
-package com.cdj.ends.api;
+package com.cdj.ends.api.call;
 
 import java.util.Map;
 import com.cdj.ends.dto.NewsSourceDTO;
@@ -15,5 +15,5 @@ import retrofit2.http.QueryMap;
 public interface NewsSourceCallService {
 
     @GET("sources/")
-    Call<NewsSourceDTO> newsSource(@Query("language") String language);
+    Call<NewsSourceDTO> getSources(@Query("language") String language);
 }
