@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 public class NewsSearchAdapter extends RecyclerView.Adapter<NewsSearchAdapter.NewsSearchViewHolder> {
 
-
     @Override
     public NewsSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return null;

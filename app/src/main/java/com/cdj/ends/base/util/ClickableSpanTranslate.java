@@ -1,11 +1,14 @@
 package com.cdj.ends.base.util;
 
 import android.content.Context;
+import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.support.design.widget.Snackbar;
 
 import com.cdj.ends.R;
 import com.cdj.ends.api.translation.TranslationAPI;
@@ -19,11 +22,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import static com.cdj.ends.Config.TRANS_BASE_URL;
+
 /**
  * Created by Dongjin on 2017. 8. 9..
  */
 
 public class ClickableSpanTranslate extends ClickableSpan {
+
+    private Snackbar snackbar;
 
     private final String TAG = "ClickableSpanMaker";
 
@@ -48,7 +54,7 @@ public class ClickableSpanTranslate extends ClickableSpan {
      * &target=ko
      * &q=hi
      */
-    public void onClick(View tv) {
+    public void onClick(final View view) {
         filter.put("key", mContext.getResources().getString(R.string.GOOGLE_TRANSLATION_KEY));
         filter.put("source", "en");
         filter.put("target", "ko");
@@ -62,7 +68,14 @@ public class ClickableSpanTranslate extends ClickableSpan {
                     //todo 리스트로 보여주자
                     Translation translation = translationDTO.getData().getTranslations().get(0);
                     String translatedText = translation.getTranslatedText();
-                    Toast.makeText(mContext, "Source : " + clickedText + " Target : " + translatedText, Toast.LENGTH_SHORT).show();
+
+                    Snackbar.make(view, clickedText + " : " + translatedText, Snackbar.LENGTH_SHORT)
+                            .setAction("Add", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(mContext, "클릭 확인", Toast.LENGTH_SHORT).show();
+                                }
+                            }).show();
                 }
             }
 

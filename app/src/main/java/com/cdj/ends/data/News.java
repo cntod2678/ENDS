@@ -8,17 +8,17 @@ import org.parceler.Parcel;
 
 @Parcel
 public class News {
-    private String id;
-    private int number;
-    private String owner;
-    private String source;
+    String id;
+    int number;
+    String owner;
+    String source;
 
-    private String author;
-    private String description;
-    private String title;
-    private String url;
-    private String urlToImage;
-    private String publishedAt;
+    String author;
+    String description;
+    String title;
+    String url;
+    String urlToImage;
+    String publishedAt;
 
     public News(){}
 

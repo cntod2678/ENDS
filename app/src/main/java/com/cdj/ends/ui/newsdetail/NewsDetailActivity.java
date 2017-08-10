@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.cdj.ends.R;
@@ -18,12 +17,11 @@ import com.cdj.ends.data.News;
 
 import org.parceler.Parcels;
 
-public class NewsDetailActivity extends AppCompatActivity {
+public class NewsDetailActivity extends AppCompatActivity implements NewsDetailChangeListener{
 
     private static final String TAG = "NewsDetailActivity";
 
-
-    News mNews;
+    private News mNews;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +32,7 @@ public class NewsDetailActivity extends AppCompatActivity {
 
         Fragment fragment = NewsDetailFragment.newInstance(mNews);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.contentFrame_detail, fragment).commit();
+        fragmentTransaction.replace(R.id.contentFrame_detail, fragment, "detail").commit();
     }
 
     @Override
@@ -50,9 +48,27 @@ public class NewsDetailActivity extends AppCompatActivity {
     private void getNewsDataFromIntent(Intent intent) {
         if(intent != null) {
             mNews = Parcels.unwrap(getIntent().getParcelableExtra("NEWS"));
-
-            Log.d(TAG, mNews.toString());
         }
     }
 
+    @Override
+    public void changeDetailFragment(Fragment f) {
+
+        Fragment newFragment = null;
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        if(f instanceof NewsDetailFragment) {
+            newFragment = NewsDetailWebViewFragment.newInstance(mNews);
+            if(getSupportFragmentManager().getBackStackEntryCount() > 0)
+                getSupportFragmentManager().popBackStack();
+
+            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment, "web").addToBackStack(null).commit();
+        } else if(f instanceof NewsDetailWebViewFragment) {
+            newFragment = NewsDetailFragment.newInstance(mNews);
+            getSupportFragmentManager().popBackStack();
+            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment, "detail").addToBackStack(null).commit();
+
+        }
+
+    }
 }

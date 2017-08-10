@@ -70,7 +70,7 @@ public class NewsKeywordFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         newsKeywordAdapter = new NewsKeywordAdapter();
-        newsViewModel = new NewsViewModelImpl(getContext());
+        newsViewModel = new NewsViewModelImpl(getActivity().getApplicationContext());
         newsViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
             @Override
             public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
