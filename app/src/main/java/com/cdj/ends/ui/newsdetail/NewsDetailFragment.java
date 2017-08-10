@@ -9,51 +9,71 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.cdj.ends.Config;
 import com.cdj.ends.R;
+import com.cdj.ends.api.translation.TranslationAPI;
 import com.cdj.ends.data.News;
-import com.cdj.ends.base.util.ClickableSpanTranslate;
+import com.cdj.ends.data.Translation;
+import com.cdj.ends.dto.TranslationDTO;
+import com.cdj.ends.ui.newsdetail.viewmode.DetailEnKoModeFragment;
+import com.cdj.ends.ui.newsdetail.viewmode.DetailEnModeFragment;
 
 import org.parceler.Parcels;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class NewsDetailFragment extends Fragment implements View.OnClickListener {
+public class NewsDetailFragment extends Fragment  {
 
     private final static String TAG = "NewsDetailFragment";
 
     @BindView(R.id.imgMain_news) ImageView imgMainNews;
-    @BindView(R.id.txtTitle_detail) TextView txtTitleDetail;
-    @BindView(R.id.txtDescription_detail) TextView txtDescriptionDetail;
+    @BindView(R.id.btnChange_translation_mode) ImageView btnTranslationMode;
     @BindView(R.id.btnChange_to_web) Button btnChangePage;
     @BindView(R.id.toolbar_news_detail) Toolbar toolbarNewsDetail;
+    private Unbinder unbinder;
 
     private News mNews;
+    private boolean translationFlag = false;
 
     private NewsDetailChangeListener newsDetailChangeListener;
+
+    private static NewsDetailFragment newsDetailFragment;
 
     public NewsDetailFragment() {}
 
     public static NewsDetailFragment newInstance(News news) {
-        NewsDetailFragment fragment = new NewsDetailFragment();
+        if(newsDetailFragment == null) {
+            synchronized (NewsDetailFragment.class) {
+                if(newsDetailFragment == null) {
+                    newsDetailFragment = new NewsDetailFragment();
+                }
+            }
+        }
+
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
-        fragment.setArguments(args);
-        return fragment;
+        newsDetailFragment.setArguments(args);
+        return newsDetailFragment;
     }
 
     @TargetApi(23)
@@ -84,7 +104,10 @@ public class NewsDetailFragment extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             mNews = Parcels.unwrap(getArguments().getParcelable(News.class.getName()));
-            Log.d(TAG, mNews.toString());
+        }
+
+        if(mNews.getTranslated() == null) {
+            requestTranslate();
         }
     }
 
@@ -92,7 +115,11 @@ public class NewsDetailFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_detail, container, false);
-        initView(view);
+        unbinder = ButterKnife.bind(this, view);
+
+        DetailEnModeFragment detailEnModeFragment = DetailEnModeFragment.newInstance(mNews);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.translation_mode_view, detailEnModeFragment).commit();
 
         return view;
     }
@@ -100,16 +127,8 @@ public class NewsDetailFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         setToolbar();
         setView();
-
-        btnChangePage.setOnClickListener(this);
-    }
-
-    private void initView(View view) {
-        toolbarNewsDetail = (Toolbar) view.findViewById(R.id.toolbar_news_detail);
-        txtDescriptionDetail = (TextView) view.findViewById(R.id.txtDescription_detail);
     }
 
     private void setToolbar() {
@@ -123,35 +142,63 @@ public class NewsDetailFragment extends Fragment implements View.OnClickListener
                 .load(mNews.getUrlToImage())
                 .fitCenter()
                 .into(imgMainNews);
-
-        makeTextViewClickable(mNews.getTitle(), txtTitleDetail);
-        makeTextViewClickable(mNews.getDescription(), txtDescriptionDetail);
     }
 
-    private void makeTextViewClickable(final String text, final TextView tv) {
-        tv.setText("");
-        String[] split = text.split("(?= )");
-        SpannableString spannableString = null;
+    @OnClick(R.id.btnChange_to_web)
+    public void onChangeWebPageClicked(View v) {
+        newsDetailChangeListener.changeDetailFragment(this);
+    }
 
-        for(String s : split) {
-            spannableString=  new SpannableString(s);
-            int length = s.length();
-            String tag = s.trim();
-            spannableString.setSpan(new ClickableSpanTranslate(getContext(), tag), 1, length,  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    @OnClick(R.id.btnChange_translation_mode)
+    public void onChangeTranslationMode(View v) {
+        Fragment fragment = null;
 
-            tv.append(spannableString);
+        if(translationFlag) {
+            fragment = DetailEnModeFragment.newInstance(mNews);
+            btnTranslationMode.setSelected(true);
+            translationFlag = false;
+        } else {
+            fragment = DetailEnKoModeFragment.newInstance(mNews);
+            btnTranslationMode.setSelected(false);
+            translationFlag = true;
         }
-        tv.setMovementMethod(LinkMovementMethod.getInstance());
+
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.translation_mode_view, fragment).commit();
+    }
+
+    private void requestTranslate() {
+        Map<String, String> filter = new HashMap<>();
+        filter.put("key", getActivity().getApplicationContext().getResources().getString(R.string.GOOGLE_TRANSLATION_KEY));
+        filter.put("source", "en");
+        filter.put("target", "ko");
+        filter.put("model", "nmt");
+        filter.put("q", mNews.getDescription());
+
+        TranslationAPI translationAPI = new TranslationAPI(Config.TRANS_BASE_URL);
+        translationAPI.requestTrnaslate(filter, new Callback<TranslationDTO>() {
+            @Override
+            public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
+                TranslationDTO translationDTO = response.body();
+                //todo 리스트로 보여주자
+                Translation translation = translationDTO.getData().getTranslations().get(0);
+
+                mNews.setTranslated(translation.getTranslatedText());
+
+                Log.d(TAG, mNews.getTranslated());
+            }
+
+            @Override
+            public void onFailure(Call<TranslationDTO> call, Throwable t) {
+
+            }
+        });
+
     }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch(id) {
-            case R.id.btnChange_to_web :
-                newsDetailChangeListener.changeDetailFragment(this);
-                break;
-        }
-
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

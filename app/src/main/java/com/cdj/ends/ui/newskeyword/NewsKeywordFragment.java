@@ -45,13 +45,21 @@ public class NewsKeywordFragment extends Fragment {
 
     private LinearLayoutManager layoutManager;
 
+    private static NewsKeywordFragment newsKeywordFragment;
+
     public NewsKeywordFragment() {}
 
     public static NewsKeywordFragment newInstance() {
+        if(newsKeywordFragment == null) {
+            synchronized (NewsKeywordFragment.class) {
+                if(newsKeywordFragment == null) {
+                    newsKeywordFragment = new NewsKeywordFragment();
+                }
+            }
+        }
         Bundle args = new Bundle();
-        NewsKeywordFragment fragment = new NewsKeywordFragment();
-        fragment.setArguments(args);
-        return fragment;
+        newsKeywordFragment.setArguments(args);
+        return newsKeywordFragment;
     }
 
     @TargetApi(23)

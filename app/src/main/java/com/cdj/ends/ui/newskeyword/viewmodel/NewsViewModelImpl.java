@@ -52,7 +52,6 @@ public class NewsViewModelImpl implements NewsViewModel {
 
     @Override
     public void fetchNews() {
-
         filter.put("source", "techcrunch");
         filter.put("apiKey", mContext.getString(R.string.NEWS_KEY));
 

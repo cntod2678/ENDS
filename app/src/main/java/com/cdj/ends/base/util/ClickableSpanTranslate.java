@@ -29,16 +29,12 @@ import static com.cdj.ends.Config.TRANS_BASE_URL;
 
 public class ClickableSpanTranslate extends ClickableSpan {
 
-    private Snackbar snackbar;
-
     private final String TAG = "ClickableSpanMaker";
 
     private TranslationAPI translationAPI;
 
     private String clickedText;
     private Context mContext;
-
-    private Map<String, String> filter = new HashMap<>();
 
     public ClickableSpanTranslate(Context context, String clickText) {
         super();
@@ -55,6 +51,7 @@ public class ClickableSpanTranslate extends ClickableSpan {
      * &q=hi
      */
     public void onClick(final View view) {
+        Map<String, String> filter = new HashMap<>();
         filter.put("key", mContext.getResources().getString(R.string.GOOGLE_TRANSLATION_KEY));
         filter.put("source", "en");
         filter.put("target", "ko");

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
+import com.cdj.ends.ui.newskeyword.NewsKeywordFragment;
 import com.cdj.ends.ui.newssource.viewmodel.SourceItemViewModel;
 import com.cdj.ends.ui.newssource.viewmodel.SourceViewModel;
 import com.cdj.ends.ui.newssource.viewmodel.SourceViewModelImpl;
@@ -34,13 +35,22 @@ public class NewsSourceFragment extends Fragment {
 
     private NewsSourceAdapter newsSourceAdapter;
 
+    private static NewsSourceFragment newsSourceFragment;
+
     public NewsSourceFragment() {}
 
     public static NewsSourceFragment newInstance() {
+        if(newsSourceFragment == null) {
+            synchronized (NewsKeywordFragment.class) {
+                if(newsSourceFragment == null) {
+                    newsSourceFragment = new NewsSourceFragment();
+                }
+            }
+        }
+
         Bundle args = new Bundle();
-        NewsSourceFragment fragment = new NewsSourceFragment();
-        fragment.setArguments(args);
-        return fragment;
+        newsSourceFragment.setArguments(args);
+        return newsSourceFragment;
     }
 
     @Override

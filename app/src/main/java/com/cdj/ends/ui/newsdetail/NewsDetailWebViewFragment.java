@@ -26,27 +26,39 @@ import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
-public class NewsDetailWebViewFragment extends Fragment implements View.OnClickListener {
+public class NewsDetailWebViewFragment extends Fragment {
 
     private static final String TAG = "NewsWebFragment";
 
     @BindView(R.id.btnChange_to_detail) Button btnChange;
     @BindView(R.id.webView_news) WebView webViewNews;
-    @BindView(R.id.toolbar_web_detail) Toolbar toolbarWebDetail;
+    @BindView(R.id.toolbar_detail_web) Toolbar toolbarDetailWeb;
+    Unbinder unbinder;
 
     private News mNews;
 
     private NewsDetailChangeListener newsDetailChangeListener;
 
+    private static NewsDetailWebViewFragment newsDetailWebViewFragment;
+
     public NewsDetailWebViewFragment() {}
 
     public static NewsDetailWebViewFragment newInstance(News news) {
-        NewsDetailWebViewFragment fragment = new NewsDetailWebViewFragment();
+        if(newsDetailWebViewFragment == null) {
+            synchronized (NewsDetailFragment.class) {
+                if(newsDetailWebViewFragment == null) {
+                    newsDetailWebViewFragment = new NewsDetailWebViewFragment();
+                }
+            }
+        }
+
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
-        fragment.setArguments(args);
-        return fragment;
+        newsDetailWebViewFragment.setArguments(args);
+        return newsDetailWebViewFragment;
     }
 
     @TargetApi(23)
@@ -79,41 +91,38 @@ public class NewsDetailWebViewFragment extends Fragment implements View.OnClickL
             mNews = Parcels.unwrap(getArguments().getParcelable(News.class.getName()));
             Log.d(TAG, mNews.toString());
         }
-
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_detail_web, container, false);
-
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         setToolbar();
 
         webViewNews.loadUrl(mNews.getUrl());
-        btnChange.setOnClickListener(this);
     }
 
     private void setToolbar() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbarWebDetail);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbarDetailWeb);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
+    @OnClick(R.id.btnChange_to_detail)
+    public void onChangeToDetailClicked(View v) {
+        newsDetailChangeListener.changeDetailFragment(this);
+    }
+
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.btnChange_to_detail :
-                newsDetailChangeListener.changeDetailFragment(this);
-                break;
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

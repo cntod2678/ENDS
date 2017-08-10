@@ -19,10 +19,12 @@ public class News {
     String url;
     String urlToImage;
     String publishedAt;
+    String translated;
 
     public News(){}
 
-    public News(String id, int number, String owner, String source, String author, String description, String title, String url, String urlToImage, String publishedAt) {
+    public News(String id, int number, String owner, String source, String author, String description,
+                String title, String url, String urlToImage, String publishedAt, String translated) {
         this.id = id;
         this.number = number;
         this.owner = owner;
@@ -33,6 +35,7 @@ public class News {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
+        this.translated = translated;
     }
 
     public String getId() {
@@ -115,18 +118,28 @@ public class News {
         this.publishedAt = publishedAt;
     }
 
+    public String getTranslated() {
+        return translated;
+    }
+
+    public void setTranslated(String translated) {
+        this.translated = translated;
+    }
+
     @Override
     public String toString() {
         return "News{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", number=" + number +
                 ", owner='" + owner + '\'' +
+                ", source='" + source + '\'' +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", url='" + url + '\'' +
                 ", urlToImage='" + urlToImage + '\'' +
                 ", publishedAt='" + publishedAt + '\'' +
+                ", translated='" + translated + '\'' +
                 '}';
     }
 }

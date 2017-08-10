@@ -19,6 +19,7 @@ import com.cdj.ends.base.view.ViewPagerDotView;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int VIEW_PAGER_MID = 1;
+    private static final int VIEW_PAGER_CNT = 3;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar_main;
@@ -60,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-
     private void setViewPager() {
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager_main.setAdapter(mainPagerAdapter);
         viewPager_main.setCurrentItem(VIEW_PAGER_MID);
+        viewPager_main.setOffscreenPageLimit(VIEW_PAGER_CNT);
 
         viewPager_main.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

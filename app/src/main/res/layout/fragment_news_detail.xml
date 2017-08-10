@@ -42,7 +42,8 @@
                 <Button
                     android:id="@+id/btnChange_to_web"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:onClick="onChangeWebPageClicked"/>
 
             </android.support.v7.widget.Toolbar>
 

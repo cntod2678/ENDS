@@ -53,20 +53,16 @@ public class NewsDetailActivity extends AppCompatActivity implements NewsDetailC
 
     @Override
     public void changeDetailFragment(Fragment f) {
-
         Fragment newFragment = null;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         if(f instanceof NewsDetailFragment) {
             newFragment = NewsDetailWebViewFragment.newInstance(mNews);
-            if(getSupportFragmentManager().getBackStackEntryCount() > 0)
-                getSupportFragmentManager().popBackStack();
-
-            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment, "web").addToBackStack(null).commit();
+            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment).commit();
         } else if(f instanceof NewsDetailWebViewFragment) {
             newFragment = NewsDetailFragment.newInstance(mNews);
             getSupportFragmentManager().popBackStack();
-            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment, "detail").addToBackStack(null).commit();
+            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment).commit();
 
         }
 
