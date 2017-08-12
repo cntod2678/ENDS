@@ -6,6 +6,7 @@ package com.cdj.ends.ui.newskeyword;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
+import com.cdj.ends.ui.keyword.KeywordActivity;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsItemViewModel;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModel;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModelImpl;
@@ -82,6 +84,9 @@ public class NewsKeywordFragment extends Fragment {
             @Override
             public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
                 newsKeywordAdapter.replaceData(viewModel);
+                if (refreshLayout.isRefreshing()) {
+                    refreshLayout.setRefreshing(false);
+                }
                 showRecvLoadiing();
             }
         });
@@ -105,8 +110,8 @@ public class NewsKeywordFragment extends Fragment {
         fabAddKeywrod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getActivity().getApplicationContext(), KeywordActivity.class);
+                startActivity(intent);
             }
         });
     }

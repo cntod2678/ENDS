@@ -1,9 +1,9 @@
 package com.cdj.ends.ui.main;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.FragmentTransaction;
@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
 import com.cdj.ends.base.view.ViewPagerDotView;
-import com.cdj.ends.ui.word.WordFragment;
-
+import com.cdj.ends.ui.keyword.KeywordActivity;
+import com.cdj.ends.ui.word.WordActivity;
 
 
 import static com.cdj.ends.ui.main.MainFragmentAdapter.PAGE_NUM;
@@ -42,11 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         initView();
-        //setViewPager();
         setToolbar();
         setNavDrawer();
-
-
     }
 
     private void initView() {
@@ -115,11 +112,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.nav_source) {
 
         } else if (id == R.id.nav_keyword) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             getSupportFragmentManager().popBackStack();
             fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance()).addToBackStack(null).commit();
         } else if (id == R.id.nav_search) {
@@ -127,9 +124,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_word) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            getSupportFragmentManager().popBackStack();
-            fragmentTransaction.replace(R.id.main_frame, WordFragment.newInstance()).addToBackStack(null).commit();
+//            getSupportFragmentManager().popBackStack();
+//            fragmentTransaction.replace(R.id.main_frame, WordFragment.newInstance()).addToBackStack(null).commit();
+            Intent intent = new Intent(getApplicationContext(), WordActivity.class);
+            startActivity(intent);
+
+
+        } else if (id == R.id.nav_add_keyword) {
+            Intent intent = new Intent(getApplicationContext(), KeywordActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "등록 안해줬다", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -147,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     };
 
+    /* mainFragment 의 viewpager listener 등록 */
     @Override
     public void pageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         dotViewIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);

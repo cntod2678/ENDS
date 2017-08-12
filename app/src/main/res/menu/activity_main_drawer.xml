@@ -28,9 +28,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="단어 복습" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_add_keyword"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="키워드 추가" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"

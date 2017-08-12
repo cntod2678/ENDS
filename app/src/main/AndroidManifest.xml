@@ -20,11 +20,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.webview.WebViewActivity" />
-
         <activity android:name=".ui.main.MainActivity" />
 
+        <activity android:name=".ui.keyword.KeywordActivity" />
+
         <activity android:name=".ui.newsdetail.NewsDetailActivity" />
+
+        <activity android:name=".ui.webview.WebViewActivity" />
+        
+        <activity android:name=".ui.word.WordActivity" />
 
     </application>
 

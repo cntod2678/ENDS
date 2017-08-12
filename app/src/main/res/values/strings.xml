@@ -17,5 +17,6 @@
     <string name="nav_news_keyword">Keyword</string>
     <string name="nav_news_search">Search</string>
 
+    <string name="action_collapse">Collapse</string>
 
 </resources>

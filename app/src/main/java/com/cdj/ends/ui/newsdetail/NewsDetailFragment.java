@@ -87,13 +87,6 @@ public class NewsDetailFragment extends Fragment  {
         if(mNews.getTranslated() == null) {
             requestTranslate();
         }
-
-        txtChangeDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onStartWebView();
-            }
-        });
     }
 
     @Nullable
@@ -114,6 +107,14 @@ public class NewsDetailFragment extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         setToolbar();
         setView();
+
+        txtChangeDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStartWebView();
+            }
+        });
+
         Snackbar.make(view, getActivity().getApplicationContext().getString(R.string.guide_translation), Snackbar.LENGTH_LONG).show();
     }
 
