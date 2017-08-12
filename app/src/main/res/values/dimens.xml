@@ -9,18 +9,26 @@
 
 
     <!-- ViewPager Dot -->
-    <dimen name="height_very_small">2.5dp</dimen>
+    <dimen name="indicator_radius_2">2.5dp</dimen>
     <dimen name="height_small_8">8dp</dimen>
     <dimen name="margin_bottom">12dp</dimen>
 
-
     <!-- NewsKeyword Item -->
+    <dimen name="cardView_radius">6dp</dimen>
     <dimen name="news_keyword_item_height">240dp</dimen>
     <dimen name="news_item_margin">5dp</dimen>
     <dimen name="news_item_img_size">80dp</dimen>
     <dimen name="news_item_img_margin">16dp</dimen>
+    <dimen name="news_item_padding">12dp</dimen>
+    <dimen name="news_item_description_margin">12dp</dimen>
 
     <!-- NewsSource Item -->
     <dimen name="news_source_item_height">80dp</dimen>
 
+    <!-- NewsDetail -->
+    <dimen name="news_detail_title_margin_bottom">16dp</dimen>
+    <dimen name="news_detail_origin_margin_bottom">16dp</dimen>
+    <dimen name="news_detail_mode_margin_bottom">8dp</dimen>
+    <dimen name="news_detail_option_margin">8dp</dimen>
+    <dimen name="news_detail_btnEdu_margin">16dp</dimen>
 </resources>

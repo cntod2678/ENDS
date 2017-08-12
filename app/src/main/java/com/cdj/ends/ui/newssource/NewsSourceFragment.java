@@ -35,19 +35,20 @@ public class NewsSourceFragment extends Fragment {
 
     private NewsSourceAdapter newsSourceAdapter;
 
-    private static NewsSourceFragment newsSourceFragment;
+    //private static NewsSourceFragment newsSourceFragment;
 
     public NewsSourceFragment() {}
 
     public static NewsSourceFragment newInstance() {
-        if(newsSourceFragment == null) {
-            synchronized (NewsKeywordFragment.class) {
-                if(newsSourceFragment == null) {
-                    newsSourceFragment = new NewsSourceFragment();
-
-                }
-            }
-        }
+//        if(newsSourceFragment == null) {
+//            synchronized (NewsKeywordFragment.class) {
+//                if(newsSourceFragment == null) {
+//                    newsSourceFragment = new NewsSourceFragment();
+//
+//                }
+//            }
+//        }
+        NewsSourceFragment newsSourceFragment = new NewsSourceFragment();
         Bundle args = new Bundle();
         newsSourceFragment.setArguments(args);
         return newsSourceFragment;
@@ -90,7 +91,6 @@ public class NewsSourceFragment extends Fragment {
 
     private void setRecycler() {
         recvNewsSource.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recvNewsSource.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recvNewsSource.setAdapter(newsSourceAdapter);
     }
 }

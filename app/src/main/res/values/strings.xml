@@ -4,5 +4,18 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="change_detail_view">본 기사 보러가기</string>
+    <string name="guide_translation">영단어를 클릭하면 해석을 볼 수 있습니다.</string>
+    <string name="en_original">원문</string>
+    <string name="ko_translated">해석</string>
+    <string name="btn_text_edu">학습하기</string>
+
     <string name="action_settings">Settings</string>
+
+    <string name="nav_group_name_news">뉴스</string>
+    <string name="nav_news_source">Publisher</string>
+    <string name="nav_news_keyword">Keyword</string>
+    <string name="nav_news_search">Search</string>
+
+
 </resources>

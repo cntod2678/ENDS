@@ -3,11 +3,11 @@ package com.cdj.ends.ui.newsdetail;
 /**
  * Created by Dongjin on 2017. 8. 9..
  */
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cdj.ends.Config;
@@ -28,6 +29,7 @@ import com.cdj.ends.data.Translation;
 import com.cdj.ends.dto.TranslationDTO;
 import com.cdj.ends.ui.newsdetail.viewmode.DetailEnKoModeFragment;
 import com.cdj.ends.ui.newsdetail.viewmode.DetailEnModeFragment;
+import com.cdj.ends.ui.webview.WebViewActivity;
 
 import org.parceler.Parcels;
 
@@ -50,12 +52,12 @@ public class NewsDetailFragment extends Fragment  {
     @BindView(R.id.btnChange_translation_mode) ImageView btnTranslationMode;
     @BindView(R.id.btnChange_to_web) Button btnChangePage;
     @BindView(R.id.toolbar_news_detail) Toolbar toolbarNewsDetail;
+    @BindView(R.id.txtChange_detail) TextView txtChangeDetail;
     private Unbinder unbinder;
 
     private static News mNews;
     private boolean translationFlag = false;
 
-    private NewsDetailChangeListener newsDetailChangeListener;
 
     private static NewsDetailFragment newsDetailFragment;
 
@@ -76,39 +78,22 @@ public class NewsDetailFragment extends Fragment  {
         return newsDetailFragment;
     }
 
-    @TargetApi(23)
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            newsDetailChangeListener = (NewsDetailChangeListener) getContext();
-        } catch(ClassCastException cce) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            newsDetailChangeListener = (NewsDetailChangeListener) activity;
-        } catch(ClassCastException cce) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             mNews = Parcels.unwrap(getArguments().getParcelable(News.class.getName()));
         }
-
         if(mNews.getTranslated() == null) {
             requestTranslate();
         }
+
+        txtChangeDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStartWebView();
+            }
+        });
     }
 
     @Nullable
@@ -129,6 +114,7 @@ public class NewsDetailFragment extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         setToolbar();
         setView();
+        Snackbar.make(view, getActivity().getApplicationContext().getString(R.string.guide_translation), Snackbar.LENGTH_LONG).show();
     }
 
     private void setToolbar() {
@@ -146,7 +132,7 @@ public class NewsDetailFragment extends Fragment  {
 
     @OnClick(R.id.btnChange_to_web)
     public void onChangeWebPageClicked(View v) {
-        newsDetailChangeListener.changeDetailFragment(this);
+        onStartWebView();
     }
 
     @OnClick(R.id.btnChange_translation_mode)
@@ -180,7 +166,6 @@ public class NewsDetailFragment extends Fragment  {
             @Override
             public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
                 TranslationDTO translationDTO = response.body();
-                //todo 리스트로 보여주자
                 Translation translation = translationDTO.getData().getTranslations().get(0);
 
                 mNews.setTranslated(translation.getTranslatedText());
@@ -193,7 +178,12 @@ public class NewsDetailFragment extends Fragment  {
 
             }
         });
+    }
 
+    private void onStartWebView() {
+        Intent intent = new Intent(getActivity(), WebViewActivity.class);
+        intent.putExtra("URL", mNews.getUrl());
+        startActivity(intent);
     }
 
     @Override

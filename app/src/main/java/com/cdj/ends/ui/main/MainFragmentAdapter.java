@@ -12,9 +12,11 @@ import com.cdj.ends.ui.newssource.NewsSourceFragment;
  * Created by Dongjin on 2017. 8. 8..
  */
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
+public class MainFragmentAdapter extends FragmentPagerAdapter {
 
-    public MainPagerAdapter(FragmentManager fm) {
+    public static final int PAGE_NUM = 3;
+
+    public MainFragmentAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -35,6 +37,6 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return PAGE_NUM;
     }
 }

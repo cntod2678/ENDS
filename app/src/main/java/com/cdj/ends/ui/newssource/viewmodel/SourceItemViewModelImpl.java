@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.cdj.ends.data.NewsSource;
-import com.cdj.ends.ui.newssourcedetail.NewsSourceWebActivity;
-
-import org.parceler.Parcels;
+import com.cdj.ends.ui.webview.WebViewActivity;
 
 /**
  * Created by Dongjin on 2017. 8. 8..
@@ -53,9 +51,8 @@ public class SourceItemViewModelImpl implements SourceItemViewModel {
 
     @Override
     public void onSourceItemClick(View view) {
-        Intent intent = new Intent(view.getContext(), NewsSourceWebActivity.class);
-        NewsSource newsSource = mNewsSource;
-        intent.putExtra("NEWS_SOURCE", Parcels.wrap(newsSource));
+        Intent intent = new Intent(view.getContext(), WebViewActivity.class);
+        intent.putExtra("URL", mNewsSource.getUrl());
         view.getContext().startActivity(intent);
     }
 }

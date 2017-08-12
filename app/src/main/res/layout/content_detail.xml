@@ -6,23 +6,54 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageButton
-        android:id="@+id/btnChange_translation_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:src="@drawable/selector_plus"
-        android:background="@color/black"
-        android:onClick="onChangeTranslationMode"/>
-
-    <FrameLayout
-        android:id="@+id/translation_mode_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </FrameLayout>
-
-    <Button
-        android:id="@+id/btnEdu"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="학습하기"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/news_detail_option_margin"/>
+
+        <ImageButton
+            android:id="@+id/btnChange_translation_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_margin="@dimen/news_detail_option_margin"
+            android:src="@drawable/selector_plus"
+            android:background="@color/black"
+            android:onClick="onChangeTranslationMode"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <FrameLayout
+            android:id="@+id/translation_mode_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txtChange_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/change_detail_view"/>
+
+        <Button
+            android:id="@+id/btnEdu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/news_detail_btnEdu_margin"
+            android:text="@string/btn_text_edu"/>
+
+    </LinearLayout>
 </LinearLayout>

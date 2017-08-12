@@ -1,7 +1,7 @@
-package com.cdj.ends.ui.newssourcedetail;
+package com.cdj.ends.ui.webview;
 
 /**
- * Created by Dongjin on 2017. 8. 11..
+ * Created by Dongjin on 2017. 8. 12..
  */
 
 import android.app.Activity;
@@ -21,67 +21,51 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.cdj.ends.R;
-import com.cdj.ends.data.NewsSource;
 
-import org.parceler.Parcels;
-
-public class NewsSourceWebFragment extends Fragment {
+public class WebViewFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private static final String TAG = "SourceWebFragment";
 
-    private static NewsSource mNewsSource;
-
     private WebView mWebRTCWebView;
 
-    private static NewsSourceWebFragment newsSourceWebFragment;
+    private String mUrl;
 
-    public NewsSourceWebFragment () {}
+    public WebViewFragment() {}
 
-    public static NewsSourceWebFragment newInstance(NewsSource newsSource) {
-        if(newsSourceWebFragment == null) {
-            synchronized (NewsSourceWebFragment.class) {
-                if(newsSourceWebFragment == null) {
-                    newsSourceWebFragment = new NewsSourceWebFragment();
-                }
-            }
-        }
-        mNewsSource = new NewsSource();
-
+    public static WebViewFragment newInstance(String url) {
         Bundle args = new Bundle();
-        args.putParcelable(NewsSource.class.getName(), Parcels.wrap(newsSource));
-        newsSourceWebFragment.setArguments(args);
-        return newsSourceWebFragment;
+        args.putString("URL", url);
+        WebViewFragment fragment = new WebViewFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((NewsSourceWebActivity) activity).onSectionAttached(
+        ((WebViewActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mNewsSource = Parcels.unwrap(getArguments().getParcelable(NewsSource.class.getName()));
+            mUrl = getArguments().getString("URL");
         }
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news_source_web, container, false);
+        View view = inflater.inflate(R.layout.fragment_web, container, false);
 
-        mWebRTCWebView = (WebView) view.findViewById(R.id.webView_source);
-
+        mWebRTCWebView = (WebView) view.findViewById(R.id.webView);
         setUpWebViewDefaults(mWebRTCWebView);
-
-        mWebRTCWebView.loadUrl(mNewsSource.getUrl());
-
+        mWebRTCWebView.loadUrl(mUrl);
         mWebRTCWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
@@ -89,7 +73,7 @@ public class NewsSourceWebFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(request.getOrigin().toString().equals("https://apprtc-m.appspot.com/")) {
+                        if(request.getOrigin().toString().equals(mUrl)) {
                             request.grant(request.getResources());
                         } else {
                             request.deny();
@@ -104,23 +88,12 @@ public class NewsSourceWebFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
-    @Override
     public void onStop() {
         super.onStop();
-
-        /**
-         * When the application falls into the background we want to stop the media stream
-         * such that the camera is free to use by other apps.
-         */
         mWebRTCWebView.evaluateJavascript("if(window.localStream){window.localStream.stop();}", null);
     }
 
-//    @TargetApi(Build.VERSION_CODES.L)
+
     private void setUpWebViewDefaults(WebView webView) {
         WebSettings settings = webView.getSettings();
 
@@ -153,4 +126,5 @@ public class NewsSourceWebFragment extends Fragment {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptThirdPartyCookies(mWebRTCWebView, true);
     }
+
 }

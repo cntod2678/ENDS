@@ -2,11 +2,11 @@ package com.cdj.ends.ui.main;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,42 +18,48 @@ import android.widget.Toast;
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
 import com.cdj.ends.base.view.ViewPagerDotView;
+import com.cdj.ends.ui.word.WordFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int VIEW_PAGER_MID = 1;
-    private static final int VIEW_PAGER_CNT = 3;
 
-    private DrawerLayout drawerLayout;
-    private Toolbar toolbar_main;
-    private ViewPager viewPager_main;
-    private MainPagerAdapter mainPagerAdapter;
+import static com.cdj.ends.ui.main.MainFragmentAdapter.PAGE_NUM;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+    MainFragment.MainViewChange {
+
     private PageSwipeCommand dotViewIndicator;
-
+    private Toolbar toolbar_main;
+    private DrawerLayout drawerLayout;
     private boolean mTerminateFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance(), "MAIN_TAG").commit();
+        }
 
         initView();
-        setViewPager();
+        //setViewPager();
         setToolbar();
         setNavDrawer();
+
+
     }
 
     private void initView() {
         toolbar_main = (Toolbar) findViewById(R.id.toolbar_main);
-        viewPager_main = (ViewPager) findViewById(R.id.viewPager_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         dotViewIndicator = (ViewPagerDotView) findViewById(R.id.dotView_indicator);
     }
 
     private void setToolbar() {
         setSupportActionBar(toolbar_main);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         dotViewIndicator.setPageTurnCommand(new ViewPagerDotView(this));
-        dotViewIndicator.setNumOfCircles(mainPagerAdapter.getCount(), getResources().getDimensionPixelSize(R.dimen.height_very_small));
+        dotViewIndicator.setNumOfCircles(PAGE_NUM, getResources().getDimensionPixelSize(R.dimen.indicator_radius_2));
     }
 
     private void setNavDrawer() {
@@ -66,36 +72,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void setViewPager() {
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        viewPager_main.setAdapter(mainPagerAdapter);
-        viewPager_main.setCurrentItem(VIEW_PAGER_MID);
-        viewPager_main.setOffscreenPageLimit(VIEW_PAGER_CNT);
-
-        viewPager_main.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                dotViewIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                dotViewIndicator.onPageSelected(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                dotViewIndicator.onPageScrollStateChanged(state);
-            }
-        });
-    }
-
     @Override
     public void onBackPressed() {
-        //int depth = getSupportFragmentManager().getBackStackEntryCount();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else if(!mTerminateFlag) {
+        } else if (getSupportFragmentManager().getBackStackEntryCount() >= 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+        else if(!mTerminateFlag) {
             Toast.makeText(MainActivity.this, "'뒤로' 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
             mTerminateFlag = true;
             mKillHandler.sendEmptyMessageDelayed(0, 2000);
@@ -132,18 +116,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_source) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_keyword) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            getSupportFragmentManager().popBackStack();
+            fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance()).addToBackStack(null).commit();
+        } else if (id == R.id.nav_search) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_word) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            getSupportFragmentManager().popBackStack();
+            fragmentTransaction.replace(R.id.main_frame, WordFragment.newInstance()).addToBackStack(null).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -160,4 +146,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+
+    @Override
+    public void pageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        dotViewIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
+    }
+
+    @Override
+    public void pageSelected(int position) {
+        dotViewIndicator.onPageSelected(position);
+    }
+
+    @Override
+    public void pageScrollStateChanged(int state) {
+        dotViewIndicator.onPageScrollStateChanged(state);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }

@@ -1,10 +1,8 @@
 package com.cdj.ends.base.util;
 
 import android.content.Context;
-import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,11 +11,17 @@ import android.support.design.widget.Snackbar;
 import com.cdj.ends.R;
 import com.cdj.ends.api.translation.TranslationAPI;
 import com.cdj.ends.data.Translation;
+import com.cdj.ends.data.Word;
 import com.cdj.ends.dto.TranslationDTO;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +40,13 @@ public class ClickableSpanTranslate extends ClickableSpan {
     private String clickedText;
     private Context mContext;
 
+
     public ClickableSpanTranslate(Context context, String clickText) {
         super();
         mContext = context;
         this.clickedText = clickText;
         translationAPI = new TranslationAPI(TRANS_BASE_URL);
+
     }
 
     /**
@@ -51,6 +57,8 @@ public class ClickableSpanTranslate extends ClickableSpan {
      * &q=hi
      */
     public void onClick(final View view) {
+
+
         Map<String, String> filter = new HashMap<>();
         filter.put("key", mContext.getResources().getString(R.string.GOOGLE_TRANSLATION_KEY));
         filter.put("source", "en");
@@ -64,13 +72,42 @@ public class ClickableSpanTranslate extends ClickableSpan {
                     TranslationDTO translationDTO = response.body();
                     //todo 리스트로 보여주자
                     Translation translation = translationDTO.getData().getTranslations().get(0);
-                    String translatedText = translation.getTranslatedText();
+                    final String translatedText = translation.getTranslatedText();
 
                     Snackbar.make(view, clickedText + " : " + translatedText, Snackbar.LENGTH_SHORT)
                             .setAction("Add", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(mContext, "클릭 확인", Toast.LENGTH_SHORT).show();
+
+                                    Realm.init(mContext);
+
+                                    RealmConfiguration config = new RealmConfiguration.Builder()
+                                            .deleteRealmIfMigrationNeeded() // Migration to run instead of throwing an exception
+                                            .build();
+
+                                    Realm mRealm = Realm.getInstance(config);
+
+                                    long now = System.currentTimeMillis();
+                                    Date date = new Date(now);
+                                    SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
+                                    String strDate = dateFormat.format(date);
+
+                                    mRealm.beginTransaction();
+                                    RealmResults<Word> words = mRealm.where(Word.class).equalTo("word", clickedText).findAll();
+                                    if(words.isEmpty()) {
+                                        Word word = mRealm.createObject(Word.class);
+                                        word.setWord(clickedText);
+                                        word.setTranslatedWord(translatedText);
+                                        word.setDate(strDate);
+                                        mRealm.commitTransaction();
+                                        Toast.makeText(mContext, clickedText + " 단어가 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(mContext, clickedText + " 단어를 이미 추가했습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    RealmResults<Word> wordList = mRealm.where(Word.class).findAll();
+                                    Log.d(TAG, wordList.size() + "");
+                                    mRealm.close();
+
                                 }
                             }).show();
                 }
@@ -86,6 +123,6 @@ public class ClickableSpanTranslate extends ClickableSpan {
 
     @Override
     public void updateDrawState(TextPaint ds) {
-
     }
+
 }

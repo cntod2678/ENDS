@@ -17,7 +17,7 @@ import com.cdj.ends.data.News;
 
 import org.parceler.Parcels;
 
-public class NewsDetailActivity extends AppCompatActivity implements NewsDetailChangeListener{
+public class NewsDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "NewsDetailActivity";
 
@@ -49,22 +49,5 @@ public class NewsDetailActivity extends AppCompatActivity implements NewsDetailC
         if(intent != null) {
             mNews = Parcels.unwrap(getIntent().getParcelableExtra("NEWS"));
         }
-    }
-
-    @Override
-    public void changeDetailFragment(Fragment f) {
-        Fragment newFragment = null;
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        if(f instanceof NewsDetailFragment) {
-            newFragment = NewsDetailWebViewFragment.newInstance(mNews);
-            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment).commit();
-        } else if(f instanceof NewsDetailWebViewFragment) {
-            newFragment = NewsDetailFragment.newInstance(mNews);
-            getSupportFragmentManager().popBackStack();
-            fragmentTransaction.replace(R.id.contentFrame_detail, newFragment).commit();
-
-        }
-
     }
 }

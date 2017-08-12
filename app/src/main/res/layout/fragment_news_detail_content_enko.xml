@@ -19,18 +19,46 @@
             android:id="@+id/txtTitle_detail_translated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/news_detail_title_margin_bottom"
             android:clickable="true"
-            android:contextClickable="true" />
+            android:contextClickable="true"
+            android:letterSpacing="0.1"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/news_detail_mode_margin_bottom"
+            android:text="@string/en_original"
+            android:lineSpacingMultiplier="2.0"
+            android:letterSpacing="0.1"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/txtDescription_detail_origin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"/>
+            android:layout_marginBottom="@dimen/news_detail_origin_margin_bottom"
+            android:clickable="true"
+            android:lineSpacingMultiplier="1.5"
+            android:letterSpacing="0.1"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/news_detail_mode_margin_bottom"
+            android:text="@string/ko_translated"
+            android:lineSpacingMultiplier="2.0"
+            android:letterSpacing="0.1"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/txtDescription_detail_translated"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.5"
+            android:letterSpacing="0.1"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

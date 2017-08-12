@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -22,22 +24,15 @@ import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsItemViewModel;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModel;
 import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModelImpl;
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 
 import java.util.List;
 
 public class NewsKeywordFragment extends Fragment {
 
-    public static final int PAGE_SIZE = 30;
-
-    private boolean isLastPage = false;
-    private int currentPage = 1;
-    private int selectedSortByKey = 0;
-    private int selectedSortOrderKey = 1;
-    private boolean isLoading = false;
-
     private SwipeRefreshLayout refreshLayout;
 
-    private RecyclerView recvNewsKeyword;
+    private ShimmerRecyclerView recvNewsKeyword;
 
     private NewsKeywordAdapter newsKeywordAdapter;
 
@@ -45,18 +40,22 @@ public class NewsKeywordFragment extends Fragment {
 
     private LinearLayoutManager layoutManager;
 
-    private static NewsKeywordFragment newsKeywordFragment;
+    private FloatingActionButton fabAddKeywrod;
+
+    //private static NewsKeywordFragment newsKeywordFragment;
 
     public NewsKeywordFragment() {}
 
     public static NewsKeywordFragment newInstance() {
-        if(newsKeywordFragment == null) {
-            synchronized (NewsKeywordFragment.class) {
-                if(newsKeywordFragment == null) {
-                    newsKeywordFragment = new NewsKeywordFragment();
-                }
-            }
-        }
+//        if(newsKeywordFragment == null) {
+//            synchronized (NewsKeywordFragment.class) {
+//                if(newsKeywordFragment == null) {
+//                    newsKeywordFragment = new NewsKeywordFragment();
+//                }
+//            }
+//        }
+
+        NewsKeywordFragment newsKeywordFragment = new NewsKeywordFragment();
         Bundle args = new Bundle();
         newsKeywordFragment.setArguments(args);
         return newsKeywordFragment;
@@ -83,6 +82,7 @@ public class NewsKeywordFragment extends Fragment {
             @Override
             public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
                 newsKeywordAdapter.replaceData(viewModel);
+                showRecvLoadiing();
             }
         });
     }
@@ -101,11 +101,20 @@ public class NewsKeywordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRecyler();
         newsViewModel.fetchNews();
+
+        fabAddKeywrod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     private void initView(View view) {
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-        recvNewsKeyword = (RecyclerView) view.findViewById(R.id.recv_news_keyword);
+        recvNewsKeyword = (ShimmerRecyclerView) view.findViewById(R.id.recv_news_keyword);
+        fabAddKeywrod = (FloatingActionButton) view.findViewById(R.id.fabAdd_keyword);
     }
 
     private void setRecyler() {
@@ -116,37 +125,19 @@ public class NewsKeywordFragment extends Fragment {
             }
         });
 
-        /***/
         layoutManager = new LinearLayoutManager(getActivity());
-
         recvNewsKeyword.setLayoutManager(layoutManager);
-        recvNewsKeyword.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recvNewsKeyword.setAdapter(newsKeywordAdapter);
-
-
+        showRecvLoadiing();
     }
 
-    /***/
-//    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
-//        @Override
-//        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//            super.onScrollStateChanged(recyclerView, newState);
-//        }
-//
-//        @Override
-//        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//            super.onScrolled(recyclerView, dx, dy);
-//            int visibleItemCount = layoutManager.getChildCount();
-//            int totalItemCount = layoutManager.getItemCount();
-//            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-//
-//            if (!isLoading && !isLastPage) {
-//                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-//                        && firstVisibleItemPosition >= 0
-//                        && totalItemCount >= PAGE_SIZE) {
-//                    loadMoreItems();
-//                }
-//            }
-//        }
-//    };
+    private void showRecvLoadiing() {
+        recvNewsKeyword.showShimmerAdapter();
+        recvNewsKeyword.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recvNewsKeyword.hideShimmerAdapter();
+            }
+        }, 2000);
+    }
 }

@@ -23,8 +23,6 @@ public class SplashActivity extends AwesomeSplash {
 
     @Override
     public void initSplash(ConfigSplash configSplash) {
-
-
         //Customize Circular Reveal
         configSplash.setBackgroundColor(R.color.colorPrimary); //any color you want form colors.xml
         configSplash.setAnimCircularRevealDuration(2000); //int ms
@@ -45,7 +43,6 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setAnimTitleDuration(3000);
         configSplash.setAnimTitleTechnique(Techniques.StandUp);
         //configSplash.setTitleFont("fonts/myfont.ttf"); //provide string to your font located in assets/fonts/
-
     }
 
     @Override

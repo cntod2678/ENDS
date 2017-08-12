@@ -15,20 +15,20 @@ import com.cdj.ends.R;
 
 public class NewsSearchFragment extends Fragment {
 
-    private static NewsSearchFragment newsSearchFragment;
+    //private NewsSearchFragment newsSearchFragment;
 
     public NewsSearchFragment() {}
 
     public static NewsSearchFragment newInstance() {
-        if(newsSearchFragment == null) {
-            synchronized (NewsSearchFragment.class) {
-                if(newsSearchFragment == null) {
-                    newsSearchFragment = new NewsSearchFragment();
-
-                }
-            }
-        }
-
+//        if(newsSearchFragment == null) {
+//            synchronized (NewsSearchFragment.class) {
+//                if(newsSearchFragment == null) {
+//                    newsSearchFragment = new NewsSearchFragment();
+//
+//                }
+//            }
+//        }
+        NewsSearchFragment newsSearchFragment = new NewsSearchFragment();
         Bundle args = new Bundle();
         newsSearchFragment.setArguments(args);
         return newsSearchFragment;
