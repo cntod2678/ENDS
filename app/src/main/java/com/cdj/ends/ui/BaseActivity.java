@@ -1,11 +1,6 @@
 package com.cdj.ends.ui;
 
-/**
- * Created by Dongjin on 2017. 8. 8..
- */
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.SharedPreferencesService;
@@ -15,15 +10,14 @@ import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
 import com.viksaa.sssplash.lib.model.ConfigSplash;
 
-public class SplashActivity extends AwesomeSplash {
+/**
+ * Created by Dongjin on 2017. 8. 11..
+ */
 
-    private SharedPreferencesService sharedPreferencesService;
-
-    private Activity mActivity;
+public class BaseActivity extends AwesomeSplash {
 
     @Override
     public void initSplash(ConfigSplash configSplash) {
-
 
         //Customize Circular Reveal
         configSplash.setBackgroundColor(R.color.colorPrimary); //any color you want form colors.xml

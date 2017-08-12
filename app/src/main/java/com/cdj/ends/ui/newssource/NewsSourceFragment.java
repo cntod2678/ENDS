@@ -44,10 +44,10 @@ public class NewsSourceFragment extends Fragment {
             synchronized (NewsKeywordFragment.class) {
                 if(newsSourceFragment == null) {
                     newsSourceFragment = new NewsSourceFragment();
+
                 }
             }
         }
-
         Bundle args = new Bundle();
         newsSourceFragment.setArguments(args);
         return newsSourceFragment;

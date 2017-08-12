@@ -1,12 +1,12 @@
 package com.cdj.ends.ui.newssource.viewmodel;
 
+import android.content.Intent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.cdj.ends.data.NewsSource;
-import com.cdj.ends.data.SortedBysAvailable;
+import com.cdj.ends.ui.newssourcedetail.NewsSourceWebActivity;
 
-import java.util.List;
+import org.parceler.Parcels;
 
 /**
  * Created by Dongjin on 2017. 8. 8..
@@ -50,13 +50,12 @@ public class SourceItemViewModelImpl implements SourceItemViewModel {
         return mNewsSource.getCountry();
     }
 
-    @Override
-    public List<SortedBysAvailable> getSortedBysAvailables() {
-        return mNewsSource.getSortedBysAvailables();
-    }
 
     @Override
     public void onSourceItemClick(View view) {
-        Toast.makeText(view.getContext(), mNewsSource.getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(view.getContext(), NewsSourceWebActivity.class);
+        NewsSource newsSource = mNewsSource;
+        intent.putExtra("NEWS_SOURCE", Parcels.wrap(newsSource));
+        view.getContext().startActivity(intent);
     }
 }

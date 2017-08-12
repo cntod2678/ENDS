@@ -54,7 +54,6 @@ public class NewsDetailWebViewFragment extends Fragment {
                 }
             }
         }
-
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
         newsDetailWebViewFragment.setArguments(args);

@@ -24,6 +24,7 @@ public class NewsSearchFragment extends Fragment {
             synchronized (NewsSearchFragment.class) {
                 if(newsSearchFragment == null) {
                     newsSearchFragment = new NewsSearchFragment();
+
                 }
             }
         }

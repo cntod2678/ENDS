@@ -52,7 +52,7 @@ public class NewsDetailFragment extends Fragment  {
     @BindView(R.id.toolbar_news_detail) Toolbar toolbarNewsDetail;
     private Unbinder unbinder;
 
-    private News mNews;
+    private static News mNews;
     private boolean translationFlag = false;
 
     private NewsDetailChangeListener newsDetailChangeListener;
@@ -69,7 +69,7 @@ public class NewsDetailFragment extends Fragment  {
                 }
             }
         }
-
+        mNews = new News();
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
         newsDetailFragment.setArguments(args);

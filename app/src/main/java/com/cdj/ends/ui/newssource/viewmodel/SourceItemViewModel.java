@@ -17,7 +17,6 @@ public interface SourceItemViewModel {
     String getUrl();
     String getCategory();
     String getCountry();
-    List<SortedBysAvailable> getSortedBysAvailables();
 
     void onSourceItemClick(View view);
 }

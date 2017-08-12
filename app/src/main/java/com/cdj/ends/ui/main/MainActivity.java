@@ -1,5 +1,7 @@
 package com.cdj.ends.ui.main;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager viewPager_main;
     private MainPagerAdapter mainPagerAdapter;
     private PageSwipeCommand dotViewIndicator;
+
+    private boolean mTerminateFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +92,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        //int depth = getSupportFragmentManager().getBackStackEntryCount();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if(!mTerminateFlag) {
+            Toast.makeText(MainActivity.this, "'뒤로' 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            mTerminateFlag = true;
+            mKillHandler.sendEmptyMessageDelayed(0, 2000);
         } else {
             super.onBackPressed();
         }
@@ -140,4 +150,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    /* 종료버튼이 한번 더 눌리지 않으면 Flag 값 복원 */
+    Handler mKillHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == 0) {
+                mTerminateFlag = false;
+            }
+        }
+    };
 }

@@ -1,11 +1,14 @@
 package com.cdj.ends.data;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 /**
  * Created by Dongjin on 2017. 8. 8..
  */
 
+@Parcel
 public class NewsSource {
     String id;
     String name;
@@ -14,8 +17,8 @@ public class NewsSource {
     String category;
     String language;
     String country;
-    Object urlsToLogos;
-    List<SortedBysAvailable> sortedBysAvailables;
+    //Object urlsToLogos;
+    //List<SortedBysAvailable> sortedBysAvailables;
 
     public String getId() {
         return id;
@@ -72,22 +75,23 @@ public class NewsSource {
     public void setCountry(String country) {
         this.country = country;
     }
+//
+//    public Object getUrlsToLogos() {
+//        return urlsToLogos;
+//    }
+//
+//    public void setUrlsToLogos(Object urlsToLogos) {
+//        this.urlsToLogos = urlsToLogos;
+//    }
 
-    public Object getUrlsToLogos() {
-        return urlsToLogos;
-    }
-
-    public void setUrlsToLogos(Object urlsToLogos) {
-        this.urlsToLogos = urlsToLogos;
-    }
-
-    public List<SortedBysAvailable> getSortedBysAvailables() {
-        return sortedBysAvailables;
-    }
-
-    public void setSortedBysAvailables(List<SortedBysAvailable> sortedBysAvailables) {
-        this.sortedBysAvailables = sortedBysAvailables;
-    }
+//    public List<SortedBysAvailable> getSortedBysAvailables() {
+//        return sortedBysAvailables;
+//    }
+//
+//    public void setSortedBysAvailables(List<SortedBysAvailable> sortedBysAvailables) {
+//        this.sortedBysAvailables = sortedBysAvailables;
+//    }
+//
 
     @Override
     public String toString() {
@@ -99,12 +103,11 @@ public class NewsSource {
                 ", category='" + category + '\'' +
                 ", language='" + language + '\'' +
                 ", country='" + country + '\'' +
-                ", urlsToLogos=" + urlsToLogos +
-                ", sortedBysAvailables=" + sortedBysAvailables +
                 '}';
     }
 
-    /***
+
+/***
      *
      "status":"ok",
      "sources":[

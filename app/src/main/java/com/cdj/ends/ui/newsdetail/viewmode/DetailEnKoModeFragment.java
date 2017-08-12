@@ -16,27 +16,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cdj.ends.Config;
 import com.cdj.ends.R;
-import com.cdj.ends.api.call.TranslateCallService;
-import com.cdj.ends.api.translation.TranslationAPI;
 import com.cdj.ends.base.util.ClickableSpanTranslate;
 import com.cdj.ends.data.News;
-import com.cdj.ends.data.Translation;
-import com.cdj.ends.dto.TranslationDTO;
 
 import org.parceler.Parcels;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DetailEnKoModeFragment extends Fragment {
 
     private static final String TAG = "DetailEnKoModeFragment";
+
+    /**
+     * Spaned Click 에서 SetText가 불가능
+     * ButterKnife 사용하지 않음
+     * */
 
     private TextView txtTitleDetailTranslated;
     private TextView txtDescriptionOrigin;

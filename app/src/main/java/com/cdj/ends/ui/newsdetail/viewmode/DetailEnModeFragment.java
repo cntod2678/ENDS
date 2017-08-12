@@ -27,6 +27,11 @@ public class DetailEnModeFragment extends Fragment {
 
     private static final String TAG= "DetailEnModeFragment";
 
+    /**
+     * Spaned Click 에서 SetText가 불가능
+     * ButterKnife 사용하지 않음
+     * */
+
     TextView txtTitleDetail;
     TextView txtDescriptionDetail;
 
@@ -41,13 +46,12 @@ public class DetailEnModeFragment extends Fragment {
             synchronized (DetailEnModeFragment.class) {
                 if(detailEnModeFragment == null) {
                     detailEnModeFragment = new DetailEnModeFragment();
-                    Bundle args = new Bundle();
-                    args.putParcelable(News.class.getName(), Parcels.wrap(news));
-                    detailEnModeFragment.setArguments(args);
                 }
             }
         }
-
+        Bundle args = new Bundle();
+        args.putParcelable(News.class.getName(), Parcels.wrap(news));
+        detailEnModeFragment.setArguments(args);
         return detailEnModeFragment;
     }
 
@@ -83,6 +87,7 @@ public class DetailEnModeFragment extends Fragment {
     private void makeTextViewClickable(final String text, final TextView tv) {
         tv.setText("");
         String[] split = text.split("(?= )");
+
         SpannableString spannableString = null;
 
         for(String s : split) {

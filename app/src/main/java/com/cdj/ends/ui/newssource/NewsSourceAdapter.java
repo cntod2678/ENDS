@@ -5,6 +5,7 @@ package com.cdj.ends.ui.newssource;
  */
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,14 @@ import com.cdj.ends.ui.newssource.viewmodel.SourceItemViewModel;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.NewsSourceViewHolder> {
+
+    private static final String TAG = "NewsSourceAdapter";
 
     private List<SourceItemViewModel> mSourceList;
 
@@ -81,10 +86,21 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
 
             txtSourceTitle.setText(viewModel.getName());
             txtSourceDes.setText(viewModel.getDescription());
+
+            String temp = viewModel.getId();
+            Log.d(TAG, temp);
+
+            String ret = "";
+            ret.replaceAll("[^- ]", temp);
+
+            Log.d(TAG, "ret : " + ret);
+           // String[] split = temp.split(" [^-]");
+
+
             Glide.with(itemView.getContext())
-                    .load(R.drawable.abc)
+                    .load(temp + ".png")
                     .fitCenter()
-                    .placeholder(R.drawable.ic_menu_share)
+                    .placeholder(R.drawable.abc)
                     .into(imgSourceLogo);
         }
     }
