@@ -87,18 +87,9 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
             txtSourceTitle.setText(viewModel.getName());
             txtSourceDes.setText(viewModel.getDescription());
 
-            String temp = viewModel.getId();
-            Log.d(TAG, temp);
-
-            String ret = "";
-            ret.replaceAll("[^- ]", temp);
-
-            Log.d(TAG, "ret : " + ret);
-           // String[] split = temp.split(" [^-]");
-
 
             Glide.with(itemView.getContext())
-                    .load(temp + ".png")
+                    .load(R.drawable.aljazeeraenglish)
                     .fitCenter()
                     .placeholder(R.drawable.abc)
                     .into(imgSourceLogo);

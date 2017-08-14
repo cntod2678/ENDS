@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cdj.ends.Config;
 import com.cdj.ends.R;
 import com.cdj.ends.api.translation.TranslationAPI;
 import com.cdj.ends.data.News;
@@ -43,6 +42,8 @@ import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cdj.ends.Config.TRANS_GOOGLE_BASE_URL;
 
 public class NewsDetailFragment extends Fragment  {
 
@@ -162,7 +163,7 @@ public class NewsDetailFragment extends Fragment  {
         filter.put("model", "nmt");
         filter.put("q", mNews.getDescription());
 
-        TranslationAPI translationAPI = new TranslationAPI(Config.TRANS_BASE_URL);
+        TranslationAPI translationAPI = new TranslationAPI(TRANS_GOOGLE_BASE_URL);
         translationAPI.requestTrnaslate(filter, new Callback<TranslationDTO>() {
             @Override
             public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
@@ -170,8 +171,6 @@ public class NewsDetailFragment extends Fragment  {
                 Translation translation = translationDTO.getData().getTranslations().get(0);
 
                 mNews.setTranslated(translation.getTranslatedText());
-
-                Log.d(TAG, mNews.getTranslated());
             }
 
             @Override

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MainFragment.MainViewChange {
 
     private PageSwipeCommand dotViewIndicator;
-    private Toolbar toolbar_main;
+    private Toolbar toolbalMain;
     private DrawerLayout drawerLayout;
     private boolean mTerminateFlag = false;
 
@@ -47,13 +47,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initView() {
-        toolbar_main = (Toolbar) findViewById(R.id.toolbar_main);
+        toolbalMain = (Toolbar) findViewById(R.id.toolbar_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         dotViewIndicator = (ViewPagerDotView) findViewById(R.id.dotView_indicator);
     }
 
     private void setToolbar() {
-        setSupportActionBar(toolbar_main);
+        setSupportActionBar(toolbalMain);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         dotViewIndicator.setPageTurnCommand(new ViewPagerDotView(this));
         dotViewIndicator.setNumOfCircles(PAGE_NUM, getResources().getDimensionPixelSize(R.dimen.indicator_radius_2));
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setNavDrawer() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar_main, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawerLayout, toolbalMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 

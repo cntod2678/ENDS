@@ -31,4 +31,18 @@
     <dimen name="news_detail_mode_margin_bottom">8dp</dimen>
     <dimen name="news_detail_option_margin">8dp</dimen>
     <dimen name="news_detail_btnEdu_margin">16dp</dimen>
+
+    <!-- login -->
+    <dimen name="login_padding_45">45dp</dimen>
+
+    <!-- word -->
+    <dimen name="word_item_padding_16">16dp</dimen>
+
+    <!-- add keyword -->
+    <dimen name="make_padding_side">8dp</dimen>
+    <dimen name="radius_edit_corner">10dp</dimen>
+    <dimen name="padding_edit_left">16dp</dimen>
+    <dimen name="margin_top_edit">8dp</dimen>
+
+
 </resources>

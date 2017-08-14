@@ -19,4 +19,6 @@
 
     <string name="action_collapse">Collapse</string>
 
+    <string name="hint_add_keyword">추가하고자 하는 키워드를 입력해주세요</string>
+
 </resources>

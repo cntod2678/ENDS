@@ -38,7 +38,6 @@ public class SourceViewModelImpl implements SourceViewModel {
             @Override
             public void onResponse(Call<NewsSourceDTO> call, Response<NewsSourceDTO> response) {
                 NewsSourceDTO newsSourceDTO = response.body();
-                Log.d(TAG, newsSourceDTO.toString());
 
                 List<SourceItemViewModel> itemVMList = new ArrayList<SourceItemViewModel>();
                 for (NewsSource newsSource : newsSourceDTO.getSources()) {

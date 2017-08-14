@@ -25,7 +25,7 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import static com.cdj.ends.Config.TRANS_BASE_URL;
+import static com.cdj.ends.Config.TRANS_GOOGLE_BASE_URL;
 
 /**
  * Created by Dongjin on 2017. 8. 9..
@@ -39,14 +39,15 @@ public class ClickableSpanTranslate extends ClickableSpan {
 
     private String clickedText;
     private Context mContext;
-
+    private Date mDate;
 
     public ClickableSpanTranslate(Context context, String clickText) {
         super();
+        long now = System.currentTimeMillis();
+        mDate = new Date(now);
         mContext = context;
         this.clickedText = clickText;
-        translationAPI = new TranslationAPI(TRANS_BASE_URL);
-
+        translationAPI = new TranslationAPI(TRANS_GOOGLE_BASE_URL);
     }
 
     /**
@@ -87,10 +88,8 @@ public class ClickableSpanTranslate extends ClickableSpan {
 
                                     Realm mRealm = Realm.getInstance(config);
 
-                                    long now = System.currentTimeMillis();
-                                    Date date = new Date(now);
                                     SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
-                                    String strDate = dateFormat.format(date);
+                                    String strDate = dateFormat.format(mDate);
 
                                     mRealm.beginTransaction();
                                     RealmResults<Word> words = mRealm.where(Word.class).equalTo("word", clickedText).findAll();
@@ -99,9 +98,11 @@ public class ClickableSpanTranslate extends ClickableSpan {
                                         word.setWord(clickedText);
                                         word.setTranslatedWord(translatedText);
                                         word.setDate(strDate);
+                                        word.setChkEdu(false);
                                         mRealm.commitTransaction();
                                         Toast.makeText(mContext, clickedText + " 단어가 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                                    } else {
+                                    }
+                                    else {
                                         Toast.makeText(mContext, clickedText + " 단어를 이미 추가했습니다.", Toast.LENGTH_SHORT).show();
                                     }
                                     RealmResults<Word> wordList = mRealm.where(Word.class).findAll();

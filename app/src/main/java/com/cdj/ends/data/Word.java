@@ -10,11 +10,19 @@ import io.realm.annotations.PrimaryKey;
 
 public class Word extends RealmObject {
 
-    private String word;
-    private String translatedWord;
-    private String date;
+    public String word;
+    public String translatedWord;
+    public String date;
+    public boolean chkEdu;
 
     public Word() {}
+
+    public Word(String word, String translatedWord, String date, boolean chkEdu) {
+        this.word = word;
+        this.translatedWord = translatedWord;
+        this.date = date;
+        this.chkEdu = chkEdu;
+    }
 
     public String getWord() {
         return word;
@@ -38,5 +46,23 @@ public class Word extends RealmObject {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isChkEdu() {
+        return chkEdu;
+    }
+
+    public void setChkEdu(boolean chkEdu) {
+        this.chkEdu = chkEdu;
+    }
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "word='" + word + '\'' +
+                ", translatedWord='" + translatedWord + '\'' +
+                ", date='" + date + '\'' +
+                ", chkEdu=" + chkEdu +
+                '}';
     }
 }

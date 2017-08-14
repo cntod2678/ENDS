@@ -22,7 +22,9 @@ public abstract class RetrofitAPI<T> {
     }
 
     private Retrofit createRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(mBaseUrl)
+        Retrofit retrofit = new Retrofit.Builder()
+                
+                .baseUrl(mBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

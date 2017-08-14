@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "212328147550",
+    "firebase_url": "https://ends-92c37.firebaseio.com",
+    "project_id": "ends-92c37",
+    "storage_bucket": "ends-92c37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212328147550:android:f2f8c35428f001ad",
+        "android_client_info": {
+          "package_name": "com.cdj.ends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212328147550-74bjnuk9kau5g0u9tvqsfrk8hd5gpitv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtAUNsUqOfFzV27yvGKo1ci6w3s8NBJzA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,28 +12,31 @@
 		android:orientation="horizontal">
 
 		<TextView
-			android:id="@+id/textView"
+			android:id="@+id/txtItem_word"
 			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:layout_height="wrap_content"
-			android:padding="16dp"
-			android:text="Medium Text"
+			android:padding="@dimen/word_item_padding_16"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_gravity="start|center_vertical"
 		    android:textColor="#ff0000" />
 
 		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		
-		<TextView
-			android:id="@+id/adapterPositionTextView"
+			android:id="@+id/txtItem_translated"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/word_item_padding_16"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_gravity="start|center_vertical"
+			android:textColor="#ff0000" />
+
+		<Button
+			android:id="@+id/btnMore"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:padding="16dp"
-			android:text="0"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-			android:layout_gravity="start|center_vertical" />
+			android:padding="@dimen/word_item_padding_16"
+			android:layout_gravity="start|center_vertical"/>
 
 	</LinearLayout>
 
@@ -41,5 +44,4 @@
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
 		android:background="@color/white"/>
-
 </LinearLayout>

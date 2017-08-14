@@ -59,14 +59,12 @@ public class NewsViewModelImpl implements NewsViewModel {
             @Override
             public void onResponse(Call<NewsDTO> call, Response<NewsDTO> response) {
                 NewsDTO newsDTO = response.body();
-                Log.d(TAG, "" + response.headers());
 
                 List<NewsItemViewModel> itemVMList = new ArrayList<NewsItemViewModel>();
                 for(News news : newsDTO.getArticles()) {
                     itemVMList.add(new NewsItemViewModelImpl(news));
                 }
 
-                Log.d(TAG, itemVMList.size() + " ");
                 if(notifyUpdateViewModelListener != null) {
                     notifyUpdateViewModelListener.onUpdatedViewModel(itemVMList);
                 }

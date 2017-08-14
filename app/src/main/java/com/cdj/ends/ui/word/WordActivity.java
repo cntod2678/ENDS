@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.GestureDetector;
@@ -23,31 +24,48 @@ import com.cdj.ends.R;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
+
 public class WordActivity extends AppCompatActivity implements ActionMode.Callback {
 
-    private static final String TAG = "SelectionDemo";
+    private static final String TAG = "WordActivity";
 
     public static final boolean SHOW_ADAPTER_POSITIONS = true;
 
     GestureDetectorCompat gestureDetector;
-    WordAdapter adapter;
+    WordAdapter wordAdapter;
     ActionMode actionMode;
 
     AppBarLayout appBarLayout;
     RecyclerView recyclerView;
+    Toolbar toolbarWord;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word);
 
-        adapter = new WordAdapter(1000, 5, SHOW_ADAPTER_POSITIONS);
+        initView();
+        setToolbar();
+        setRecv();
+        setGesture();
+    }
 
+    private void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.recv_words);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBar);
+        toolbarWord = (Toolbar) findViewById(R.id.toolbar_word);
+    }
+
+    private void setToolbar() {
+        setSupportActionBar(toolbarWord);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setRecv() {
+        wordAdapter = new WordAdapter(this, SHOW_ADAPTER_POSITIONS);
 
         recyclerView.setLayoutManager(new StickyHeaderLayoutManager());
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(wordAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
@@ -64,7 +82,9 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
             }
         });
+    }
 
+    private void setGesture() {
         gestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -75,13 +95,20 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
                 if (actionMode != null) {
                     toggleSelection(adapterPosition);
                 } else {
-                    int sectionIndex = adapter.getSectionForAdapterPosition(adapterPosition);
-                    int footerAdapterPosition = adapter.getAdapterPositionForSectionFooter(sectionIndex);
+                    int sectionIndex = 0;
+                    int footerAdapterPosition = 0;
+
+                    try {
+                        sectionIndex = wordAdapter.getSectionForAdapterPosition(adapterPosition);
+                        footerAdapterPosition = wordAdapter.getAdapterPositionForSectionFooter(sectionIndex);
+                    } catch (IndexOutOfBoundsException idexException) {
+                        Log.d(TAG, idexException.getMessage());
+                    }
 
                     if (footerAdapterPosition == adapterPosition) {
                         onFooterTapped(sectionIndex);
                     } else {
-                        int itemIndex = adapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
+                        int itemIndex = wordAdapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
                         if (itemIndex >= 0) {
                             onItemTapped(sectionIndex, itemIndex);
                         } else {
@@ -109,11 +136,10 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
         });
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        final Snackbar snack = Snackbar.make(recyclerView, "테스트트", Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snack = Snackbar.make(recyclerView, "길게 누르면 삭제가 가능합니다.", Snackbar.LENGTH_INDEFINITE);
         snack.setAction(android.R.string.ok, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +150,6 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         return true;
     }
 
@@ -154,11 +179,10 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete: {
-                adapter.deleteSelection();
+                wordAdapter.deleteSelection();
                 mode.finish();
                 return true;
             }
-
         }
         return false;
     }
@@ -166,32 +190,31 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         this.actionMode = null;
-        adapter.clearSelection();
+        wordAdapter.clearSelection();
     }
 
     void toggleSelection(int adapterPosition) {
 
         Log.d(TAG, "toggleSelection() called with: " + "adapterPosition = [" + adapterPosition + "]");
-
         // note: We're not supporting selection of entire section because - while it can be useful
         // in some circumstances, it's confusing here. We only allow toggling of items/footers
 
-        int sectionIndex = adapter.getSectionForAdapterPosition(adapterPosition);
-        int footerAdapterPosition = adapter.getAdapterPositionForSectionFooter(sectionIndex);
+        int sectionIndex = wordAdapter.getSectionForAdapterPosition(adapterPosition);
+        int footerAdapterPosition = wordAdapter.getAdapterPositionForSectionFooter(sectionIndex);
 
         if (footerAdapterPosition == adapterPosition) {
             Log.d(TAG, "toggleSelection: toggling selection for footer @ section " + sectionIndex);
-            adapter.toggleSectionFooterSelection(sectionIndex);
+            wordAdapter.toggleSectionFooterSelection(sectionIndex);
         } else {
-            int itemIndex = adapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
+            int itemIndex = wordAdapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
             if (itemIndex >= 0) {
                 Log.d(TAG, "toggleSelection: toggling selection of item @ section: " + sectionIndex + " itemIndex: " + itemIndex);
-                adapter.toggleSectionItemSelected(sectionIndex, itemIndex);
+                wordAdapter.toggleSectionItemSelected(sectionIndex, itemIndex);
             }
         }
 
         // update selected item count in CAB
-        int selectedItemCount = adapter.getSelectedItemCount();
+        int selectedItemCount = wordAdapter.getSelectedItemCount();
         String title = "테스트" + selectedItemCount;
         actionMode.setTitle(title);
     }

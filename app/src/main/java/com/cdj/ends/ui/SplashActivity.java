@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.SharedPreferencesService;
+import com.cdj.ends.ui.login.LoginActivity;
 import com.cdj.ends.ui.main.MainActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
@@ -47,7 +48,7 @@ public class SplashActivity extends AwesomeSplash {
 
     @Override
     public void animationsFinished() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
         finish();
     }
