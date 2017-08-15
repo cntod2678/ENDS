@@ -19,7 +19,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cdj.ends.R;
-import com.cdj.ends.base.util.ChromeTabActionBroadcastReceiver;
+import com.cdj.ends.base.util.ChromeTabActionBuilder;
+import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.data.Word;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
@@ -28,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -44,7 +44,7 @@ public class WordAdapter extends SectioningAdapter {
     private static final String TAG = "WordAdapter";
 
     private Context mContext;
-
+    private Realm mRealm;
 
     class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
         TextView txtItemWord;
@@ -61,13 +61,11 @@ public class WordAdapter extends SectioningAdapter {
 
     class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder implements View.OnClickListener {
         TextView txtHeaderDate;
-        TextView txtWordNum;
         ImageButton collapseButton;
 
         HeaderViewHolder(View itemView, boolean showAdapterPosition) {
             super(itemView);
             txtHeaderDate = (TextView) itemView.findViewById(R.id.txtHeader_Date);
-            txtWordNum = (TextView) itemView.findViewById(R.id.txtWord_num);
             collapseButton = (ImageButton) itemView.findViewById(R.id.collapseButton);
             collapseButton.setOnClickListener(this);
         }
@@ -89,21 +87,23 @@ public class WordAdapter extends SectioningAdapter {
         }
     }
 
+    public class FooterViewHolder extends SectioningAdapter.FooterViewHolder {
+        TextView textView;
+
+        public FooterViewHolder(View itemView, boolean showAdapterPosition) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.textView);
+        }
+    }
+
     private ArrayList<Section> sections = new ArrayList<>();
 
     private boolean showAdapterPositions;
 
-    public WordAdapter(Context context, boolean showAdapterPositions) {
+    public WordAdapter(Context context, Realm realm, boolean showAdapterPositions) {
         this.showAdapterPositions = showAdapterPositions;
         mContext = context;
-
-        Realm.init(mContext);
-
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded() // Migration to run instead of throwing an exception
-                .build();
-
-        Realm mRealm = Realm.getInstance(config);
+        mRealm = realm;
 
         RealmResults<Word> dateList = mRealm.where(Word.class).distinct("date");
         RealmResults<Word> wordsAllList = mRealm.where(Word.class).findAllSorted("date", Sort.ASCENDING);
@@ -120,13 +120,13 @@ public class WordAdapter extends SectioningAdapter {
             appendSection(sectionIdx, temp);
         }
 
-        mRealm.close();
     }
 
     private void appendSection(int index, List<Word> words) {
         Section section = new Section();
         section.index = index;
-        section.header = words.get(index).getDate();
+        section.header = words.get(0).getDate();
+        section.footer = "단어 개수 : " + words.size();
 
         for (Word word : words) {
             section.wordsItems.add(new Word(word.getWord(), word.getTranslatedWord(), word.getDate(), word.isChkEdu()));
@@ -151,25 +151,15 @@ public class WordAdapter extends SectioningAdapter {
                 Log.d(TAG, "onVisitSelectedSectionItem() called with: " + "sectionIndex = [" + sectionIndex + "], itemIndex = [" + itemIndex + "]");
                 Section section = sections.get(sectionIndex);
                 if (section != null) {
-
-                    Realm.init(mContext);
-
-                    RealmConfiguration config = new RealmConfiguration.Builder()
-                            .deleteRealmIfMigrationNeeded() // Migration to run instead of throwing an exception
-                            .build();
-
-                    Realm mRealm = Realm.getInstance(config);
-                    mRealm.beginTransaction();
-
                     RealmResults<Word> deleteItemWord = mRealm.where(Word.class).equalTo("word", section.wordsItems.get(itemIndex).getWord()).findAll();
-                    Log.d(TAG, deleteItemWord.toString());
 
                     if(deleteItemWord.size() > 0) {
+                        mRealm.beginTransaction();
                         deleteItemWord.deleteFromRealm(0);
+                        mRealm.commitTransaction();
                     }
 
-                    mRealm.commitTransaction();
-                    mRealm.close();
+//                    mRealm.close();
 
                     section.wordsItems.remove(itemIndex);
                     notifySectionItemRemoved(sectionIndex, itemIndex);
@@ -206,6 +196,11 @@ public class WordAdapter extends SectioningAdapter {
         return !TextUtils.isEmpty(sections.get(sectionIndex).header);
     }
 
+    @Override
+    public boolean doesSectionHaveFooter(int sectionIndex) {
+        return !TextUtils.isEmpty(sections.get(sectionIndex).footer);
+    }
+
 
     @Override
     public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
@@ -221,6 +216,12 @@ public class WordAdapter extends SectioningAdapter {
         return new HeaderViewHolder(v, showAdapterPositions);
     }
 
+    @Override
+    public FooterViewHolder onCreateFooterViewHolder(ViewGroup parent, int footerType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(R.layout.list_item_selectable_footer, parent, false);
+        return new FooterViewHolder(v, showAdapterPositions);
+    }
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -247,42 +248,22 @@ public class WordAdapter extends SectioningAdapter {
         HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
 
         hvh.txtHeaderDate.setText(s.header);
-        hvh.txtWordNum.setText(Integer.toString(WordAdapter.this.getNumberOfItemsInSection(sectionIndex)));
 
         hvh.itemView.setActivated(isSectionSelected(sectionIndex));
         hvh.updateSectionCollapseToggle(isSectionCollapsed(sectionIndex));
     }
 
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onBindFooterViewHolder(SectioningAdapter.FooterViewHolder viewHolder, int sectionIndex, int footerType) {
+        Section s = sections.get(sectionIndex);
+        FooterViewHolder fvh = (FooterViewHolder) viewHolder;
+        fvh.textView.setText(s.footer);
+        fvh.itemView.setActivated(isSectionFooterSelected(sectionIndex));
+    }
+
     private void openChromTab(String queryString) {
         String url = TRANS_NAVER_BASE_URL + "&query=" + queryString;
-        CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
-
-        intentBuilder.setToolbarColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
-        intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark));
-
-        // set action button
-        intentBuilder.setActionButton(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher), "Action Button",
-                createPendingIntent(ChromeTabActionBroadcastReceiver.ACTION_ACTION_BUTTON));
-
-        // set start and exit animations
-        intentBuilder.setStartAnimations(mContext, R.anim.slide_in_right, R.anim.slide_out_left);
-        intentBuilder.setExitAnimations(mContext, android.R.anim.slide_in_left,
-                android.R.anim.slide_out_right);
-
-        CustomTabsIntent customTabsIntent = intentBuilder.build();
-
-        customTabsIntent.launchUrl(mContext, Uri.parse(url));
+        ChromeTabActionBuilder.openChromTab(mContext, url);
     }
-
-    /**
-     * Creates a pending intent to send a broadcast to the {@link ChromeTabActionBroadcastReceiver}
-     * @param actionSource
-     * @return
-     */
-    private PendingIntent createPendingIntent(int actionSource) {
-        Intent actionIntent = new Intent(mContext, ChromeTabActionBroadcastReceiver.class);
-        actionIntent.putExtra(ChromeTabActionBroadcastReceiver.KEY_ACTION_SOURCE, actionSource);
-        return PendingIntent.getBroadcast(mContext, actionSource, actionIntent, 0);
-    }
-
 }

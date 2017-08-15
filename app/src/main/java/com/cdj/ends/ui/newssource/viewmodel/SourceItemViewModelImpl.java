@@ -1,10 +1,9 @@
 package com.cdj.ends.ui.newssource.viewmodel;
 
-import android.content.Intent;
 import android.view.View;
 
+import com.cdj.ends.base.util.ChromeTabActionBuilder;
 import com.cdj.ends.data.NewsSource;
-import com.cdj.ends.ui.webview.WebViewActivity;
 
 /**
  * Created by Dongjin on 2017. 8. 8..
@@ -51,8 +50,6 @@ public class SourceItemViewModelImpl implements SourceItemViewModel {
 
     @Override
     public void onSourceItemClick(View view) {
-        Intent intent = new Intent(view.getContext(), WebViewActivity.class);
-        intent.putExtra("URL", mNewsSource.getUrl());
-        view.getContext().startActivity(intent);
+        ChromeTabActionBuilder.openChromTab(view.getContext(), mNewsSource.getUrl());
     }
 }

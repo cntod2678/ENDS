@@ -4,7 +4,6 @@ package com.cdj.ends.ui.newsdetail;
  * Created by Dongjin on 2017. 8. 9..
  */
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -12,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +21,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cdj.ends.R;
 import com.cdj.ends.api.translation.TranslationAPI;
+import com.cdj.ends.base.util.ChromeTabActionBuilder;
 import com.cdj.ends.data.News;
 import com.cdj.ends.data.Translation;
 import com.cdj.ends.dto.TranslationDTO;
 import com.cdj.ends.ui.newsdetail.viewmode.DetailEnKoModeFragment;
 import com.cdj.ends.ui.newsdetail.viewmode.DetailEnModeFragment;
-import com.cdj.ends.ui.webview.WebViewActivity;
 
 import org.parceler.Parcels;
 
@@ -57,21 +55,23 @@ public class NewsDetailFragment extends Fragment  {
     private Unbinder unbinder;
 
     private static News mNews;
-    private boolean translationFlag = false;
+    private static boolean translationFlag = true;
 
 
-    private static NewsDetailFragment newsDetailFragment;
+//    private static NewsDetailFragment newsDetailFragment;
 
     public NewsDetailFragment() {}
 
     public static NewsDetailFragment newInstance(News news) {
-        if(newsDetailFragment == null) {
-            synchronized (NewsDetailFragment.class) {
-                if(newsDetailFragment == null) {
-                    newsDetailFragment = new NewsDetailFragment();
-                }
-            }
-        }
+//        if(newsDetailFragment == null) {
+//            synchronized (NewsDetailFragment.class) {
+//                if(newsDetailFragment == null) {
+//                    newsDetailFragment = new NewsDetailFragment();
+//                }
+//            }
+//        }
+
+        NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
         mNews = new News();
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
@@ -108,14 +108,6 @@ public class NewsDetailFragment extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         setToolbar();
         setView();
-
-        txtChangeDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onStartWebView();
-            }
-        });
-
         Snackbar.make(view, getActivity().getApplicationContext().getString(R.string.guide_translation), Snackbar.LENGTH_LONG).show();
     }
 
@@ -132,9 +124,9 @@ public class NewsDetailFragment extends Fragment  {
                 .into(imgMainNews);
     }
 
-    @OnClick(R.id.btnChange_to_web)
+    @OnClick({R.id.btnChange_to_web, R.id.txtChange_detail})
     public void onChangeWebPageClicked(View v) {
-        onStartWebView();
+        ChromeTabActionBuilder.openChromTab(getActivity(), mNews.getUrl());
     }
 
     @OnClick(R.id.btnChange_translation_mode)
@@ -143,11 +135,11 @@ public class NewsDetailFragment extends Fragment  {
 
         if(translationFlag) {
             fragment = DetailEnModeFragment.newInstance(mNews);
-            btnTranslationMode.setSelected(true);
+            btnTranslationMode.setSelected(false);
             translationFlag = false;
         } else {
             fragment = DetailEnKoModeFragment.newInstance(mNews);
-            btnTranslationMode.setSelected(false);
+            btnTranslationMode.setSelected(true);
             translationFlag = true;
         }
 
@@ -178,12 +170,6 @@ public class NewsDetailFragment extends Fragment  {
 
             }
         });
-    }
-
-    private void onStartWebView() {
-        Intent intent = new Intent(getActivity(), WebViewActivity.class);
-        intent.putExtra("URL", mNews.getUrl());
-        startActivity(intent);
     }
 
     @Override

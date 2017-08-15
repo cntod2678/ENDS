@@ -1,4 +1,4 @@
-package com.cdj.ends.api.call;
+package com.cdj.ends.call;
 
 import com.cdj.ends.dto.TranslationDTO;
 

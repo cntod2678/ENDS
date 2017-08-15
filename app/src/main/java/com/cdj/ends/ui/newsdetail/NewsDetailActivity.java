@@ -29,10 +29,6 @@ public class NewsDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news_detail);
 
         getNewsDataFromIntent(getIntent());
-
-        Fragment fragment = NewsDetailFragment.newInstance(mNews);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.contentFrame_detail, fragment, "detail").commit();
     }
 
     @Override
@@ -49,5 +45,13 @@ public class NewsDetailActivity extends AppCompatActivity {
         if(intent != null) {
             mNews = Parcels.unwrap(getIntent().getParcelableExtra("NEWS"));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Fragment fragment = NewsDetailFragment.newInstance(mNews);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.contentFrame_detail, fragment, "detail").commit();
     }
 }

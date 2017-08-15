@@ -26,17 +26,6 @@
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:textColor="@color/black" />
 
-		<TextView
-			android:id="@+id/txtWord_num"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="start|center_vertical"
-			android:padding="16dp"
-			tools:text="0"
-			android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="@color/black" />
-
-
 		<ImageButton
 			android:id="@+id/collapseButton"
 			style="?android:attr/borderlessButtonStyle"
@@ -52,5 +41,4 @@
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
 		android:background="@color/white"/>
-
 </LinearLayout>

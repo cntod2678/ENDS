@@ -1,7 +1,7 @@
 package com.cdj.ends.api.news;
 
 import com.cdj.ends.api.RetrofitManagerAPI;
-import com.cdj.ends.api.call.NewsSourceCallService;
+import com.cdj.ends.call.NewsSourceCallService;
 import com.cdj.ends.dto.NewsSourceDTO;
 
 import retrofit2.Callback;

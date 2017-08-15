@@ -20,5 +20,9 @@
     <string name="action_collapse">Collapse</string>
 
     <string name="hint_add_keyword">추가하고자 하는 키워드를 입력해주세요</string>
+    <string name="validation_check_null">키워드가 입력되지 않았습니다</string>
+    <string name="validation_check_type">형식이 잘못된 키워드입니다</string>
 
+    <string name="selected_word">선택된 단어 개수</string>
+    <string name="added_keyword">추가된 키워드 목록</string>
 </resources>

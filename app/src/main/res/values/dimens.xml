@@ -29,7 +29,7 @@
     <dimen name="news_detail_title_margin_bottom">16dp</dimen>
     <dimen name="news_detail_origin_margin_bottom">16dp</dimen>
     <dimen name="news_detail_mode_margin_bottom">8dp</dimen>
-    <dimen name="news_detail_option_margin">8dp</dimen>
+    <dimen name="news_detail_option_margin">16dp</dimen>
     <dimen name="news_detail_btnEdu_margin">16dp</dimen>
 
     <!-- login -->
@@ -43,6 +43,6 @@
     <dimen name="radius_edit_corner">10dp</dimen>
     <dimen name="padding_edit_left">16dp</dimen>
     <dimen name="margin_top_edit">8dp</dimen>
-
+    <dimen name="container_keyword_padding">8dp</dimen>
 
 </resources>

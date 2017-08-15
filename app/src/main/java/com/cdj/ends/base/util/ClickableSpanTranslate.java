@@ -41,11 +41,14 @@ public class ClickableSpanTranslate extends ClickableSpan {
     private Context mContext;
     private Date mDate;
 
+    public ClickableSpanTranslate() {}
+
     public ClickableSpanTranslate(Context context, String clickText) {
-        super();
+        mContext = context;
+
         long now = System.currentTimeMillis();
         mDate = new Date(now);
-        mContext = context;
+
         this.clickedText = clickText;
         translationAPI = new TranslationAPI(TRANS_GOOGLE_BASE_URL);
     }
@@ -58,7 +61,6 @@ public class ClickableSpanTranslate extends ClickableSpan {
      * &q=hi
      */
     public void onClick(final View view) {
-
 
         Map<String, String> filter = new HashMap<>();
         filter.put("key", mContext.getResources().getString(R.string.GOOGLE_TRANSLATION_KEY));

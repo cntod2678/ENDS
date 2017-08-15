@@ -21,8 +21,11 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cdj.ends.R;
+import com.cdj.ends.base.util.RealmBuilder;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
+
+import io.realm.Realm;
 
 
 public class WordActivity extends AppCompatActivity implements ActionMode.Callback {
@@ -39,10 +42,15 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     RecyclerView recyclerView;
     Toolbar toolbarWord;
 
+    private Realm mRealm;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word);
+
+        Realm.init(this);
+        mRealm = RealmBuilder.getRealmInstance();
 
         initView();
         setToolbar();
@@ -62,7 +70,7 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     }
 
     private void setRecv() {
-        wordAdapter = new WordAdapter(this, SHOW_ADAPTER_POSITIONS);
+        wordAdapter = new WordAdapter(this, mRealm, SHOW_ADAPTER_POSITIONS);
 
         recyclerView.setLayoutManager(new StickyHeaderLayoutManager());
         recyclerView.setAdapter(wordAdapter);
@@ -85,6 +93,37 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     }
 
     private void setGesture() {
+//        gestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener() {
+//            @Override
+//            public boolean onSingleTapConfirmed(MotionEvent e) {
+//                View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+//                Log.i(TAG, "onSingleTapConfirmed: view: " + view);
+//                int adapterPosition = recyclerView.getChildAdapterPosition(view);
+//
+//                if (actionMode != null) {
+//                    toggleSelection(adapterPosition);
+//                } else {
+//                    int sectionIndex = 0;
+//
+//
+//                    try {
+//                        sectionIndex = wordAdapter.getSectionForAdapterPosition(adapterPosition);
+//                    } catch (IndexOutOfBoundsException idexException) {
+//                        Log.d(TAG, idexException.getMessage());
+//                    }
+//
+//
+//                    int itemIndex = wordAdapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
+//                    if (itemIndex >= 0) {
+//                        onItemTapped(sectionIndex, itemIndex);
+//                    } else {
+//                        onSectionTapped(sectionIndex);
+//                    }
+//                }
+//
+//                return super.onSingleTapConfirmed(e);
+//            }
+
         gestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -101,22 +140,26 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
                     try {
                         sectionIndex = wordAdapter.getSectionForAdapterPosition(adapterPosition);
                         footerAdapterPosition = wordAdapter.getAdapterPositionForSectionFooter(sectionIndex);
-                    } catch (IndexOutOfBoundsException idexException) {
-                        Log.d(TAG, idexException.getMessage());
+                    } catch (IndexOutOfBoundsException idxException) {
+                        Log.e(TAG, idxException.getMessage());
                     }
 
                     if (footerAdapterPosition == adapterPosition) {
                         onFooterTapped(sectionIndex);
                     } else {
-                        int itemIndex = wordAdapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
-                        if (itemIndex >= 0) {
-                            onItemTapped(sectionIndex, itemIndex);
-                        } else {
-                            onSectionTapped(sectionIndex);
+                        try {
+                            int itemIndex = wordAdapter.getPositionOfItemInSection(sectionIndex, adapterPosition);
+                            if (itemIndex >= 0) {
+                                onItemTapped(sectionIndex, itemIndex);
+                            } else {
+                                onSectionTapped(sectionIndex);
+                            }
+                        } catch (IndexOutOfBoundsException idxException) {
+                            Log.e(TAG, idxException.getMessage());
                         }
+
                     }
                 }
-
 
                 return super.onSingleTapConfirmed(e);
             }
@@ -148,14 +191,14 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
         }).show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -164,7 +207,6 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         appBarLayout.setExpanded(false, true);
-
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.menu_cab_selectiondemo, menu);
         return true;
@@ -196,6 +238,7 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     void toggleSelection(int adapterPosition) {
 
         Log.d(TAG, "toggleSelection() called with: " + "adapterPosition = [" + adapterPosition + "]");
+
         // note: We're not supporting selection of entire section because - while it can be useful
         // in some circumstances, it's confusing here. We only allow toggling of items/footers
 
@@ -215,7 +258,7 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
 
         // update selected item count in CAB
         int selectedItemCount = wordAdapter.getSelectedItemCount();
-        String title = "테스트" + selectedItemCount;
+        String title = this.getString(R.string.selected_word) + ": " + selectedItemCount;
         actionMode.setTitle(title);
     }
 
@@ -231,4 +274,9 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
         Log.d(TAG, "onFooterTapped() called with: " + "sectionIndex = [" + sectionIndex + "]");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
 }

@@ -9,13 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.api.login.LoginAPI;
-import com.cdj.ends.base.util.ParserHelperFromJson;
 import com.cdj.ends.data.User;
+import com.cdj.ends.dto.ResultDTO;
 import com.cdj.ends.dto.UserDTO;
 import com.cdj.ends.ui.main.MainActivity;
 import com.google.gson.Gson;
@@ -24,7 +23,10 @@ import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.cdj.ends.Config.LOCAL_HOST_URL;
 
 import static com.cdj.ends.Config.NAVER_LOGIN_URL;
 
@@ -39,12 +41,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private OAuthLoginButton mOAuthLoginButton;
 
+    private LoginAPI loginAPI;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        loginAPI = new LoginAPI(LOCAL_HOST_URL);
         mOAuthLoginButton = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
         initNaver();
     }
@@ -75,17 +80,32 @@ public class LoginActivity extends AppCompatActivity {
                             UserDTO userDTO = gson.fromJson(response, UserDTO.class);
                             Log.d(TAG, userDTO.toString());
                             User user = userDTO.getResponse();
-                            //Log.d(TAG, user.getEmail());
-
+                            Log.d(TAG, user.toString());
                             //todo 디비 저장
 
+                            loginAPI.postLoginInfo(user, new retrofit2.Callback<ResultDTO>() {
+                                @Override
+                                public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                                    Log.d(TAG, response.toString());
+                                    int code = response.code();
+                                    if(code == 200) {
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResultDTO> call, Throwable t) {
+                                    Log.d(TAG, t.getMessage());
+                                    throw new NullPointerException();
+                                }
+                            });
                         }
                     }).start();
 
 
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
+
                 } else {
                     Toast.makeText(getApplicationContext(), "잠시 후 로그인을 다시 시도해 주세요", Toast.LENGTH_SHORT).show();
                 }

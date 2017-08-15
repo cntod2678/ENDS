@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +21,14 @@ import com.cdj.ends.data.News;
 
 import org.parceler.Parcels;
 
+/**
+ * Spaned Click 에서 SetText가 불가능
+ * ButterKnife 사용하지 않음
+ * */
 
-public class DetailEnKoModeFragment extends Fragment {
+public class DetailEnKoModeFragment extends Fragment implements WordClickListener {
 
     private static final String TAG = "DetailEnKoModeFragment";
-
-    /**
-     * Spaned Click 에서 SetText가 불가능
-     * ButterKnife 사용하지 않음
-     * */
 
     private TextView txtTitleDetailTranslated;
     private TextView txtDescriptionOrigin;
@@ -40,18 +38,19 @@ public class DetailEnKoModeFragment extends Fragment {
 
     String translatedText = "";
 
-    private static DetailEnKoModeFragment detailEnKoModeFragment;
+//    private static DetailEnKoModeFragment detailEnKoModeFragment;
 
     public DetailEnKoModeFragment() {}
 
     public static DetailEnKoModeFragment newInstance(News news) {
-        if(detailEnKoModeFragment == null) {
-            synchronized (DetailEnKoModeFragment.class) {
-                if(detailEnKoModeFragment == null) {
-                    detailEnKoModeFragment = new DetailEnKoModeFragment();
-                }
-            }
-        }
+//        if(detailEnKoModeFragment == null) {
+//            synchronized (DetailEnKoModeFragment.class) {
+//                if(detailEnKoModeFragment == null) {
+//                    detailEnKoModeFragment = new DetailEnKoModeFragment();
+//                }
+//            }
+//        }
+        DetailEnKoModeFragment detailEnKoModeFragment = new DetailEnKoModeFragment();
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
         detailEnKoModeFragment.setArguments(args);
@@ -64,13 +63,6 @@ public class DetailEnKoModeFragment extends Fragment {
         if(getArguments() != null) {
             mNews = Parcels.unwrap(getArguments().getParcelable(News.class.getName()));
         }
-
-        /***
-         * https://translation.googleapis.com/language/translate/v2
-         * ?q=hi%20dongjin
-         * &source=en
-         * &target=ko&model=nmt&key=AIzaSyDL00Tc1pp-WypllEw0kmM94B8YQip-dQI
-         */
     }
 
     @Nullable
@@ -85,7 +77,6 @@ public class DetailEnKoModeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "later : " + translatedText);
         setView();
     }
 
@@ -101,7 +92,7 @@ public class DetailEnKoModeFragment extends Fragment {
         txtDescriptionTranslated.setText(mNews.getTranslated());
     }
 
-    private void makeTextViewClickable(final String text, final TextView tv) {
+    public void makeTextViewClickable(final String text, final TextView tv) {
         tv.setText("");
         String[] split = text.split("(?= )");
         SpannableString spannableString = null;

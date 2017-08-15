@@ -1,7 +1,8 @@
 package com.cdj.ends.api.news;
 
 import com.cdj.ends.api.RetrofitManagerAPI;
-import com.cdj.ends.api.call.NewsCallService;
+
+import com.cdj.ends.call.NewsCallService;
 import com.cdj.ends.dto.NewsDTO;
 
 import java.util.Map;

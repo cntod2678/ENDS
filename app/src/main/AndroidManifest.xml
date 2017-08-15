@@ -39,8 +39,6 @@
 
         <activity android:name=".ui.newsdetail.NewsDetailActivity" />
 
-        <activity android:name=".ui.webview.WebViewActivity" />
-        
         <activity android:name=".ui.word.WordActivity" />
 
 

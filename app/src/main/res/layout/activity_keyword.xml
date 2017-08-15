@@ -49,11 +49,9 @@
                     android:hint="@string/hint_add_keyword"
                     android:paddingStart="@dimen/padding_edit_left"
                     android:paddingLeft="@dimen/padding_edit_left"
-                    android:paddingBottom="4dp"
                     android:paddingTop="4dp"
                     android:lines="1"
                     android:maxLines="1"/>
-
             </android.support.design.widget.TextInputLayout>
 
             <Button

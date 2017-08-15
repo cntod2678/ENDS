@@ -5,14 +5,13 @@ package com.cdj.ends.data;
  */
 
 public class User {
+    String email;
     String nickname;
-    String enc_id;
     String profile_image;
     String age;
     String gender;
     String id;
     String name;
-    String email;
     String birthday;
 
     public String getEmail() {
@@ -23,13 +22,6 @@ public class User {
         this.email = email;
     }
 
-    public String getEnc_id() {
-        return enc_id;
-    }
-
-    public void setEnc_id(String enc_id) {
-        this.enc_id = enc_id;
-    }
 
     public String getNickname() {
         return nickname;

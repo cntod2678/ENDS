@@ -12,5 +12,6 @@ import java.util.List;
 public class Section {
     public int index;
     public String header;
+    public String footer;
     public List<Word> wordsItems = new ArrayList<>();
 }

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,33 +21,34 @@ import com.cdj.ends.data.News;
 
 import org.parceler.Parcels;
 
+/**
+ * Spaned Click 에서 SetText가 불가능
+ * ButterKnife 사용하지 않음
+ * */
 
-public class DetailEnModeFragment extends Fragment {
+public class DetailEnModeFragment extends Fragment implements WordClickListener {
 
     private static final String TAG= "DetailEnModeFragment";
 
-    /**
-     * Spaned Click 에서 SetText가 불가능
-     * ButterKnife 사용하지 않음
-     * */
 
     TextView txtTitleDetail;
     TextView txtDescriptionDetail;
 
     private News mNews;
 
-    private static DetailEnModeFragment detailEnModeFragment;
+//    private static DetailEnModeFragment detailEnModeFragment;
 
     public DetailEnModeFragment() {}
 
     public static DetailEnModeFragment newInstance(News news) {
-        if(detailEnModeFragment == null) {
-            synchronized (DetailEnModeFragment.class) {
-                if(detailEnModeFragment == null) {
-                    detailEnModeFragment = new DetailEnModeFragment();
-                }
-            }
-        }
+//        if(detailEnModeFragment == null) {
+//            synchronized (DetailEnModeFragment.class) {
+//                if(detailEnModeFragment == null) {
+//                    detailEnModeFragment = new DetailEnModeFragment();
+//                }
+//            }
+//        }
+        DetailEnModeFragment detailEnModeFragment = new DetailEnModeFragment();
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
         detailEnModeFragment.setArguments(args);
@@ -60,7 +60,7 @@ public class DetailEnModeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             mNews = Parcels.unwrap(getArguments().getParcelable(News.class.getName()));
-            Log.d(TAG, mNews.getTitle());
+//            Log.d(TAG, mNews.getTitle());
         }
     }
 
@@ -84,7 +84,7 @@ public class DetailEnModeFragment extends Fragment {
         makeTextViewClickable(mNews.getDescription(), txtDescriptionDetail);
     }
 
-    private void makeTextViewClickable(final String text, final TextView tv) {
+    public void makeTextViewClickable(final String text, final TextView tv) {
         tv.setText("");
         String[] split = text.split("(?= )");
 

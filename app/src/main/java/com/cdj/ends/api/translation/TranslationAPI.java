@@ -1,7 +1,7 @@
 package com.cdj.ends.api.translation;
 
 import com.cdj.ends.api.RetrofitManagerAPI;
-import com.cdj.ends.api.call.TranslateCallService;
+import com.cdj.ends.call.TranslateCallService;
 import com.cdj.ends.dto.TranslationDTO;
 
 import java.util.Map;
