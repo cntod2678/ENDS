@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.newskeyword.viewmodel;
+package com.cdj.ends.ui.news.newskeyword.viewmodel;
 
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 
@@ -11,5 +11,5 @@ public interface NewsViewModel {
 
     void fetchNews();
 
-    void setUpdateViewModelListener(NotifyUpdateViewModelListener listener);
+    void setUpdateViewModelListener (NotifyUpdateViewModelListener listener);
 }

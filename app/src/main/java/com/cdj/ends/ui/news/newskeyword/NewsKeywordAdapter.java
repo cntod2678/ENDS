@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.newskeyword;
+package com.cdj.ends.ui.news.newskeyword;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +10,7 @@ import android.support.v7.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.cdj.ends.R;
-import com.cdj.ends.ui.newskeyword.viewmodel.NewsItemViewModel;
-import com.cdj.ends.ui.newssource.viewmodel.SourceItemViewModel;
+import com.cdj.ends.ui.news.NewsItemViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -86,13 +85,19 @@ public class NewsKeywordAdapter extends RecyclerView.Adapter<NewsKeywordAdapter.
 
             txtSource.setText(viewModel.getSource());
             txtTitle.setText(viewModel.getTitle());
-            txtAuthor.setText(viewModel.getAuthor());
+
+            if(viewModel.getAuthor() == null) {
+                txtAuthor.setVisibility(View.GONE);
+            } else {
+                txtAuthor.setText(viewModel.getAuthor());
+            }
+
             txtPublished.setText(viewModel.getPublishedAt());
             txtDescription.setText(viewModel.getDescription());
 
             Glide.with(itemView.getContext())
                     .load(viewModel.getUrlToImage())
-                    .fitCenter()
+                    .centerCrop()
                     .placeholder(R.drawable.abc)
                     .into(imgNews);
         }

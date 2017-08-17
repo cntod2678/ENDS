@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/search_viewPager_height"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/imgCategory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/txtCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"/>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:id="@+id/txtCategory_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/viewIncicator_category"
+            android:maxLines="2"
+            android:textColor="@color/black"/>
+
+        <com.cdj.ends.base.view.ViewPagerDotView
+            android:id="@id/viewIncicator_category"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_small_8"
+            app:layout_constraintTop_toBottomOf="@id/txtCategory_title"/>
+
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>
+

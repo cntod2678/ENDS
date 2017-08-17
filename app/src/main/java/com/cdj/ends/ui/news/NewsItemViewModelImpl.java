@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.newskeyword.viewmodel;
+package com.cdj.ends.ui.news;
 
 import android.content.Intent;
 import android.view.View;
@@ -20,24 +20,9 @@ public class NewsItemViewModelImpl implements NewsItemViewModel {
     }
 
     @Override
-    public String getId() {
-        return mNews.getId();
-    }
-
-    @Override
-    public int getNumber() {
-        return mNews.getNumber();
-    }
-
-    @Override
-    public String getOwner() {
-        return mNews.getOwner();
-    }
-
-    @Override
     public String getSource() {
-        if(mNews.getSource() == null)
-            return "temp";
+        if(mNews.equals("undefined"))
+            return "출처가 확인되지 않은 뉴스";
         return mNews.getSource();
     }
 
@@ -69,6 +54,11 @@ public class NewsItemViewModelImpl implements NewsItemViewModel {
     @Override
     public String getPublishedAt() {
         return mNews.getPublishedAt();
+    }
+
+    @Override
+    public String getCategory() {
+        return mNews.getCategory();
     }
 
     @Override

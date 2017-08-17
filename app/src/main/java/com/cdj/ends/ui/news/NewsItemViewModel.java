@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.newskeyword.viewmodel;
+package com.cdj.ends.ui.news;
 
 import android.view.View;
 
@@ -7,10 +7,7 @@ import android.view.View;
  */
 
 public interface NewsItemViewModel {
-    String getId();
-    int getNumber();
-    String getOwner();
-
+    String getCategory();
     String getSource();
     String getAuthor();
     String getDescription();

@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.cdj.ends.ui.newskeyword.NewsKeywordFragment;
-import com.cdj.ends.ui.newssearch.NewsSearchFragment;
+import com.cdj.ends.ui.news.newskeyword.NewsKeywordFragment;
+import com.cdj.ends.ui.news.newssearch.NewsSearchFragment;
 import com.cdj.ends.ui.newssource.NewsSourceFragment;
 
 /**

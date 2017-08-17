@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.newskeyword;
+package com.cdj.ends.ui.news.newskeyword;
 
 /**
  * Created by Dongjin on 2017. 8. 8..
@@ -10,12 +10,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +20,9 @@ import android.view.ViewGroup;
 import com.cdj.ends.R;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 import com.cdj.ends.ui.keyword.KeywordActivity;
-import com.cdj.ends.ui.newskeyword.viewmodel.NewsItemViewModel;
-import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModel;
-import com.cdj.ends.ui.newskeyword.viewmodel.NewsViewModelImpl;
+import com.cdj.ends.ui.news.NewsItemViewModel;
+import com.cdj.ends.ui.news.newskeyword.viewmodel.NewsViewModel;
+import com.cdj.ends.ui.news.newskeyword.viewmodel.NewsViewModelImpl;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 
 import java.util.List;
@@ -44,19 +41,9 @@ public class NewsKeywordFragment extends Fragment {
 
     private FloatingActionButton fabAddKeywrod;
 
-    //private static NewsKeywordFragment newsKeywordFragment;
-
     public NewsKeywordFragment() {}
 
     public static NewsKeywordFragment newInstance() {
-//        if(newsKeywordFragment == null) {
-//            synchronized (NewsKeywordFragment.class) {
-//                if(newsKeywordFragment == null) {
-//                    newsKeywordFragment = new NewsKeywordFragment();
-//                }
-//            }
-//        }
-
         NewsKeywordFragment newsKeywordFragment = new NewsKeywordFragment();
         Bundle args = new Bundle();
         newsKeywordFragment.setArguments(args);
@@ -87,9 +74,9 @@ public class NewsKeywordFragment extends Fragment {
                 if (refreshLayout.isRefreshing()) {
                     refreshLayout.setRefreshing(false);
                 }
-                showRecvLoadiing();
             }
         });
+        showRecvLoadiing();
     }
 
     @Nullable
@@ -127,13 +114,13 @@ public class NewsKeywordFragment extends Fragment {
             @Override
             public void onRefresh() {
                 newsViewModel.refreshNews();
+                showRecvLoadiing();
             }
         });
 
         layoutManager = new LinearLayoutManager(getActivity());
         recvNewsKeyword.setLayoutManager(layoutManager);
         recvNewsKeyword.setAdapter(newsKeywordAdapter);
-        showRecvLoadiing();
     }
 
     private void showRecvLoadiing() {

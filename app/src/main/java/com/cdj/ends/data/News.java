@@ -11,8 +11,8 @@ public class News {
     String id;
     int number;
     String owner;
-    String source;
 
+    String source;
     String author;
     String description;
     String title;
@@ -20,6 +20,7 @@ public class News {
     String urlToImage;
     String publishedAt;
     String translated;
+    String category;
 
     public News(){}
 
@@ -126,6 +127,14 @@ public class News {
         this.translated = translated;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "News{" +
@@ -140,6 +149,7 @@ public class News {
                 ", urlToImage='" + urlToImage + '\'' +
                 ", publishedAt='" + publishedAt + '\'' +
                 ", translated='" + translated + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 }

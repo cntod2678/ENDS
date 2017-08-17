@@ -6,11 +6,10 @@ package com.cdj.ends.ui.keyword;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridLayout;
+import android.view.ViewGroup;
 import android.support.design.widget.TextInputEditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +18,10 @@ import android.support.v7.widget.Toolbar;
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.data.Keyword;
+import com.google.android.flexbox.FlexboxLayout;
 
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 public class KeywordActivity extends AppCompatActivity {
@@ -30,10 +29,7 @@ public class KeywordActivity extends AppCompatActivity {
     private static final String TAG = "KeywordActivity";
 
     private TextInputEditText editKeyword;
-
-    private GridLayout gridLayout;
-    private GridLayout.LayoutParams layoutParams;
-
+    private FlexboxLayout flexboxLayout;
     private Toolbar toolbarKeyword;
 
     private Realm mRealm;
@@ -47,13 +43,28 @@ public class KeywordActivity extends AppCompatActivity {
 
         Realm.init(this);
         mRealm = RealmBuilder.getRealmInstance();
+//
+//        mRealm.beginTransaction();
+//        mRealm.delete(Keyword.class);
+//        mRealm.commitTransaction();
+
+        RealmResults<Keyword> keywords = mRealm.where(Keyword.class).equalTo("keyword", "issue").findAll();
+        if(keywords.size() == 0) {
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Keyword newKeyword = realm.createObject(Keyword.class);
+                    newKeyword.setKeyword("issue");
+                }
+            });
+        }
 
         setKeywords();
     }
 
     private void initView() {
         editKeyword = (TextInputEditText) findViewById(R.id.edit_keyword);
-        gridLayout = (GridLayout) findViewById(R.id.container_keyword);
+        flexboxLayout = (FlexboxLayout) findViewById(R.id.container_keyword);
         toolbarKeyword = (Toolbar) findViewById(R.id.toolbar_keyword);
     }
 
@@ -66,9 +77,7 @@ public class KeywordActivity extends AppCompatActivity {
         RealmResults<Keyword> keywords = mRealm.where(Keyword.class).findAll();
 
         for(Keyword keyword : keywords) {
-            TextView txtKeyword = new TextView(this);
-            txtKeyword.setText(keyword.getKeyword());
-            gridLayout.addView(txtKeyword);
+            addChildView(keyword.getKeyword());
         }
     }
 
@@ -99,35 +108,8 @@ public class KeywordActivity extends AppCompatActivity {
                     }
                 });
 
-                final TextView txtNewKeyword = new TextView(this);
+                addChildView(keyword);
 
-                txtNewKeyword.setTextSize(15.0f);
-                txtNewKeyword.setText(keyword);
-                txtNewKeyword.setMaxLines(1);
-                txtNewKeyword.setMaxEms(5);
-                txtNewKeyword.setEllipsize(TextUtils.TruncateAt.END);
-
-                txtNewKeyword.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        //todo 삭제
-                        Toast.makeText(getApplicationContext(), txtNewKeyword.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                        RealmResults<Keyword> deleteKeyword = mRealm.where(Keyword.class).equalTo("keyword", keyword).findAll();
-
-                        if(!deleteKeyword.isEmpty()) {
-                            mRealm.beginTransaction();
-                            deleteKeyword.deleteFromRealm(0);
-                            mRealm.commitTransaction();
-                        }
-
-                        txtNewKeyword.setVisibility(View.GONE);
-                        return false;
-                    }
-                });
-
-                gridLayout.addView(txtNewKeyword);
-                editKeyword.setText("");
             } else {
                 Toast.makeText(getApplicationContext(), "이미 추가되어 있는 단어입니다.", Toast.LENGTH_SHORT).show();
             }
@@ -136,7 +118,7 @@ public class KeywordActivity extends AppCompatActivity {
     }
 
     private boolean validateData(String keyword) {
-        if (keyword == null) {
+        if (keyword == null || keyword.equals("")) {
             Toast.makeText(getApplicationContext(), "키워드를 추가해 주세요", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -148,16 +130,42 @@ public class KeywordActivity extends AppCompatActivity {
         return true;
     }
 
-    private void deleteKeyword(View view, String keyword) {
-        RealmResults<Keyword> deleteKeyword = mRealm.where(Keyword.class).equalTo("keyword", keyword).findAll();
+    private void addChildView(final String keyword) {
 
-        if(!deleteKeyword.isEmpty()) {
-            mRealm.beginTransaction();
-            deleteKeyword.deleteFromRealm(0);
-            mRealm.commitTransaction();
-        }
-        gridLayout.removeView(view);
+        final TextView txtNewKeyword = new TextView(this);
+
+        txtNewKeyword.setText(keyword);
+
+        FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(10, 20, 10, 30);
+        txtNewKeyword.setLayoutParams(lp);
+
+        txtNewKeyword.setPadding((int) getApplication().getResources().getDimension(R.dimen.keyword_padding_side),
+                (int) getApplication().getResources().getDimension(R.dimen.keyword_padding_updown),
+                        (int) getApplication().getResources().getDimension(R.dimen.keyword_padding_side),
+                                (int) getApplication().getResources().getDimension(R.dimen.keyword_padding_updown));
+        txtNewKeyword.setBackground(getDrawable(R.drawable.custom_edit_background));
+
+        txtNewKeyword.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                RealmResults<Keyword> deleteKeyword = mRealm.where(Keyword.class).equalTo("keyword", keyword).findAll();
+
+                if(!deleteKeyword.isEmpty()) {
+                    mRealm.beginTransaction();
+                    deleteKeyword.deleteFromRealm(0);
+                    mRealm.commitTransaction();
+                }
+
+                txtNewKeyword.setVisibility(View.GONE);
+                return false;
+            }
+        });
+
+        flexboxLayout.addView(txtNewKeyword);
+        editKeyword.setText("");
     }
+
 
     @Override
     protected void onDestroy() {

@@ -3,8 +3,10 @@ package com.cdj.ends.api.news;
 import com.cdj.ends.api.RetrofitManagerAPI;
 
 import com.cdj.ends.call.NewsCallService;
+import com.cdj.ends.data.News;
 import com.cdj.ends.dto.NewsDTO;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Callback;
@@ -24,5 +26,9 @@ public class NewsKeywordAPI extends RetrofitManagerAPI<NewsCallService, NewsDTO>
 
     public void requestNewsItem(Map<String, String> map, Callback<NewsDTO> callback) {
         newsCallService.newsKeyword(map).enqueue(callback);
+    }
+
+    public void requestNewsKeyword(List<String> keywords, Callback<List<News>> callback) {
+        newsCallService.newsKeywords(keywords).enqueue(callback);
     }
 }

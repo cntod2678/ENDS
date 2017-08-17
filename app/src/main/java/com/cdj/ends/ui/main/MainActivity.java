@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     /* mainFragment 의 viewpager listener 등록 */
     @Override
     public void pageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.ChromeTabActionBuilder;
@@ -46,12 +47,38 @@ public class WordAdapter extends SectioningAdapter {
     private Context mContext;
     private Realm mRealm;
 
-    class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
+    private List<Section> sections;
+
+    public WordAdapter(Context context) {
+        mContext = context;
+        sections = new ArrayList<>();
+
+        Realm.init(mContext);
+        mRealm = RealmBuilder.getRealmInstance();
+
+        RealmResults<Word> dateList = mRealm.where(Word.class).distinct("date");
+        RealmResults<Word> wordsAllList = mRealm.where(Word.class).findAllSorted("date", Sort.DESCENDING);
+
+        for(Word date : dateList) {
+            int sectionIdx = 0;
+            List<Word> wordListByDate = new ArrayList<>();
+
+            for(Word word : wordsAllList) {
+                if(word.getDate().equals(date.getDate())) {
+                    wordListByDate.add(word);
+                }
+            }
+            appendSection(sectionIdx, wordListByDate);
+        }
+
+    }
+
+    public class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
         TextView txtItemWord;
         TextView txtItemWordTranslated;
         Button btnMore;
 
-        ItemViewHolder(View itemView, boolean showAdapterPosition) {
+        ItemViewHolder(View itemView) {
             super(itemView);
             txtItemWord = (TextView) itemView.findViewById(R.id.txtItem_word);
             txtItemWordTranslated = (TextView) itemView.findViewById(R.id.txtItem_translated);
@@ -59,11 +86,11 @@ public class WordAdapter extends SectioningAdapter {
         }
     }
 
-    class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder implements View.OnClickListener {
+    public class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder implements View.OnClickListener {
         TextView txtHeaderDate;
         ImageButton collapseButton;
 
-        HeaderViewHolder(View itemView, boolean showAdapterPosition) {
+        HeaderViewHolder(View itemView) {
             super(itemView);
             txtHeaderDate = (TextView) itemView.findViewById(R.id.txtHeader_Date);
             collapseButton = (ImageButton) itemView.findViewById(R.id.collapseButton);
@@ -88,38 +115,12 @@ public class WordAdapter extends SectioningAdapter {
     }
 
     public class FooterViewHolder extends SectioningAdapter.FooterViewHolder {
-        TextView textView;
+        TextView txtFooter_nums;
 
-        public FooterViewHolder(View itemView, boolean showAdapterPosition) {
+        public FooterViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.textView);
+            txtFooter_nums = (TextView) itemView.findViewById(R.id.txtFooter_nums);
         }
-    }
-
-    private ArrayList<Section> sections = new ArrayList<>();
-
-    private boolean showAdapterPositions;
-
-    public WordAdapter(Context context, Realm realm, boolean showAdapterPositions) {
-        this.showAdapterPositions = showAdapterPositions;
-        mContext = context;
-        mRealm = realm;
-
-        RealmResults<Word> dateList = mRealm.where(Word.class).distinct("date");
-        RealmResults<Word> wordsAllList = mRealm.where(Word.class).findAllSorted("date", Sort.ASCENDING);
-
-        for(Word date : dateList) {
-            int sectionIdx = 0;
-            List<Word> temp = new ArrayList<>();
-
-            for(Word word : wordsAllList) {
-                if(word.getDate().equals(date.getDate())) {
-                    temp.add(word);
-                }
-            }
-            appendSection(sectionIdx, temp);
-        }
-
     }
 
     private void appendSection(int index, List<Word> words) {
@@ -150,16 +151,18 @@ public class WordAdapter extends SectioningAdapter {
             public void onVisitSelectedSectionItem(int sectionIndex, int itemIndex) {
                 Log.d(TAG, "onVisitSelectedSectionItem() called with: " + "sectionIndex = [" + sectionIndex + "], itemIndex = [" + itemIndex + "]");
                 Section section = sections.get(sectionIndex);
+
                 if (section != null) {
-                    RealmResults<Word> deleteItemWord = mRealm.where(Word.class).equalTo("word", section.wordsItems.get(itemIndex).getWord()).findAll();
-
-                    if(deleteItemWord.size() > 0) {
-                        mRealm.beginTransaction();
-                        deleteItemWord.deleteFromRealm(0);
-                        mRealm.commitTransaction();
-                    }
-
-//                    mRealm.close();
+//                    RealmResults<Word> deleteItemWord = mRealm.where(Word.class).equalTo("word", section.wordsItems.get(itemIndex).getWord()).findAll();
+//
+//                    Toast.makeText(mContext.getApplicationContext(), section.wordsItems.get(itemIndex).getWord() + " ", Toast.LENGTH_SHORT ).show();
+//
+//                    if(deleteItemWord.size() > 0) {
+//                        mRealm.beginTransaction();
+//                        deleteItemWord.deleteFromRealm(0);
+//                        mRealm.commitTransaction();
+//                        Toast.makeText(mContext.getApplicationContext(), deleteItemWord.get(0).getWord() + "삭제성공", Toast.LENGTH_SHORT).show();
+//                    }
 
                     section.wordsItems.remove(itemIndex);
                     notifySectionItemRemoved(sectionIndex, itemIndex);
@@ -168,7 +171,7 @@ public class WordAdapter extends SectioningAdapter {
 
             @Override
             public void onVisitSelectedFooter(int sectionIndex) {
-
+                Log.d(TAG, "onVisitSelectedFooter() called with: " + "sectionIndex = [" + sectionIndex + "]");
             }
         });
 
@@ -206,24 +209,23 @@ public class WordAdapter extends SectioningAdapter {
     public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.list_item_selectable_item, parent, false);
-        return new ItemViewHolder(v, showAdapterPositions);
+        return new ItemViewHolder(v);
     }
 
     @Override
     public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.list_item_selectable_header, parent, false);
-        return new HeaderViewHolder(v, showAdapterPositions);
+        return new HeaderViewHolder(v);
     }
 
     @Override
     public FooterViewHolder onCreateFooterViewHolder(ViewGroup parent, int footerType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.list_item_selectable_footer, parent, false);
-        return new FooterViewHolder(v, showAdapterPositions);
+        return new FooterViewHolder(v);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindItemViewHolder(final SectioningAdapter.ItemViewHolder viewHolder, final int sectionIndex, final int itemIndex, int itemType) {
         final Section s = sections.get(sectionIndex);
@@ -241,24 +243,20 @@ public class WordAdapter extends SectioningAdapter {
         ivh.itemView.setActivated(isSectionItemSelected(sectionIndex, itemIndex));
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
         Section s = sections.get(sectionIndex);
         HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
-
         hvh.txtHeaderDate.setText(s.header);
-
         hvh.itemView.setActivated(isSectionSelected(sectionIndex));
         hvh.updateSectionCollapseToggle(isSectionCollapsed(sectionIndex));
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindFooterViewHolder(SectioningAdapter.FooterViewHolder viewHolder, int sectionIndex, int footerType) {
         Section s = sections.get(sectionIndex);
         FooterViewHolder fvh = (FooterViewHolder) viewHolder;
-        fvh.textView.setText(s.footer);
+        fvh.txtFooter_nums.setText(s.footer);
         fvh.itemView.setActivated(isSectionFooterSelected(sectionIndex));
     }
 

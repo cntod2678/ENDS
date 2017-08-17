@@ -57,20 +57,9 @@ public class NewsDetailFragment extends Fragment  {
     private static News mNews;
     private static boolean translationFlag = true;
 
-
-//    private static NewsDetailFragment newsDetailFragment;
-
     public NewsDetailFragment() {}
 
     public static NewsDetailFragment newInstance(News news) {
-//        if(newsDetailFragment == null) {
-//            synchronized (NewsDetailFragment.class) {
-//                if(newsDetailFragment == null) {
-//                    newsDetailFragment = new NewsDetailFragment();
-//                }
-//            }
-//        }
-
         NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
         mNews = new News();
         Bundle args = new Bundle();

@@ -1,10 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/container_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="search"/>
-</LinearLayout>
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager_category"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="8dp" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/txtLatest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="카테고리 별 최신뉴스"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                android:entries="@array/spinner_item">
+            </Spinner>
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recvCategory_latest"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/recv_category_recv_original_height"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/container_spinner"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:layout_editor_absoluteX="8dp">
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/btnSpand_recv_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/recvCategory_latest"
+            android:text="더 보기"
+            android:onClick="onSpandRecvHeightClicked"
+            tools:layout_editor_absoluteX="8dp" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -19,8 +19,7 @@ import com.cdj.ends.ui.newssource.viewmodel.SourceItemViewModel;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static com.cdj.ends.Config.LOCAL_HOST_URL;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -87,12 +86,12 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
             txtSourceTitle.setText(viewModel.getName());
             txtSourceDes.setText(viewModel.getDescription());
 
-
             Glide.with(itemView.getContext())
-                    .load(R.drawable.aljazeeraenglish)
+                    .load(LOCAL_HOST_URL + "images/" + viewModel.getName() + ".PNG")
                     .fitCenter()
-                    .placeholder(R.drawable.abc)
+                    .placeholder(R.drawable.aljazeeraenglish)
                     .into(imgSourceLogo);
+            Log.d(TAG, LOCAL_HOST_URL + "images/" + viewModel.getName() + ".PNG");
         }
     }
 }

@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    app:layout_constraintWidth_max="10dp">
+    android:paddingRight="16dp">
 
     <TextView
         android:id="@+id/txtList_keyword"
-        android:layout_width="match_parent"
+        android:layout_width="336dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/added_keyword"
         android:textColor="@color/colorPrimaryDark"
         android:letterSpacing="0.1"
         android:textStyle="bold"
         android:textSize="16sp" />
 
-    <GridLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/container_keyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/txtList_keyword"
-        android:orientation="horizontal"
-        android:columnCount="3"
-        android:useDefaultMargins="true"
-        android:columnOrderPreserved="false"
-        android:paddingLeft="@dimen/container_keyword_padding"
-        android:paddingRight="@dimen/container_keyword_padding">
-    </GridLayout>
+        android:layout_marginTop="24dp"
+        app:flexWrap="wrap"
+        app:alignItems="flex_start"
+        app:alignContent="flex_start"
+        app:justifyContent="space_around">
+
+    </com.google.android.flexbox.FlexboxLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
