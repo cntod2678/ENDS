@@ -1,27 +1,17 @@
 package com.cdj.ends.ui.word;
 
-import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.annotation.DrawableRes;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cdj.ends.R;
-import com.cdj.ends.base.util.ChromeTabActionBuilder;
-import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.data.Word;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
@@ -29,72 +19,43 @@ import org.zakariya.stickyheaders.SectioningAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-
-import com.cdj.ends.ui.word.viewmodel.Section;
-
-import static com.cdj.ends.Config.TRANS_NAVER_BASE_URL;
-
 /**
- * Created by Dongjin on 2017. 8. 13..
+ * Created by Dongjin on 2017. 8. 18..
  */
 
 public class WordAdapter extends SectioningAdapter {
+
     private static final String TAG = "WordAdapter";
 
+    private boolean showAdapterPositions;
+
     private Context mContext;
-    private Realm mRealm;
 
-    private List<Section> sections;
+    private List<Section> mSectionList;
 
-    public WordAdapter(Context context) {
-        mContext = context;
-        sections = new ArrayList<>();
-
-        Realm.init(mContext);
-        mRealm = RealmBuilder.getRealmInstance();
-
-        RealmResults<Word> dateList = mRealm.where(Word.class).distinct("date");
-        RealmResults<Word> wordsAllList = mRealm.where(Word.class).findAllSorted("date", Sort.DESCENDING);
-
-        for(Word date : dateList) {
-            int sectionIdx = 0;
-            List<Word> wordListByDate = new ArrayList<>();
-
-            for(Word word : wordsAllList) {
-                if(word.getDate().equals(date.getDate())) {
-                    wordListByDate.add(word);
-                }
-            }
-            appendSection(sectionIdx, wordListByDate);
-        }
-
+    public WordAdapter(Context context, List<Section> sections, boolean showAdapterPositions) {
+        this.mContext = context;
+        mSectionList = new ArrayList<>();
+        this.mSectionList = sections;
+        this.showAdapterPositions = showAdapterPositions;
+        Log.d(TAG, mSectionList.size() + " ");
     }
 
-    public class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
-        TextView txtItemWord;
-        TextView txtItemWordTranslated;
-        Button btnMore;
-
-        ItemViewHolder(View itemView) {
-            super(itemView);
-            txtItemWord = (TextView) itemView.findViewById(R.id.txtItem_word);
-            txtItemWordTranslated = (TextView) itemView.findViewById(R.id.txtItem_translated);
-            btnMore = (Button) itemView.findViewById(R.id.btnMore);
-        }
-    }
-
-    public class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder implements View.OnClickListener {
-        TextView txtHeaderDate;
+    class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder implements View.OnClickListener {
+        TextView txtSectionHeader;
+        TextView txtAdapterPositionHeader;
         ImageButton collapseButton;
 
-        HeaderViewHolder(View itemView) {
+        public HeaderViewHolder(View itemView, boolean showAdapterPosition) {
             super(itemView);
-            txtHeaderDate = (TextView) itemView.findViewById(R.id.txtHeader_Date);
+            txtSectionHeader = (TextView) itemView.findViewById(R.id.txtSection_header);
+            txtAdapterPositionHeader = (TextView) itemView.findViewById(R.id.txtAdapter_position_header);
             collapseButton = (ImageButton) itemView.findViewById(R.id.collapseButton);
             collapseButton.setOnClickListener(this);
+
+            if (showAdapterPosition) {
+                txtAdapterPositionHeader.setVisibility(View.INVISIBLE);
+            }
         }
 
         void updateSectionCollapseToggle(boolean sectionIsCollapsed) {
@@ -114,57 +75,55 @@ public class WordAdapter extends SectioningAdapter {
         }
     }
 
-    public class FooterViewHolder extends SectioningAdapter.FooterViewHolder {
-        TextView txtFooter_nums;
+    class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
+        TextView txtOriginWord;
+        TextView txtTranslatedWord;
+        TextView txtAdapterPositionItem;
 
-        public FooterViewHolder(View itemView) {
+        public ItemViewHolder(View itemView, boolean showAdapterPosition) {
             super(itemView);
-            txtFooter_nums = (TextView) itemView.findViewById(R.id.txtFooter_nums);
+
+            txtOriginWord = (TextView) itemView.findViewById(R.id.txtOrigin_word);
+            txtTranslatedWord = (TextView) itemView.findViewById(R.id.txtTranslated_word);
+            txtAdapterPositionItem = (TextView) itemView.findViewById(R.id.txtAdapter_position_item) ;
+
+            if(showAdapterPosition) {
+                txtAdapterPositionItem.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
-    private void appendSection(int index, List<Word> words) {
-        Section section = new Section();
-        section.index = index;
-        section.header = words.get(0).getDate();
-        section.footer = "단어 개수 : " + words.size();
+    class FooterViewHolder extends SectioningAdapter.FooterViewHolder {
+        TextView txtWordNums;
+        TextView txtAdapterPositionFooter;
 
-        for (Word word : words) {
-            section.wordsItems.add(new Word(word.getWord(), word.getTranslatedWord(), word.getDate(), word.isChkEdu()));
+        public FooterViewHolder(View itemView, boolean showAdapterPosition) {
+            super(itemView);
+            txtWordNums = (TextView) itemView.findViewById(R.id.txtWord_nums);
+            txtAdapterPositionFooter = (TextView) itemView.findViewById(R.id.txtAdapter_position_footer);
+
+            if(showAdapterPosition) {
+                txtAdapterPositionFooter.setVisibility(View.INVISIBLE);
+            }
         }
-        sections.add(section);
     }
-
 
     public void deleteSelection() {
-        traverseSelection(new SectioningAdapter.SelectionVisitor() {
+
+        traverseSelection(new SelectionVisitor() {
             @Override
             public void onVisitSelectedSection(int sectionIndex) {
                 Log.d(TAG, "onVisitSelectedSection() called with: " + "sectionIndex = [" + sectionIndex + "]");
-                // todo 날짜 모두 삭제
-                // deleteAllFromRealm
-//                sections.remove(sectionIndex);
-//                notifySectionRemoved(sectionIndex);
+                mSectionList.remove(sectionIndex);
+                notifySectionRemoved(sectionIndex);
             }
 
             @Override
             public void onVisitSelectedSectionItem(int sectionIndex, int itemIndex) {
                 Log.d(TAG, "onVisitSelectedSectionItem() called with: " + "sectionIndex = [" + sectionIndex + "], itemIndex = [" + itemIndex + "]");
-                Section section = sections.get(sectionIndex);
-
+                Section section = mSectionList.get(sectionIndex);
                 if (section != null) {
-//                    RealmResults<Word> deleteItemWord = mRealm.where(Word.class).equalTo("word", section.wordsItems.get(itemIndex).getWord()).findAll();
-//
-//                    Toast.makeText(mContext.getApplicationContext(), section.wordsItems.get(itemIndex).getWord() + " ", Toast.LENGTH_SHORT ).show();
-//
-//                    if(deleteItemWord.size() > 0) {
-//                        mRealm.beginTransaction();
-//                        deleteItemWord.deleteFromRealm(0);
-//                        mRealm.commitTransaction();
-//                        Toast.makeText(mContext.getApplicationContext(), deleteItemWord.get(0).getWord() + "삭제성공", Toast.LENGTH_SHORT).show();
-//                    }
-
-                    section.wordsItems.remove(itemIndex);
+                    section.items.remove(itemIndex);
                     notifySectionItemRemoved(sectionIndex, itemIndex);
                 }
             }
@@ -172,6 +131,11 @@ public class WordAdapter extends SectioningAdapter {
             @Override
             public void onVisitSelectedFooter(int sectionIndex) {
                 Log.d(TAG, "onVisitSelectedFooter() called with: " + "sectionIndex = [" + sectionIndex + "]");
+                Section section = mSectionList.get(sectionIndex);
+                if (section != null) {
+                    section.footer = null;
+                    notifySectionFooterRemoved(sectionIndex);
+                }
             }
         });
 
@@ -186,82 +150,73 @@ public class WordAdapter extends SectioningAdapter {
 
     @Override
     public int getNumberOfSections() {
-        return sections.size();
+        return mSectionList.size();
     }
 
     @Override
     public int getNumberOfItemsInSection(int sectionIndex) {
-        return sections.get(sectionIndex).wordsItems.size();
+        return mSectionList.get(sectionIndex).items.size();
     }
 
     @Override
     public boolean doesSectionHaveHeader(int sectionIndex) {
-        return !TextUtils.isEmpty(sections.get(sectionIndex).header);
+        return !TextUtils.isEmpty(mSectionList.get(sectionIndex).header);
     }
 
     @Override
     public boolean doesSectionHaveFooter(int sectionIndex) {
-        return !TextUtils.isEmpty(sections.get(sectionIndex).footer);
-    }
-
-
-    @Override
-    public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.list_item_selectable_item, parent, false);
-        return new ItemViewHolder(v);
+        return !TextUtils.isEmpty(mSectionList.get(sectionIndex).footer);
     }
 
     @Override
     public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.list_item_selectable_header, parent, false);
-        return new HeaderViewHolder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_word_header, parent, false);
+        return new HeaderViewHolder(view, showAdapterPositions);
+    }
+
+    @Override
+    public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_word_item, parent, false);
+        return new ItemViewHolder(view, showAdapterPositions);
     }
 
     @Override
     public FooterViewHolder onCreateFooterViewHolder(ViewGroup parent, int footerType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.list_item_selectable_footer, parent, false);
-        return new FooterViewHolder(v);
-    }
-
-    @Override
-    public void onBindItemViewHolder(final SectioningAdapter.ItemViewHolder viewHolder, final int sectionIndex, final int itemIndex, int itemType) {
-        final Section s = sections.get(sectionIndex);
-        ItemViewHolder ivh = (ItemViewHolder) viewHolder;
-        ivh.txtItemWord.setText(s.wordsItems.get(itemIndex).getWord());
-        ivh.txtItemWordTranslated.setText(s.wordsItems.get(itemIndex).getTranslatedWord());
-
-        ivh.btnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openChromTab(s.wordsItems.get(itemIndex).getWord());
-            }
-        });
-
-        ivh.itemView.setActivated(isSectionItemSelected(sectionIndex, itemIndex));
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_word_footer, parent, false);
+        return new FooterViewHolder(view, showAdapterPositions);
     }
 
     @Override
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
-        Section s = sections.get(sectionIndex);
+        Section s = mSectionList.get(sectionIndex);
         HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
-        hvh.txtHeaderDate.setText(s.header);
+
+        hvh.txtSectionHeader.setText(s.header);
+        hvh.txtAdapterPositionHeader.setText(Integer.toString(getAdapterPositionForSectionHeader(sectionIndex)));
+
         hvh.itemView.setActivated(isSectionSelected(sectionIndex));
         hvh.updateSectionCollapseToggle(isSectionCollapsed(sectionIndex));
     }
 
     @Override
+    public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemType) {
+        Section s = mSectionList.get(sectionIndex);
+        ItemViewHolder ivh = (ItemViewHolder) viewHolder;
+        ivh.txtOriginWord.setText(s.items.get(itemIndex).getWord());
+        ivh.txtTranslatedWord.setText(s.items.get(itemIndex).getTranslatedWord());
+        ivh.txtAdapterPositionItem.setText(Integer.toString(getAdapterPositionForSectionItem(sectionIndex, itemIndex)));
+
+        ivh.itemView.setActivated(isSectionItemSelected(sectionIndex, itemIndex));
+    }
+
+    @Override
     public void onBindFooterViewHolder(SectioningAdapter.FooterViewHolder viewHolder, int sectionIndex, int footerType) {
-        Section s = sections.get(sectionIndex);
+        Section s = mSectionList.get(sectionIndex);
         FooterViewHolder fvh = (FooterViewHolder) viewHolder;
-        fvh.txtFooter_nums.setText(s.footer);
+        fvh.txtWordNums.setText(s.footer);
+        fvh.txtAdapterPositionFooter.setText(Integer.toString(getAdapterPositionForSectionFooter(sectionIndex)));
+
         fvh.itemView.setActivated(isSectionFooterSelected(sectionIndex));
     }
 
-    private void openChromTab(String queryString) {
-        String url = TRANS_NAVER_BASE_URL + "&query=" + queryString;
-        ChromeTabActionBuilder.openChromTab(mContext, url);
-    }
 }

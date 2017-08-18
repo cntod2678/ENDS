@@ -20,15 +20,15 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * Created by Dongjin on 2017. 8. 16..
  */
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+public class CategoryFavoriteAdapter extends RecyclerView.Adapter<CategoryFavoriteAdapter.CategoryViewHolder> {
 
     private List<NewsItemViewModel> mNewsList;
 
-    public CategoryAdapter() { setList(Collections.<NewsItemViewModel>emptyList()); }
+    public CategoryFavoriteAdapter() { setList(Collections.<NewsItemViewModel>emptyList()); }
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_latest_category, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_favorite, parent, false);
         CategoryViewHolder categoryHolder = new CategoryViewHolder(view);
         return categoryHolder;
     }

@@ -4,6 +4,7 @@ package com.cdj.ends.ui.newssource;
  * Created by Dongjin on 2017. 8. 8..
  */
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +30,14 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
 
     private List<SourceItemViewModel> mSourceList;
 
+    private Context mContext;
+
     public NewsSourceAdapter() {
+        setList(Collections.<SourceItemViewModel>emptyList());
+    }
+
+    public NewsSourceAdapter(Context context) {
+        mContext = context;
         setList(Collections.<SourceItemViewModel>emptyList());
     }
 
@@ -87,7 +95,7 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
             txtSourceDes.setText(viewModel.getDescription());
 
             Glide.with(itemView.getContext())
-                    .load(LOCAL_HOST_URL + "images/" + viewModel.getName() + ".PNG")
+                    .load(viewModel.getImgUrl())
                     .fitCenter()
                     .placeholder(R.drawable.aljazeeraenglish)
                     .into(imgSourceLogo);

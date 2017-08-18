@@ -1,9 +1,5 @@
 package com.cdj.ends.api;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -27,9 +23,6 @@ public abstract class RetrofitAPI<T> {
 
     private Retrofit createRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
-                .client(new OkHttpClient().newBuilder()
-                        .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                        .addNetworkInterceptor(new StethoInterceptor()).build())
                 .baseUrl(mBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

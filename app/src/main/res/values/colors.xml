@@ -12,4 +12,16 @@
     <color name="dark_gray">#343434</color>
 
     <color name="edit_stroke">#A1A1A1</color>
+
+
+
+    <color name="divider">#dddddd</color>
+    <color name="actionButton">#bbbbbb</color>
+
+    <color name="textLight">#dddddd</color>
+    <color name="textMedium">#999999</color>
+    <color name="textColor">#444444</color>
+
+    <color name="headerBackground">#eeeeee</color>
+    <color name="selectedItemBackground">#aaaaaa</color>
 </resources>

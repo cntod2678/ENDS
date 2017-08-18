@@ -25,4 +25,10 @@
 
     <string name="selected_word">선택된 단어 개수</string>
     <string name="added_keyword">추가된 키워드 목록</string>
+
+    <string name="latest_category">카테고리 별 최신기사</string>
+    <string name="favorite_category">카테고리 별 인기기사</string>
+
+    <string name="cab_selected_count">%1$d 개가 선택</string>
+    <string name="hint_demo_select_long_press">길게 누를 시 삭제할 수 있습니다</string>
 </resources>

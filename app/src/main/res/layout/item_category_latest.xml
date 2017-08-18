@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/search_viewPager_height"
-    android:layout_margin="5dp">
+    android:layout_height="@dimen/search_viewPager_height">
 
     <ImageView
         android:id="@+id/imgCategory"
@@ -17,7 +16,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"/>
 
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,12 +25,17 @@
             android:id="@+id/txtCategory_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/viewIncicator_category"
-            android:maxLines="2"
-            android:textColor="@color/black"/>
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/viewIndicicator_category"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
 
         <com.cdj.ends.base.view.ViewPagerDotView
-            android:id="@id/viewIncicator_category"
+            android:id="@id/viewIndicicator_category"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_small_8"
             app:layout_constraintTop_toBottomOf="@id/txtCategory_title"/>

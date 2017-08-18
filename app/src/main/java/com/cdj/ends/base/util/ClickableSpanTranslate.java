@@ -93,9 +93,9 @@ public class ClickableSpanTranslate extends ClickableSpan {
                                     SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
                                     String strDate = dateFormat.format(mDate);
 
-                                    mRealm.beginTransaction();
                                     RealmResults<Word> words = mRealm.where(Word.class).equalTo("word", clickedText).findAll();
                                     if(words.isEmpty()) {
+                                        mRealm.beginTransaction();
                                         Word word = mRealm.createObject(Word.class);
                                         word.setWord(clickedText);
                                         word.setTranslatedWord(translatedText);

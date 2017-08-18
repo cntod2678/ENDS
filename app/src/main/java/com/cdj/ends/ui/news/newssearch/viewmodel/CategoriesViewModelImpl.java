@@ -32,7 +32,9 @@ public class CategoriesViewModelImpl implements CategoriesViewModel {
 
     private NewsSearchAPI newsSearchAPI;
 
-    private NotifyUpdateViewModelListener notifyUpdateViewModelListener;
+    private NotifyUpdateViewModelListener notifyUpdateFavoriteListener;
+
+    private NotifyUpdateViewModelListener notifyLatestListener;
 
     public CategoriesViewModelImpl() {}
 
@@ -42,8 +44,31 @@ public class CategoriesViewModelImpl implements CategoriesViewModel {
     }
 
     @Override
-    public void fetchCategory(final String category) {
-        newsSearchAPI.newsCategory(category, new Callback<List<News>>() {
+    public void fetchLatest() {
+        newsSearchAPI.newsCategory_latest(new Callback<List<News>>() {
+            @Override
+            public void onResponse(Call<List<News>> call, Response<List<News>> response) {
+                List<News> newsList = response.body();
+                List<NewsItemViewModel> itemViewModelList = new ArrayList<NewsItemViewModel>();
+
+                for(News news : newsList) {
+                    itemViewModelList.add(new NewsItemViewModelImpl(news));
+                }
+                if(notifyLatestListener != null) {
+                    notifyLatestListener.onUpdatedViewModel(itemViewModelList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<News>> call, Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void fetchFamous(final String category) {
+        newsSearchAPI.newsCategory_famous(category, new Callback<List<News>>() {
             @Override
             public void onResponse(Call<List<News>> call, Response<List<News>> response) {
                 List<News> newsList = response.body();
@@ -57,8 +82,8 @@ public class CategoriesViewModelImpl implements CategoriesViewModel {
                     itemVMList.add(new NewsItemViewModelImpl(news));
                 }
 
-                if (notifyUpdateViewModelListener != null) {
-                    notifyUpdateViewModelListener.onUpdatedViewModel(itemVMList);
+                if (notifyUpdateFavoriteListener != null) {
+                    notifyUpdateFavoriteListener.onUpdatedViewModel(itemVMList);
                 }
             }
 
@@ -71,6 +96,11 @@ public class CategoriesViewModelImpl implements CategoriesViewModel {
 
     @Override
     public void setUpdateViewModelListener(NotifyUpdateViewModelListener listener) {
-        notifyUpdateViewModelListener = listener;
+        notifyUpdateFavoriteListener = listener;
+    }
+
+    @Override
+    public void setUpdateCategoryLatestListener(NotifyUpdateViewModelListener listener) {
+        notifyLatestListener = listener;
     }
 }

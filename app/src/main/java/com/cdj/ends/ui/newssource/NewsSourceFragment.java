@@ -46,7 +46,7 @@ public class NewsSourceFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        newsSourceAdapter = new NewsSourceAdapter();
+        newsSourceAdapter = new NewsSourceAdapter(getActivity().getApplicationContext());
 
         sourceViewModel = new SourceViewModelImpl();
         sourceViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<SourceItemViewModel>>() {
@@ -70,6 +70,12 @@ public class NewsSourceFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setRecycler();
+        sourceViewModel.fetchSource();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         sourceViewModel.fetchSource();
     }
 

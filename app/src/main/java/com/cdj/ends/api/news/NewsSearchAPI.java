@@ -22,12 +22,12 @@ public class NewsSearchAPI extends RetrofitManagerAPI<NewsCallService, News> {
         newsCallService = createCallService();
     }
 
-    public void newsCategories(String category, Callback<List<News>> callback) {
-        newsCallService.newsCategories(category).enqueue(callback);
+    public void newsCategory_latest(Callback<List<News>> callback) {
+        newsCallService.newsCategory_latest().enqueue(callback);
     }
 
-    public void newsCategory(String category, Callback<List<News>> callback) {
-        newsCallService.newsCategory(category).enqueue(callback);
+    public void newsCategory_famous(String category, Callback<List<News>> callback) {
+        newsCallService.newsCategory_famous(category).enqueue(callback);
     }
 
 }

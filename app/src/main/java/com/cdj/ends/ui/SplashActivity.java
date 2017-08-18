@@ -5,11 +5,9 @@ package com.cdj.ends.ui;
  */
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.SharedPreferencesService;
-import com.cdj.ends.ui.login.LoginActivity;
 import com.cdj.ends.ui.main.MainActivity;
 import com.daimajia.androidanimations.library.Techniques;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
@@ -38,11 +36,11 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setAnimLogoSplashTechnique(Techniques.Bounce); //choose one form Techniques (ref: https://github.com/daimajia/AndroidViewAnimations)
 
         //Customize Title
-        configSplash.setTitleSplash("ENDS");
-        configSplash.setTitleTextColor(R.color.white);
-        configSplash.setTitleTextSize(35f); //float value
-        configSplash.setAnimTitleDuration(3000);
-        configSplash.setAnimTitleTechnique(Techniques.StandUp);
+//        configSplash.setTitleSplash("ENDS");
+//        configSplash.setTitleTextColor(R.color.white);
+//        configSplash.setTitleTextSize(35f); //float value
+//        configSplash.setAnimTitleDuration(3000);
+//        configSplash.setAnimTitleTechnique(Techniques.StandUp);
         //configSplash.setTitleFont("fonts/myfont.ttf"); //provide string to your font located in assets/fonts/
     }
 

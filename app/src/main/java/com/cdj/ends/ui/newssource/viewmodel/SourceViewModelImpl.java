@@ -4,13 +4,12 @@ import android.util.Log;
 
 import com.cdj.ends.api.news.NewsSourceAPI;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
-import com.cdj.ends.data.NewsSource;
-import com.cdj.ends.dto.NewsSourceDTO;
+import com.cdj.ends.dto.SourceDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cdj.ends.Config.BASE_URL;
+import static com.cdj.ends.Config.LOCAL_HOST_URL;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,19 +28,20 @@ public class SourceViewModelImpl implements SourceViewModel {
     private NewsSourceAPI newsSourceAPI;
 
     public SourceViewModelImpl() {
-        newsSourceAPI = new NewsSourceAPI(BASE_URL);
+        newsSourceAPI = new NewsSourceAPI(LOCAL_HOST_URL);
     }
 
     @Override
     public void fetchSource() {
-        newsSourceAPI.requestSourceItems(new Callback<NewsSourceDTO>() {
+        newsSourceAPI.requestSourceItems(new Callback<List<SourceDTO>>() {
             @Override
-            public void onResponse(Call<NewsSourceDTO> call, Response<NewsSourceDTO> response) {
-                NewsSourceDTO newsSourceDTO = response.body();
+            public void onResponse(Call<List<SourceDTO>> call, Response<List<SourceDTO>> response) {
+                List<SourceDTO> SourceDTOs = response.body();
 
                 List<SourceItemViewModel> itemVMList = new ArrayList<SourceItemViewModel>();
-                for (NewsSource newsSource : newsSourceDTO.getSources()) {
-                    itemVMList.add(new SourceItemViewModelImpl(newsSource));
+
+                for (SourceDTO source : SourceDTOs) {
+                    itemVMList.add(new SourceItemViewModelImpl(source));
                 }
 
                 if(notifyUpdateViewModelListener != null) {
@@ -50,7 +50,7 @@ public class SourceViewModelImpl implements SourceViewModel {
             }
 
             @Override
-            public void onFailure(Call<NewsSourceDTO> call, Throwable t) {
+            public void onFailure(Call<List<SourceDTO>> call, Throwable t) {
                 Log.d(TAG, "source load Fail");
             }
         });

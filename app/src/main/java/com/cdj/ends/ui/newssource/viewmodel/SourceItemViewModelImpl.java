@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.cdj.ends.base.util.ChromeTabActionBuilder;
 import com.cdj.ends.data.NewsSource;
+import com.cdj.ends.dto.SourceDTO;
 
 /**
  * Created by Dongjin on 2017. 8. 8..
@@ -11,10 +12,10 @@ import com.cdj.ends.data.NewsSource;
 
 public class SourceItemViewModelImpl implements SourceItemViewModel {
 
-    NewsSource mNewsSource;
+    SourceDTO mNewsSource;
 
-    public SourceItemViewModelImpl(NewsSource newsSource) {
-        this.mNewsSource = newsSource;
+    public SourceItemViewModelImpl(SourceDTO source) {
+        this.mNewsSource = source;
     }
 
     @Override
@@ -45,6 +46,11 @@ public class SourceItemViewModelImpl implements SourceItemViewModel {
     @Override
     public String getCountry() {
         return mNewsSource.getCountry();
+    }
+
+    @Override
+    public String getImgUrl() {
+        return mNewsSource.getImgUrl();
     }
 
 

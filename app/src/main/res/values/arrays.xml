@@ -2,10 +2,19 @@
 <resources>
     <string-array name="spinner_item">
         <item>Business</item>
-        <item>Entertainment</item>
         <item>General</item>
         <item>politics</item>
         <item>Sport</item>
         <item>Technology</item>
     </string-array>
+
+    <string-array name="news_source">
+        <item>http://mobile.abc.net.au/cm/cb/4355924/News+iOS+120x120/data.png</item>
+        <item>http://www.aljazeera.com/mritems/assets/images/touch-icon-iphone-retina.png</item>
+        <item>http://cdn.arstechnica.net/apple-touch-icon.png</item>
+        <item name="abc">abc</item>
+
+    </string-array>
+
+
 </resources>

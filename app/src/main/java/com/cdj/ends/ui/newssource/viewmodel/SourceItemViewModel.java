@@ -17,6 +17,7 @@ public interface SourceItemViewModel {
     String getUrl();
     String getCategory();
     String getCountry();
+    String getImgUrl();
 
     void onSourceItemClick(View view);
 }

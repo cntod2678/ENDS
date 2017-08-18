@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,21 +25,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.login.LoginActivity" />
-
-        <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginInAppBrowserActivity"
-            android:label="OAuth2.0 In-app"/>
-
-        <activity android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
         <activity android:name=".ui.main.MainActivity" />
+
+        <activity android:name=".ui.word.WordActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".ui.keyword.KeywordActivity" />
 
         <activity android:name=".ui.newsdetail.NewsDetailActivity" />
-
-        <activity android:name=".ui.word.WordActivity" />
 
 
     </application>

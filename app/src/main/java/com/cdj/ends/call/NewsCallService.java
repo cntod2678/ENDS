@@ -3,6 +3,7 @@ package com.cdj.ends.call;
 import com.cdj.ends.data.News;
 import com.cdj.ends.dto.NewsDTO;
 import com.cdj.ends.dto.NewsSourceDTO;
+import com.cdj.ends.dto.SourceDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,15 @@ public interface NewsCallService {
     @GET("/articles")
     Call<List<News>> newsKeywords(@Query("keyword") List<String> keyword);
 
-    @GET("sources/")
-    Call<NewsSourceDTO> getSources(@Query("language") String language);
+//    @GET("sources/")
+//    Call<NewsSourceDTO> getSources(@Query("language") String language);
+//
+    @GET("/sources")
+    Call<List<SourceDTO>> getSources();
 
-    @GET("/categories")
-    Call<List<News>> newsCategories(@Query("category") String category);
+    @GET("/category_latest")
+    Call<List<News>> newsCategory_latest();
 
-    @GET("/category")
-    Call<List<News>> newsCategory(@Query("category") String category);
+    @GET("/category_famous")
+    Call<List<News>> newsCategory_famous(@Query("category") String category);
 }

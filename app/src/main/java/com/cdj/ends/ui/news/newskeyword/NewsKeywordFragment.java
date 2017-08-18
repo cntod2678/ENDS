@@ -76,7 +76,6 @@ public class NewsKeywordFragment extends Fragment {
                 }
             }
         });
-        showRecvLoadiing();
     }
 
     @Nullable
@@ -93,7 +92,7 @@ public class NewsKeywordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRecyler();
         newsViewModel.fetchNews();
-
+        showRecvLoadiing();
         fabAddKeywrod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +129,6 @@ public class NewsKeywordFragment extends Fragment {
             public void run() {
                 recvNewsKeyword.hideShimmerAdapter();
             }
-        }, 2000);
+        }, 1000);
     }
 }

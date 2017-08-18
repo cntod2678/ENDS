@@ -6,6 +6,7 @@ package com.cdj.ends.ui.news.newssearch;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -16,11 +17,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
-import com.cdj.ends.base.view.ViewPagerDotView;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 import com.cdj.ends.data.News;
 import com.cdj.ends.ui.news.NewsItemViewModel;
@@ -29,7 +28,6 @@ import com.cdj.ends.ui.news.newssearch.viewmodel.CategoriesViewModelImpl;
 
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.constraint.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,19 +46,21 @@ public class NewsSearchFragment extends Fragment {
     @BindView(R.id.btnSpand_recv_height) Button btnSpandRecvHeight;
     Unbinder unbinder;
 
-    private GuideAdapter guideAdapter;
+    private static final String SPINNER_STATE = "SPINNER_STATE";
 
-    private CategoryAdapter categoryAdapter;
+    private static final int CATEGORY_PAGE_NUM = 5;
 
-    private List<News> newsList;
+    private CategoryLatestAdpater categoryLatestAdpater;
 
-    private List<String> strList;
+    private CategoryFavoriteAdapter categoryFavoriteAdapter;
 
     private PageSwipeCommand viewPagerIndicatorCategory;
 
-    private CategoriesViewModel categoriesViewModel;
+    private CategoriesViewModel categoriesFavoriteViewModel;
 
-    private static final int CATEGORY_PAGE_NUM = 3;
+    private CategoriesViewModel categoriesLatestViewModel;
+
+
 
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
@@ -82,20 +82,22 @@ public class NewsSearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
-        categoryAdapter = new CategoryAdapter();
 
-        strList = new ArrayList<>();
-        strList.add("1");
-        strList.add("2");
-        strList.add("3");
-
-        guideAdapter = new GuideAdapter(getActivity(), strList);
-
-        categoriesViewModel = new CategoriesViewModelImpl(getActivity());
-        categoriesViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
+        categoryLatestAdpater = new CategoryLatestAdpater(getActivity());
+        categoriesLatestViewModel = new CategoriesViewModelImpl(getActivity());
+        categoriesLatestViewModel.setUpdateCategoryLatestListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
             @Override
             public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
-                categoryAdapter.replaceData(viewModel);
+                categoryLatestAdpater.setData(viewModel);
+            }
+        });
+
+        categoryFavoriteAdapter = new CategoryFavoriteAdapter();
+        categoriesFavoriteViewModel = new CategoriesViewModelImpl(getActivity());
+        categoriesFavoriteViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
+            @Override
+            public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
+                categoryFavoriteAdapter.replaceData(viewModel);
             }
         });
      }
@@ -105,7 +107,7 @@ public class NewsSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_search, container, false);
         unbinder = ButterKnife.bind(this, view);
-        timer = new Timer();
+
         return view;
     }
 
@@ -115,15 +117,22 @@ public class NewsSearchFragment extends Fragment {
         setViewPager();
         setSpinner();
         setRecv();
-//        categoriesViewModel.fetchCategory(spinner.getItemAtPosition(0).toString());
+
+        spinner.setSelection(0);
+        categoriesLatestViewModel.fetchLatest();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        categoriesLatestViewModel.fetchLatest();
     }
 
     private void setViewPager() {
-        viewPagerCategory.setAdapter(guideAdapter);
         viewPagerCategory.setCurrentItem(0);
-
+        timer = new Timer();
         final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
+        final Runnable update = new Runnable() {
             int currentPage = 0;
             public void run() {
                 if (currentPage == CATEGORY_PAGE_NUM) {
@@ -132,24 +141,27 @@ public class NewsSearchFragment extends Fragment {
                 viewPagerCategory.setCurrentItem(currentPage++, true);
             }
         };
+
         timer .schedule(new TimerTask() { // task to be scheduled
             @Override
             public void run() {
-                handler.post(Update);
+                handler.post(update);
             }
         }, 500, 3000);
+
+        viewPagerCategory.setAdapter(categoryLatestAdpater);
     }
 
     private void setRecv() {
         recvCategoryLatest.setLayoutManager(staggeredGridLayoutManager);
-        recvCategoryLatest.setAdapter(categoryAdapter);
+        recvCategoryLatest.setAdapter(categoryFavoriteAdapter);
     }
 
     private void setSpinner() {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                categoriesViewModel.fetchCategory(parent.getItemAtPosition(position).toString());
+                categoriesFavoriteViewModel.fetchFamous(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -178,15 +190,39 @@ public class NewsSearchFragment extends Fragment {
         recvCategoryLatest.setLayoutParams(params);
     }
 
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        int spinnerSelectedState = spinner.getSelectedItemPosition();
+        outState.putInt(SPINNER_STATE, spinnerSelectedState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null) {
+            spinner.setSelection(savedInstanceState.getInt(SPINNER_STATE));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
     @Override
     public void onStop() {
         super.onStop();
-        timer.cancel();
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        timer.cancel();
     }
 }

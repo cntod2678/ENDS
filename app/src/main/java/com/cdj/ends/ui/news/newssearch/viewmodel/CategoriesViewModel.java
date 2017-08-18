@@ -7,6 +7,8 @@ import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
  */
 
 public interface CategoriesViewModel {
-    void fetchCategory(String category);
+    void fetchLatest();
+    void fetchFamous(String category);
     void setUpdateViewModelListener(NotifyUpdateViewModelListener listener);
+    void setUpdateCategoryLatestListener(NotifyUpdateViewModelListener listener);
 }
