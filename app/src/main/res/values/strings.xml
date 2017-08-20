@@ -15,20 +15,26 @@
     <string name="nav_group_name_news">뉴스</string>
     <string name="nav_news_source">Publisher</string>
     <string name="nav_news_keyword">Keyword</string>
-    <string name="nav_news_search">Search</string>
+    <string name="nav_news_category">Category</string>
 
     <string name="action_collapse">Collapse</string>
 
-    <string name="hint_add_keyword">추가하고자 하는 키워드를 입력해주세요</string>
+    <string name="hint_add_keyword">키워드를 입력해주세요</string>
     <string name="validation_check_null">키워드가 입력되지 않았습니다</string>
     <string name="validation_check_type">형식이 잘못된 키워드입니다</string>
 
     <string name="selected_word">선택된 단어 개수</string>
     <string name="added_keyword">추가된 키워드 목록</string>
 
-    <string name="latest_category">카테고리 별 최신기사</string>
-    <string name="favorite_category">카테고리 별 인기기사</string>
+    <string name="latest_category">카테고리별 최신기사</string>
+    <string name="favorite_category">카테고리별 인기기사</string>
 
     <string name="cab_selected_count">%1$d 개가 선택</string>
     <string name="hint_demo_select_long_press">길게 누를 시 삭제할 수 있습니다</string>
+
+    <string name="category_business">Business</string>
+    <string name="category_general">General</string>
+    <string name="category_politics">politics</string>
+    <string name="category_sport">Sport</string>
+    <string name="category_technology">Technology</string>
 </resources>

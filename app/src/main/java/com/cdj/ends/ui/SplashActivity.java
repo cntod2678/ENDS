@@ -16,8 +16,6 @@ import com.viksaa.sssplash.lib.model.ConfigSplash;
 
 public class SplashActivity extends AwesomeSplash {
 
-    private SharedPreferencesService sharedPreferencesService;
-
     private Activity mActivity;
 
     @Override
@@ -36,11 +34,11 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setAnimLogoSplashTechnique(Techniques.Bounce); //choose one form Techniques (ref: https://github.com/daimajia/AndroidViewAnimations)
 
         //Customize Title
-//        configSplash.setTitleSplash("ENDS");
-//        configSplash.setTitleTextColor(R.color.white);
-//        configSplash.setTitleTextSize(35f); //float value
-//        configSplash.setAnimTitleDuration(3000);
-//        configSplash.setAnimTitleTechnique(Techniques.StandUp);
+        configSplash.setTitleSplash("ENDS");
+        configSplash.setTitleTextColor(R.color.white);
+        configSplash.setTitleTextSize(35f); //float value
+        configSplash.setAnimTitleDuration(1000);
+        configSplash.setAnimTitleTechnique(Techniques.FadeIn);
         //configSplash.setTitleFont("fonts/myfont.ttf"); //provide string to your font located in assets/fonts/
     }
 

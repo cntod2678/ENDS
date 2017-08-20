@@ -36,18 +36,10 @@ public class DetailEnModeFragment extends Fragment implements WordClickListener 
 
     private News mNews;
 
-//    private static DetailEnModeFragment detailEnModeFragment;
 
     public DetailEnModeFragment() {}
 
     public static DetailEnModeFragment newInstance(News news) {
-//        if(detailEnModeFragment == null) {
-//            synchronized (DetailEnModeFragment.class) {
-//                if(detailEnModeFragment == null) {
-//                    detailEnModeFragment = new DetailEnModeFragment();
-//                }
-//            }
-//        }
         DetailEnModeFragment detailEnModeFragment = new DetailEnModeFragment();
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));

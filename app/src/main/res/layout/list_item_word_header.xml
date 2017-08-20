@@ -6,7 +6,7 @@
     android:background="@drawable/selectable_header_background"
     android:orientation="vertical"
     android:paddingBottom="0dp"
-    android:paddingTop="32dp">
+    android:paddingTop="16dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -23,17 +23,8 @@
             android:paddingStart="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/selectable_header_text_color"
-            android:text="Section Header"/>
-
-        <TextView
-            android:id="@+id/txtAdapter_position_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:padding="16dp"
-            tools:text="0"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/selectable_item_text_color" />
+            android:text="Section Header"
+            android:textStyle="bold"/>
 
         <ImageButton
             android:id="@+id/collapseButton"

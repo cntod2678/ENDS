@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,28 +11,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="right">
+        android:gravity="right|center_vertical"
+        android:paddingRight="24dp"
+        android:paddingTop="12dp">
 
-        <Button
+        <ImageButton
+            android:id="@+id/btnShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/news_detail_option_margin"/>
+            android:layout_margin="@dimen/margin_normal_big_12"
+            android:src="@drawable/ic_menu_share"
+            android:background="@color/transparent"
+            android:onClick="onShareClicked"/>
 
         <ImageButton
             android:id="@+id/btnChange_translation_mode"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_margin="@dimen/news_detail_option_margin"
-            android:src="@drawable/selector_plus"
-            android:background="@color/black"
-            android:onClick="onChangeTranslationMode"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal_big_12"
+            android:background="@color/transparent"
+            android:onClick="onChangeTranslationModeClicked"
+            android:src="@drawable/selector_language" />
     </LinearLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -42,26 +49,36 @@
 
             <FrameLayout
                 android:id="@+id/translation_mode_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="24dp">
             </FrameLayout>
 
             <TextView
                 android:id="@+id/txtChange_detail"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/translation_mode_view"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="8dp"
                 android:text="@string/change_detail_view"
                 android:onClick="onChangeWebPageClicked"/>
 
             <Button
                 android:id="@+id/btnEdu"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtChange_detail"
                 android:layout_marginTop="@dimen/news_detail_btnEdu_margin"
-                android:text="@string/btn_text_edu" />
-        </LinearLayout>
+                android:text="@string/btn_text_edu"
+                tools:layout_editor_absoluteX="24dp" />
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
 </LinearLayout>

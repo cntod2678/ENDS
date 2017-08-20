@@ -7,6 +7,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -39,7 +41,7 @@ public class NewsKeywordFragment extends Fragment {
 
     private LinearLayoutManager layoutManager;
 
-    private FloatingActionButton fabAddKeywrod;
+    private FloatingActionButton fabAddKeyword;
 
     public NewsKeywordFragment() {}
 
@@ -93,7 +95,10 @@ public class NewsKeywordFragment extends Fragment {
         setRecyler();
         newsViewModel.fetchNews();
         showRecvLoadiing();
-        fabAddKeywrod.setOnClickListener(new View.OnClickListener() {
+
+        fabAddKeyword.setBackgroundTintList(ColorStateList.valueOf(Color
+                .parseColor("#CBA483")));
+        fabAddKeyword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), KeywordActivity.class);
@@ -105,7 +110,7 @@ public class NewsKeywordFragment extends Fragment {
     private void initView(View view) {
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         recvNewsKeyword = (ShimmerRecyclerView) view.findViewById(R.id.recv_news_keyword);
-        fabAddKeywrod = (FloatingActionButton) view.findViewById(R.id.fabAdd_keyword);
+        fabAddKeyword = (FloatingActionButton) view.findViewById(R.id.fabAdd_keyword);
     }
 
     private void setRecyler() {

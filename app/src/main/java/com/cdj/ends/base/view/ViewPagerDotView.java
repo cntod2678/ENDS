@@ -188,4 +188,18 @@ public class ViewPagerDotView extends View implements PageSwipeCommand {
     public void setPageTurnCommand(PageSwipeCommand pageSwipeCommand) {
         mPageSwipeCommand = pageSwipeCommand;
     }
+
+    @Override
+    public void setVisibility(int mode) {
+        switch (mode) {
+            case GONE :
+                this.setVisibility(GONE);
+                break;
+            case INVISIBLE :
+                this.setVisibility(INVISIBLE);
+                break;
+            case VISIBLE :
+                this.setVisibility(VISIBLE);
+        }
+    }
 }

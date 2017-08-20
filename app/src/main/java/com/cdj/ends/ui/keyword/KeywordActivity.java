@@ -16,13 +16,24 @@ import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.cdj.ends.R;
+import com.cdj.ends.api.translation.TranslationAPI;
 import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.data.Keyword;
+import com.cdj.ends.data.Translation;
+import com.cdj.ends.dto.TranslationDTO;
 import com.google.android.flexbox.FlexboxLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.cdj.ends.Config.TRANS_GOOGLE_BASE_URL;
 
 public class KeywordActivity extends AppCompatActivity {
 
@@ -33,6 +44,11 @@ public class KeywordActivity extends AppCompatActivity {
     private Toolbar toolbarKeyword;
 
     private Realm mRealm;
+
+    private TranslationAPI translationAPI;
+
+    private Map<String, String> filter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +57,11 @@ public class KeywordActivity extends AppCompatActivity {
         initView();
         setToolbar();
 
+        translationAPI = new TranslationAPI(TRANS_GOOGLE_BASE_URL);
+
         Realm.init(this);
         mRealm = RealmBuilder.getRealmInstance();
-//
+
 //        mRealm.beginTransaction();
 //        mRealm.delete(Keyword.class);
 //        mRealm.commitTransaction();
@@ -92,6 +110,37 @@ public class KeywordActivity extends AppCompatActivity {
     }
 
 
+    @OnClick(R.id.btnTrans_keyword)
+    public void onTransKeywordClicked(View view) {
+        if(editKeyword.getText() == null) {
+            Toast.makeText(getApplicationContext(), this.getResources().getString(R.string.validation_check_null),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            filter = new HashMap<>();
+            filter.put("key", this.getResources().getString(R.string.GOOGLE_TRANSLATION_KEY));
+            filter.put("source", "ko");
+            filter.put("target", "en");
+            filter.put("q", editKeyword.getText().toString());
+
+            translationAPI.requestTranslate(filter, new Callback<TranslationDTO>() {
+                @Override
+                public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
+                    TranslationDTO translationDTO = response.body();
+                    //todo 리스트로 보여주자
+                    Translation translation = translationDTO.getData().getTranslations().get(0);
+                    final String translatedKeyword = translation.getTranslatedText();
+                    editKeyword.setText(translatedKeyword);
+                }
+
+                @Override
+                public void onFailure(Call<TranslationDTO> call, Throwable t) {
+
+                }
+            });
+
+        }
+    }
+
     @OnClick(R.id.btnAdd_keyword)
     public void onAddKeywordClicked(View view) {
         final String keyword = editKeyword.getText().toString();
@@ -119,7 +168,7 @@ public class KeywordActivity extends AppCompatActivity {
 
     private boolean validateData(String keyword) {
         if (keyword == null || keyword.equals("")) {
-            Toast.makeText(getApplicationContext(), "키워드를 추가해 주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), this.getResources().getString(R.string.validation_check_null), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -137,7 +186,7 @@ public class KeywordActivity extends AppCompatActivity {
         txtNewKeyword.setText(keyword);
 
         FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(10, 20, 10, 30);
+        lp.setMargins(15, 20, 15, 30);
         txtNewKeyword.setLayoutParams(lp);
 
         txtNewKeyword.setPadding((int) getApplication().getResources().getDimension(R.dimen.keyword_padding_side),

@@ -18,14 +18,4 @@
         android:textColor="@color/selectable_footer_text_color"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/txtAdapter_position_footer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:padding="16dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="0"
-        android:textColor="@color/selectable_footer_text_color" />
-
 </LinearLayout>

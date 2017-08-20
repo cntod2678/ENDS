@@ -1,6 +1,5 @@
 package com.cdj.ends.dto;
 
-import com.cdj.ends.data.Temp;
 import com.cdj.ends.data.User;
 
 /**

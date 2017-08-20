@@ -37,7 +37,7 @@ import io.realm.Sort;
  * Created by Dongjin on 2017. 8. 18..
  */
 
-public class WordActivity extends AppCompatActivity implements ActionMode.Callback {
+public class WordActivity extends AppCompatActivity implements ActionMode.Callback, WordAdapter.DeleteWordListener {
 
     @BindView(R.id.recv_word) RecyclerView recvWord;
     @BindView(R.id.toolbar_word) Toolbar toolbarWord;
@@ -150,6 +150,7 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     private void setToolbar() {
         setSupportActionBar(toolbarWord);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         if (toolbarWord != null) {
             toolbarWord.setNavigationOnClickListener(new View.OnClickListener() {
@@ -271,18 +272,28 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
     @Override
     protected void onResume() {
         super.onResume();
-//        final Snackbar snack = Snackbar.make(recvWord, R.string.hint_demo_select_long_press, Snackbar.LENGTH_INDEFINITE);
-//        snack.setAction(android.R.string.ok, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                snack.dismiss();
-//            }
-//        }).show();
+        final Snackbar snack = Snackbar.make(recvWord, R.string.hint_demo_select_long_press, Snackbar.LENGTH_INDEFINITE);
+        snack.setAction(android.R.string.ok, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snack.dismiss();
+            }
+        }).show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mRealm.close();
+    }
+
+    @Override
+    public void deleteWord(List<Word> wordList) {
+        for(Word word : wordList) {
+            RealmResults<Word> deleteList = mRealm.where(Word.class).equalTo("word", word.getWord()).findAll();
+            mRealm.beginTransaction();
+            deleteList.deleteFromRealm(0);
+            mRealm.commitTransaction();
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ import com.cdj.ends.ui.news.NewsItemViewModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -29,7 +32,6 @@ public class CategoryLatestAdpater extends PagerAdapter {
     private Context mContext;
 
     private List<NewsItemViewModel> categories;
-
 
     public CategoryLatestAdpater() { setList(Collections.<NewsItemViewModel> emptyList());}
 
@@ -59,16 +61,28 @@ public class CategoryLatestAdpater extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-        View viewItem = inflater.inflate(R.layout.item_category_latest, container, false);
+        final View viewItem = inflater.inflate(R.layout.item_category_latest, container, false);
 
+        FrameLayout newsItem = (FrameLayout) viewItem.findViewById(R.id.container_category_latest);
+        TextView txtCategory = (TextView) viewItem.findViewById(R.id.txtCategory);
         TextView txtCategoryTitle = (TextView) viewItem.findViewById(R.id.txtCategory_title);
+        ImageView imgCategory = (ImageView) viewItem.findViewById(R.id.imgCategory);
+
+        newsItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categories.get(position).onNewsItemClick(viewItem);
+            }
+        });
+
+        txtCategory.setText(categories.get(position).getCategory());
         txtCategoryTitle.setText(categories.get(position).getTitle());
 
-        ImageView imgCategory = (ImageView) viewItem.findViewById(R.id.imgCategory);
         Glide.with(mContext)
                 .load(categories.get(position).getUrlToImage())
+                .bitmapTransform(new BlurTransformation(mContext, 23))
                 .centerCrop()
                 .into(imgCategory);
 

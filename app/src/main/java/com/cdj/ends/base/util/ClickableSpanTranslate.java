@@ -68,7 +68,7 @@ public class ClickableSpanTranslate extends ClickableSpan {
         filter.put("target", "ko");
         filter.put("q", clickedText);
 
-        translationAPI.requestTrnaslate(filter, new Callback<TranslationDTO>() {
+        translationAPI.requestTranslate(filter, new Callback<TranslationDTO>() {
             @Override
             public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
                 if(response.body() != null) {

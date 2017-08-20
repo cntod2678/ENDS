@@ -6,30 +6,32 @@ package com.cdj.ends.ui.news.newssearch;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabItem;
 import android.widget.Spinner;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
-import com.cdj.ends.data.News;
 import com.cdj.ends.ui.news.NewsItemViewModel;
 import com.cdj.ends.ui.news.newssearch.viewmodel.CategoriesViewModel;
 import com.cdj.ends.ui.news.newssearch.viewmodel.CategoriesViewModelImpl;
 
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,12 +43,15 @@ import butterknife.Unbinder;
 
 public class NewsSearchFragment extends Fragment {
     @BindView(R.id.viewPager_category) ViewPager viewPagerCategory;
-    @BindView(R.id.spinner) Spinner spinner;
+    @BindView(R.id.tabLayout_favorite_category) TabLayout tabLayoutFavoriteCategory;
     @BindView(R.id.recvCategory_latest) RecyclerView recvCategoryLatest;
     @BindView(R.id.btnSpand_recv_height) Button btnSpandRecvHeight;
+    @BindView(R.id.txtDate_category) TextView txtDateCategory;
     Unbinder unbinder;
 
-    private static final String SPINNER_STATE = "SPINNER_STATE";
+    private static final String TAG = "NewsSearchFragment";
+
+    private static final String CATEGORY_STATE = "CATEGORY_STATE";
 
     private static final int CATEGORY_PAGE_NUM = 5;
 
@@ -59,8 +64,6 @@ public class NewsSearchFragment extends Fragment {
     private CategoriesViewModel categoriesFavoriteViewModel;
 
     private CategoriesViewModel categoriesLatestViewModel;
-
-
 
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
@@ -114,18 +117,28 @@ public class NewsSearchFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setDate();
         setViewPager();
-        setSpinner();
         setRecv();
-
-        spinner.setSelection(0);
-        categoriesLatestViewModel.fetchLatest();
+        setTabs();
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
         categoriesLatestViewModel.fetchLatest();
+        categoriesFavoriteViewModel.fetchFamous(tabLayoutFavoriteCategory.getTabAt(tabLayoutFavoriteCategory.getSelectedTabPosition()).getText().toString());
+    }
+
+    private void setDate() {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+
+        SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy년 MM월 dd일", java.util.Locale.getDefault());
+        String strDate = dateFormat.format(date);
+
+        txtDateCategory.setText(strDate);
     }
 
     private void setViewPager() {
@@ -157,18 +170,25 @@ public class NewsSearchFragment extends Fragment {
         recvCategoryLatest.setAdapter(categoryFavoriteAdapter);
     }
 
-    private void setSpinner() {
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    private void setTabs() {
+        tabLayoutFavoriteCategory.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                categoriesFavoriteViewModel.fetchFamous(parent.getItemAtPosition(position).toString());
+            public void onTabSelected(TabLayout.Tab tab) {
+                categoriesFavoriteViewModel.fetchFamous(tab.getText().toString());
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                parent.setSelection(0);
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+
+        //tabLayoutFavoriteCategory.getTabAt(0).select();
     }
 
     @OnClick(R.id.btnSpand_recv_height)
@@ -190,12 +210,10 @@ public class NewsSearchFragment extends Fragment {
         recvCategoryLatest.setLayoutParams(params);
     }
 
-
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        int spinnerSelectedState = spinner.getSelectedItemPosition();
-        outState.putInt(SPINNER_STATE, spinnerSelectedState);
+        int selectedCategory = tabLayoutFavoriteCategory.getSelectedTabPosition();
+        outState.putInt(CATEGORY_STATE, selectedCategory);
         super.onSaveInstanceState(outState);
     }
 
@@ -203,7 +221,7 @@ public class NewsSearchFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            spinner.setSelection(savedInstanceState.getInt(SPINNER_STATE));
+            tabLayoutFavoriteCategory.getTabAt(savedInstanceState.getInt(CATEGORY_STATE)).select();
         }
     }
 

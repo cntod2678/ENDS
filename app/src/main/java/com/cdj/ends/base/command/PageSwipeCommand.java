@@ -14,4 +14,6 @@ public interface PageSwipeCommand {
     void onPageScrollStateChanged(int state);
 
     void setPageTurnCommand(PageSwipeCommand pageSwipeCommand);
+
+    void setVisibility(int mode);
 }

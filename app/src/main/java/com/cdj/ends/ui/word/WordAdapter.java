@@ -1,5 +1,6 @@
 package com.cdj.ends.ui.word;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
@@ -27,35 +28,35 @@ public class WordAdapter extends SectioningAdapter {
 
     private static final String TAG = "WordAdapter";
 
+    private DeleteWordListener deleteWordListener;
+
     private boolean showAdapterPositions;
 
     private Context mContext;
 
     private List<Section> mSectionList;
 
+    interface DeleteWordListener {
+        void deleteWord(List<Word> wordList);
+    }
+
     public WordAdapter(Context context, List<Section> sections, boolean showAdapterPositions) {
         this.mContext = context;
         mSectionList = new ArrayList<>();
         this.mSectionList = sections;
         this.showAdapterPositions = showAdapterPositions;
-        Log.d(TAG, mSectionList.size() + " ");
+        deleteWordListener = (DeleteWordListener) mContext;
     }
 
     class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder implements View.OnClickListener {
         TextView txtSectionHeader;
-        TextView txtAdapterPositionHeader;
         ImageButton collapseButton;
 
         public HeaderViewHolder(View itemView, boolean showAdapterPosition) {
             super(itemView);
             txtSectionHeader = (TextView) itemView.findViewById(R.id.txtSection_header);
-            txtAdapterPositionHeader = (TextView) itemView.findViewById(R.id.txtAdapter_position_header);
             collapseButton = (ImageButton) itemView.findViewById(R.id.collapseButton);
             collapseButton.setOnClickListener(this);
-
-            if (showAdapterPosition) {
-                txtAdapterPositionHeader.setVisibility(View.INVISIBLE);
-            }
         }
 
         void updateSectionCollapseToggle(boolean sectionIsCollapsed) {
@@ -95,21 +96,14 @@ public class WordAdapter extends SectioningAdapter {
 
     class FooterViewHolder extends SectioningAdapter.FooterViewHolder {
         TextView txtWordNums;
-        TextView txtAdapterPositionFooter;
 
         public FooterViewHolder(View itemView, boolean showAdapterPosition) {
             super(itemView);
             txtWordNums = (TextView) itemView.findViewById(R.id.txtWord_nums);
-            txtAdapterPositionFooter = (TextView) itemView.findViewById(R.id.txtAdapter_position_footer);
-
-            if(showAdapterPosition) {
-                txtAdapterPositionFooter.setVisibility(View.INVISIBLE);
-            }
         }
     }
 
     public void deleteSelection() {
-
         traverseSelection(new SelectionVisitor() {
             @Override
             public void onVisitSelectedSection(int sectionIndex) {
@@ -123,6 +117,12 @@ public class WordAdapter extends SectioningAdapter {
                 Log.d(TAG, "onVisitSelectedSectionItem() called with: " + "sectionIndex = [" + sectionIndex + "], itemIndex = [" + itemIndex + "]");
                 Section section = mSectionList.get(sectionIndex);
                 if (section != null) {
+                    //todo
+                    List<Word> deleteWordList = new ArrayList<Word>();
+                    deleteWordList.add(section.items.get(itemIndex));
+                    Log.d(TAG, "선택된 삭제 " +  deleteWordList.size());
+                    deleteWordListener.deleteWord(deleteWordList);
+
                     section.items.remove(itemIndex);
                     notifySectionItemRemoved(sectionIndex, itemIndex);
                 }
@@ -130,7 +130,6 @@ public class WordAdapter extends SectioningAdapter {
 
             @Override
             public void onVisitSelectedFooter(int sectionIndex) {
-                Log.d(TAG, "onVisitSelectedFooter() called with: " + "sectionIndex = [" + sectionIndex + "]");
                 Section section = mSectionList.get(sectionIndex);
                 if (section != null) {
                     section.footer = null;
@@ -139,12 +138,11 @@ public class WordAdapter extends SectioningAdapter {
             }
         });
 
-        // clear selection without notification - because that would fight the deletion animations triggered above
         clearSelection(false);
     }
 
     private void onToggleSectionCollapse(int sectionIndex) {
-        Log.d(TAG, "onToggleSectionCollapse() called with: " + "sectionIndex = [" + sectionIndex + "]");
+
         setSectionIsCollapsed(sectionIndex, !isSectionCollapsed(sectionIndex));
     }
 
@@ -192,7 +190,6 @@ public class WordAdapter extends SectioningAdapter {
         HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
 
         hvh.txtSectionHeader.setText(s.header);
-        hvh.txtAdapterPositionHeader.setText(Integer.toString(getAdapterPositionForSectionHeader(sectionIndex)));
 
         hvh.itemView.setActivated(isSectionSelected(sectionIndex));
         hvh.updateSectionCollapseToggle(isSectionCollapsed(sectionIndex));
@@ -213,10 +210,10 @@ public class WordAdapter extends SectioningAdapter {
     public void onBindFooterViewHolder(SectioningAdapter.FooterViewHolder viewHolder, int sectionIndex, int footerType) {
         Section s = mSectionList.get(sectionIndex);
         FooterViewHolder fvh = (FooterViewHolder) viewHolder;
-        fvh.txtWordNums.setText(s.footer);
-        fvh.txtAdapterPositionFooter.setText(Integer.toString(getAdapterPositionForSectionFooter(sectionIndex)));
+        fvh.txtWordNums.setText("외워야 할 단어 : " + s.footer);
 
         fvh.itemView.setActivated(isSectionFooterSelected(sectionIndex));
     }
+
 
 }

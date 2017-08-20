@@ -4,6 +4,7 @@ package com.cdj.ends.ui.newsdetail;
  * Created by Dongjin on 2017. 8. 9..
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -14,7 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import jp.wasabeef.glide.transformations.CropTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,8 +50,9 @@ public class NewsDetailFragment extends Fragment  {
     private final static String TAG = "NewsDetailFragment";
 
     @BindView(R.id.imgMain_news) ImageView imgMainNews;
-    @BindView(R.id.btnChange_translation_mode) ImageView btnTranslationMode;
-    @BindView(R.id.btnChange_to_web) Button btnChangePage;
+    @BindView(R.id.btnChange_translation_mode) ImageButton btnTranslationMode;
+    @BindView(R.id.btnShare) ImageButton btnShare;
+    @BindView(R.id.txtDetail_source) TextView txtDetailSource;
     @BindView(R.id.toolbar_news_detail) Toolbar toolbarNewsDetail;
     @BindView(R.id.txtChange_detail) TextView txtChangeDetail;
     private Unbinder unbinder;
@@ -97,7 +100,13 @@ public class NewsDetailFragment extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         setToolbar();
         setView();
-        Snackbar.make(view, getActivity().getApplicationContext().getString(R.string.guide_translation), Snackbar.LENGTH_LONG).show();
+        final Snackbar snack = Snackbar.make(view, getActivity().getApplicationContext().getString(R.string.guide_translation), Snackbar.LENGTH_INDEFINITE);
+        snack.setAction(android.R.string.ok, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snack.dismiss();
+            }
+        }).show();
     }
 
     private void setToolbar() {
@@ -109,17 +118,24 @@ public class NewsDetailFragment extends Fragment  {
     private void setView() {
         Glide.with(getActivity())
                 .load(mNews.getUrlToImage())
-                .fitCenter()
+                .override(600, 400)
+                .centerCrop()
                 .into(imgMainNews);
+
+        txtDetailSource.setText(mNews.getSource());
     }
 
-    @OnClick({R.id.btnChange_to_web, R.id.txtChange_detail})
-    public void onChangeWebPageClicked(View v) {
-        ChromeTabActionBuilder.openChromTab(getActivity(), mNews.getUrl());
+    @OnClick(R.id.btnShare)
+    public void onShareClicked(View v) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, mNews.getUrl());
+        intent.setType("text/plain");
+        startActivity(intent);
     }
 
     @OnClick(R.id.btnChange_translation_mode)
-    public void onChangeTranslationMode(View v) {
+    public void onChangeTranslationModeClicked(View v) {
         Fragment fragment = null;
 
         if(translationFlag) {
@@ -145,7 +161,7 @@ public class NewsDetailFragment extends Fragment  {
         filter.put("q", mNews.getDescription());
 
         TranslationAPI translationAPI = new TranslationAPI(TRANS_GOOGLE_BASE_URL);
-        translationAPI.requestTrnaslate(filter, new Callback<TranslationDTO>() {
+        translationAPI.requestTranslate(filter, new Callback<TranslationDTO>() {
             @Override
             public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
                 TranslationDTO translationDTO = response.body();

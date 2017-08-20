@@ -8,6 +8,17 @@
     <dimen name="fab_margin">16dp</dimen>
 
 
+    <!-- margins -->
+    <dimen name="margin_small_4">4dp</dimen>
+    <dimen name="margin_normal_8">8dp</dimen>
+    <dimen name="margin_normal_big_12">12dp</dimen>
+    <dimen name="margin_big_16">16dp</dimen>
+
+    <dimen name="text_20">20sp</dimen>
+    <dimen name="text_title">16sp</dimen>
+    <dimen name="text_regular">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+
     <!-- ViewPager Dot -->
     <dimen name="indicator_radius_2">2.5dp</dimen>
     <dimen name="height_small_8">8dp</dimen>
@@ -16,11 +27,11 @@
     <!-- NewsKeyword Item -->
     <dimen name="cardView_radius">6dp</dimen>
     <dimen name="news_keyword_item_height">240dp</dimen>
-    <dimen name="news_item_margin">5dp</dimen>
+    <dimen name="news_item_margin">6dp</dimen>
     <dimen name="news_item_img_size">80dp</dimen>
     <dimen name="news_item_img_margin">16dp</dimen>
-    <dimen name="news_item_padding">12dp</dimen>
-    <dimen name="news_item_description_margin">12dp</dimen>
+    <dimen name="news_item_padding">16dp</dimen>
+    <dimen name="news_item_description_margin">8dp</dimen>
 
     <!-- NewsSource Item -->
     <dimen name="news_source_item_height">80dp</dimen>
@@ -43,7 +54,6 @@
     <dimen name="radius_edit_corner">10dp</dimen>
     <dimen name="padding_edit_left">16dp</dimen>
     <dimen name="margin_top_edit">8dp</dimen>
-    <dimen name="container_keyword_padding">8dp</dimen>
     <dimen name="keyword_padding_side">15dp</dimen>
     <dimen name="keyword_padding_updown">5dp</dimen>
 

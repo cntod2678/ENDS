@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,6 @@ import android.view.ViewGroup;
 import com.cdj.ends.R;
 
 public class MainFragment extends Fragment {
-
-    private static final int VIEW_PAGER_MID = 1;
     private static final int VIEW_PAGER_CNT = 3;
 
     private ViewPager viewPager_main;
@@ -26,11 +25,16 @@ public class MainFragment extends Fragment {
 
     private MainViewChange mainViewChange ;
 
+    private static String CURRENT_PAGE_NUM = "CURRENT_PAGE_NUM";
+
+    private static int current_page;
+
     public MainFragment () {}
 
-    public static MainFragment newInstance() {
+    public static MainFragment newInstance(int page_num) {
         MainFragment mainFragment = new MainFragment();
         Bundle args = new Bundle();
+        args.putInt(CURRENT_PAGE_NUM, page_num);
         mainFragment.setArguments(args);
         return mainFragment;
     }
@@ -60,6 +64,16 @@ public class MainFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            current_page = getArguments().getInt(CURRENT_PAGE_NUM);
+        } else {
+            current_page = 1;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,7 +86,8 @@ public class MainFragment extends Fragment {
     private void setViewPager() {
         mainPagerAdapter = new MainFragmentAdapter(getActivity().getSupportFragmentManager());
         viewPager_main.setAdapter(mainPagerAdapter);
-        viewPager_main.setCurrentItem(VIEW_PAGER_MID);
+        viewPager_main.setCurrentItem(current_page);
+        Log.d(CURRENT_PAGE_NUM, "curr : " + current_page);
         viewPager_main.setOffscreenPageLimit(VIEW_PAGER_CNT);
 
         viewPager_main.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -98,7 +113,6 @@ public class MainFragment extends Fragment {
         void pageSelected(int position);
         void pageScrollStateChanged(int state);
     }
-
 
     @Override
     public void onResume() {

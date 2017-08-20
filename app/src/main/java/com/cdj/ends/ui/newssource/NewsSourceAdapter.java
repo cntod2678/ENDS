@@ -99,7 +99,6 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
                     .fitCenter()
                     .placeholder(R.drawable.aljazeeraenglish)
                     .into(imgSourceLogo);
-            Log.d(TAG, LOCAL_HOST_URL + "images/" + viewModel.getName() + ".PNG");
         }
     }
 }

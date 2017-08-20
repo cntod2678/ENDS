@@ -21,7 +21,7 @@ public class TranslationAPI extends RetrofitManagerAPI<TranslateCallService, Tra
         translateCallService = createCallService();
     }
 
-    public void requestTrnaslate(Map<String, String> map, Callback<TranslationDTO> callback) {
+    public void requestTranslate(Map<String, String> map, Callback<TranslationDTO> callback) {
         translateCallService.translate(map).enqueue(callback);
     }
 

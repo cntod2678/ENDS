@@ -6,9 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/txtList_keyword"
@@ -16,21 +14,24 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="24dp"
+        android:layout_marginLeft="@dimen/margin_normal_big_12"
         android:text="@string/added_keyword"
         android:textColor="@color/colorPrimaryDark"
         android:letterSpacing="0.1"
         android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textSize="@dimen/text_title" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/container_keyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         app:flexWrap="wrap"
         app:alignItems="flex_start"
         app:alignContent="flex_start"
-        app:justifyContent="space_around">
+        app:justifyContent="flex_start">
 
     </com.google.android.flexbox.FlexboxLayout>
 

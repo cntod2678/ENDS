@@ -9,12 +9,12 @@
                 android:title="@string/nav_news_source" />
             <item
                 android:id="@+id/nav_keyword"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_news"
                 android:title="@string/nav_news_keyword" />
             <item
                 android:id="@+id/nav_search"
                 android:icon="@drawable/ic_menu_send"
-                android:title="@string/nav_news_search" />
+                android:title="@string/nav_news_category" />
         </menu>
     </item>
 
@@ -25,7 +25,7 @@
             android:title="즐겨찾기" />
         <item
             android:id="@+id/nav_word"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_word"
             android:title="단어 복습" />
         <item
             android:id="@+id/nav_add_keyword"

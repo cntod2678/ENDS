@@ -1,5 +1,6 @@
 package com.cdj.ends.ui.main;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -11,47 +12,72 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
 import com.cdj.ends.base.view.ViewPagerDotView;
 import com.cdj.ends.ui.keyword.KeywordActivity;
+import com.cdj.ends.ui.settings.SettingFragment;
 import com.cdj.ends.ui.word.WordActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.cdj.ends.ui.main.MainFragmentAdapter.PAGE_NUM;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
     MainFragment.MainViewChange {
 
+    private static final String TAG = "MainActivity";
+
+    private final String MAIN_PAGE = "MAIN_PAGE";
+    private static int CURRENT_PAGE = 1;
+
+    @BindView(R.id.toolbar_main) Toolbar toolbarMain;
+
+    private LinearLayout guideMain;
     private PageSwipeCommand dotViewIndicator;
-    private Toolbar toolbalMain;
     private DrawerLayout drawerLayout;
     private boolean mTerminateFlag = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState == null) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance(), "MAIN_TAG").commit();
+        ButterKnife.bind(this);
+
+        if(getIntent() != null) {
+            CURRENT_PAGE = getIntent().getIntExtra(MAIN_PAGE, 1);
         }
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance(CURRENT_PAGE)).commit();
 
         initView();
         setToolbar();
         setNavDrawer();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
     private void initView() {
-        toolbalMain = (Toolbar) findViewById(R.id.toolbar_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        guideMain = (LinearLayout) findViewById(R.id.guide_main);
         dotViewIndicator = (ViewPagerDotView) findViewById(R.id.dotView_indicator);
     }
 
     private void setToolbar() {
-        setSupportActionBar(toolbalMain);
+        setSupportActionBar(toolbarMain);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         dotViewIndicator.setPageTurnCommand(new ViewPagerDotView(this));
         dotViewIndicator.setNumOfCircles(PAGE_NUM, getResources().getDimensionPixelSize(R.dimen.indicator_radius_2));
@@ -59,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setNavDrawer() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbalMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawerLayout, toolbarMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -83,30 +109,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_source) {
-
-        } else if (id == R.id.nav_keyword) {
-            getSupportFragmentManager().popBackStack();
-            fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance()).addToBackStack(null).commit();
-        } else if (id == R.id.nav_search) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_word) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra(MAIN_PAGE, 0);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_keyword) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra(MAIN_PAGE, 1);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_search) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra(MAIN_PAGE, 2);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_word) {
             Intent intent = new Intent(getApplicationContext(), WordActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_add_keyword) {
+        }
+        else if (id == R.id.nav_add_keyword) {
             Intent intent = new Intent(getApplicationContext(), KeywordActivity.class);
             startActivity(intent);
-        } else {
+        }
+        else if (id == R.id.nav_manage) {
+            if(fragmentManager.getBackStackEntryCount() >= 1 ) {
+                fragmentManager.popBackStack();
+            }
+            guideMain.setVisibility(View.INVISIBLE);
+            fragmentManager.beginTransaction()
+                    .add(R.id.main_frame, SettingFragment.newInstance()).addToBackStack(null)
+                    .commit();
+        }
+        else {
             Toast.makeText(getApplicationContext(), "등록 안해줬다", Toast.LENGTH_SHORT).show();
         }
 
@@ -114,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     /* mainFragment 의 viewpager listener 등록 */
     @Override
@@ -141,4 +183,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+
 }

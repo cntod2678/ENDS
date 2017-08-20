@@ -21,13 +21,18 @@
         <TextView
             android:id="@+id/txtSource_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16dp"/>
 
         <TextView
             android:id="@+id/txtSource_des"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:maxLines="2"
+            android:lineSpacingMultiplier="1.1"
             android:ellipsize="end"/>
     </LinearLayout>
 </LinearLayout>
