@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 
 import com.cdj.ends.R;
 
-
 /**
  * Created by Dongjin on 2017. 8. 14..
  */
@@ -24,7 +23,7 @@ public class ChromeTabActionBuilder {
         intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark));
 
         // set action button
-        intentBuilder.setActionButton(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher), "Action Button",
+        intentBuilder.setActionButton(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.custom_edit_background), "Action Button",
                 createPendingIntent(mContext, ChromeTabActionBroadcastReceiver.ACTION_ACTION_BUTTON));
 
         // set start and exit animations

@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.cdj.ends.Config;
 import com.cdj.ends.R;
+import com.cdj.ends.base.util.ChromeTabActionBuilder;
 import com.cdj.ends.data.Word;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
@@ -79,18 +81,14 @@ public class WordAdapter extends SectioningAdapter {
     class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
         TextView txtOriginWord;
         TextView txtTranslatedWord;
-        TextView txtAdapterPositionItem;
+        ImageButton imgBtnSearchMore;
 
         public ItemViewHolder(View itemView, boolean showAdapterPosition) {
             super(itemView);
 
             txtOriginWord = (TextView) itemView.findViewById(R.id.txtOrigin_word);
             txtTranslatedWord = (TextView) itemView.findViewById(R.id.txtTranslated_word);
-            txtAdapterPositionItem = (TextView) itemView.findViewById(R.id.txtAdapter_position_item) ;
-
-            if(showAdapterPosition) {
-                txtAdapterPositionItem.setVisibility(View.INVISIBLE);
-            }
+            imgBtnSearchMore = (ImageButton) itemView.findViewById(R.id.imgBtn_search_more);
         }
     }
 
@@ -142,7 +140,6 @@ public class WordAdapter extends SectioningAdapter {
     }
 
     private void onToggleSectionCollapse(int sectionIndex) {
-
         setSectionIsCollapsed(sectionIndex, !isSectionCollapsed(sectionIndex));
     }
 
@@ -196,12 +193,19 @@ public class WordAdapter extends SectioningAdapter {
     }
 
     @Override
-    public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemType) {
-        Section s = mSectionList.get(sectionIndex);
+    public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, final int itemIndex, int itemType) {
+        final Section s = mSectionList.get(sectionIndex);
         ItemViewHolder ivh = (ItemViewHolder) viewHolder;
         ivh.txtOriginWord.setText(s.items.get(itemIndex).getWord());
         ivh.txtTranslatedWord.setText(s.items.get(itemIndex).getTranslatedWord());
-        ivh.txtAdapterPositionItem.setText(Integer.toString(getAdapterPositionForSectionItem(sectionIndex, itemIndex)));
+        ivh.imgBtnSearchMore.setImageResource(R.drawable.ic_menu_camera);
+
+        ivh.imgBtnSearchMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChromeTabActionBuilder.openChromTab(mContext, Config.TRANS_NAVER_BASE_URL + s.items.get(itemIndex).getWord());
+            }
+        });
 
         ivh.itemView.setActivated(isSectionItemSelected(sectionIndex, itemIndex));
     }

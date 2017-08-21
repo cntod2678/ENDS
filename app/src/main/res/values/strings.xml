@@ -37,4 +37,7 @@
     <string name="category_politics">politics</string>
     <string name="category_sport">Sport</string>
     <string name="category_technology">Technology</string>
+
+
+    <string name="notice_delete_cache">앱에 저장된 데이터를 삭제하고 정리합니다. 기록한 단어, 추가한 키워드, 스크랩한 목록등이 삭제됩니다.</string>
 </resources>

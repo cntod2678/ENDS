@@ -4,6 +4,11 @@ package com.cdj.ends.ui.newsdetail;
  * Created by Dongjin on 2017. 8. 9..
  */
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +44,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import jp.wasabeef.glide.transformations.CropTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +57,7 @@ public class NewsDetailFragment extends Fragment  {
     @BindView(R.id.imgMain_news) ImageView imgMainNews;
     @BindView(R.id.btnChange_translation_mode) ImageButton btnTranslationMode;
     @BindView(R.id.btnShare) ImageButton btnShare;
+    @BindView(R.id.btnScrap) ImageButton btnScrap;
     @BindView(R.id.txtDetail_source) TextView txtDetailSource;
     @BindView(R.id.toolbar_news_detail) Toolbar toolbarNewsDetail;
     @BindView(R.id.txtChange_detail) TextView txtChangeDetail;
@@ -59,6 +65,36 @@ public class NewsDetailFragment extends Fragment  {
 
     private static News mNews;
     private static boolean translationFlag = true;
+
+    private ScrapWordListener scrapWordListener;
+
+    interface ScrapWordListener {
+        void scrap(News news);
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Activity) {
+            try {
+                scrapWordListener = (NewsDetailActivity) getContext();
+            } catch (ClassCastException cce) {
+                throw new ClassCastException(context.toString()
+                        + " must implement OnHeadlineSelectedListener");
+            }
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            scrapWordListener = (ScrapWordListener) activity;
+        } catch(ClassCastException ce) {
+            Log.d(TAG, ce.getMessage());
+        }
+    }
 
     public NewsDetailFragment() {}
 
@@ -125,8 +161,34 @@ public class NewsDetailFragment extends Fragment  {
         txtDetailSource.setText(mNews.getSource());
     }
 
+    @OnClick(R.id.txtChange_detail)
+    public void onChangeWebPageClicked(View view) {
+        ChromeTabActionBuilder.openChromTab(getActivity(), mNews.getUrl());
+    }
+
+    @OnClick(R.id.btnScrap)
+    public void onScrapClicked(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setMessage("스크랩북에 추가하시겠습니까?");
+
+        // OK 버튼 이벤트
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                scrapWordListener.scrap(mNews);
+            }
+        });
+
+        // Cancel 버튼 이벤트
+        dialog.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
     @OnClick(R.id.btnShare)
-    public void onShareClicked(View v) {
+    public void onShareClicked(View view) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, mNews.getUrl());
@@ -135,7 +197,7 @@ public class NewsDetailFragment extends Fragment  {
     }
 
     @OnClick(R.id.btnChange_translation_mode)
-    public void onChangeTranslationModeClicked(View v) {
+    public void onChangeTranslationModeClicked(View view) {
         Fragment fragment = null;
 
         if(translationFlag) {
@@ -176,6 +238,7 @@ public class NewsDetailFragment extends Fragment  {
             }
         });
     }
+
 
     @Override
     public void onDestroyView() {

@@ -33,13 +33,12 @@
             android:layout_gravity="start|center_vertical"
             android:textColor="@color/selectable_item_text_color" />
 
-        <TextView
-            android:id="@+id/txtAdapter_position_item"
+        <ImageButton
+            android:id="@+id/imgBtn_search_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="0"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_gravity="start|center_vertical" />
     </LinearLayout>
 

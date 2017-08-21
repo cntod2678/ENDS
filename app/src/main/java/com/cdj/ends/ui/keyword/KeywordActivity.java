@@ -126,7 +126,6 @@ public class KeywordActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<TranslationDTO> call, Response<TranslationDTO> response) {
                     TranslationDTO translationDTO = response.body();
-                    //todo 리스트로 보여주자
                     Translation translation = translationDTO.getData().getTranslations().get(0);
                     final String translatedKeyword = translation.getTranslatedText();
                     editKeyword.setText(translatedKeyword);
@@ -163,7 +162,6 @@ public class KeywordActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "이미 추가되어 있는 단어입니다.", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     private boolean validateData(String keyword) {
@@ -171,7 +169,6 @@ public class KeywordActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), this.getResources().getString(R.string.validation_check_null), Toast.LENGTH_SHORT).show();
             return false;
         }
-
         if(keyword.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
             Toast.makeText(getApplicationContext(), "한글을 변환해서 추가해주세요", Toast.LENGTH_SHORT).show();
             return false;
@@ -182,7 +179,6 @@ public class KeywordActivity extends AppCompatActivity {
     private void addChildView(final String keyword) {
 
         final TextView txtNewKeyword = new TextView(this);
-
         txtNewKeyword.setText(keyword);
 
         FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -219,8 +215,6 @@ public class KeywordActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RealmResults<Keyword> keywords = mRealm.where(Keyword.class).findAll();
-        Log.d(TAG, "stop : " + keywords.size());
         mRealm.close();
     }
 }

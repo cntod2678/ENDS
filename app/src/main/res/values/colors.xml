@@ -12,6 +12,7 @@
     <color name="black">#000000</color>
     <color name="light_gray">#ABABAB</color>
     <color name="dark_gray">#343434</color>
+    <color name="red">#cc0000</color>
 
     <color name="edit_stroke">#A1A1A1</color>
 

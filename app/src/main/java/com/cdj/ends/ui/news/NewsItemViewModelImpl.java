@@ -21,13 +21,15 @@ public class NewsItemViewModelImpl implements NewsItemViewModel {
 
     @Override
     public String getSource() {
-        if(mNews.equals("undefined"))
+        if(mNews.getSource().equals("undefined"))
             return "출처가 확인되지 않은 뉴스";
         return mNews.getSource();
     }
 
     @Override
     public String getAuthor() {
+        if(mNews.getAuthor().equals("undefined"))
+            return "출처가 확인되지 않은 뉴스";
         return mNews.getAuthor();
     }
 

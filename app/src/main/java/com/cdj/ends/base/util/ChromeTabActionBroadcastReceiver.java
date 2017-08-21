@@ -13,9 +13,7 @@ import com.cdj.ends.R;
 
 public class ChromeTabActionBroadcastReceiver  extends BroadcastReceiver {
     public static final String KEY_ACTION_SOURCE = "org.chromium.customtabsdemos.ACTION_SOURCE";
-
     public static final int ACTION_ACTION_BUTTON = 3;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -23,7 +21,6 @@ public class ChromeTabActionBroadcastReceiver  extends BroadcastReceiver {
 
         if (data != null) {
             String toastText = getToastText(context, intent.getIntExtra(KEY_ACTION_SOURCE, -1), data);
-
             Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
         }
     }
@@ -31,6 +28,7 @@ public class ChromeTabActionBroadcastReceiver  extends BroadcastReceiver {
     private String getToastText(Context context, int actionSource, String message) {
         switch (actionSource) {
             case ACTION_ACTION_BUTTON:
+                Toast.makeText(context, "확인 " + message, Toast.LENGTH_SHORT).show();
                 return "액션 버튼번";
             default:
                 return "정의되지 않음";

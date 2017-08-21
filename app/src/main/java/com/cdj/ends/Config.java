@@ -11,7 +11,7 @@ public class Config {
 
     public static final String NAVER_LOGIN_URL = "https://openapi.naver.com/v1/nid/me";
 
-    public static final String TRANS_NAVER_BASE_URL = "http://m.endic.naver.com/search.nhn?searchOption=all";
+    public static final String TRANS_NAVER_BASE_URL = "http://m.endic.naver.com/search.nhn?searchOption=all&query=";
 
     public static final String LOCAL_HOST_URL = "http://172.20.10.2:3000/";
 //    public static final String LOCAL_HOST_URL = "http://192.168.0.25:3000/";

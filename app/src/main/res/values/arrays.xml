@@ -8,13 +8,79 @@
         <item>Technology</item>
     </string-array>
 
-    <string-array name="news_source">
-        <item>http://mobile.abc.net.au/cm/cb/4355924/News+iOS+120x120/data.png</item>
-        <item>http://www.aljazeera.com/mritems/assets/images/touch-icon-iphone-retina.png</item>
-        <item>http://cdn.arstechnica.net/apple-touch-icon.png</item>
-        <item name="abc">abc</item>
+    <array name="open_source">
+        <item>AwesomeSplash</item>
+        https://github.com/ViksaaSkool/AwesomeSplash
+        Copyright (c) 2015  ViksaaSkool
+        The MIT License (MIT)
 
-    </string-array>
+        <item>butterknife</item>
+        https://github.com/JakeWharton/butterknife
+        Copyright 2013 Jake Wharton
+        Apache License 2.0
+
+        <item>customtabs</item>
+        https://github.com/GoogleChrome/custom-tabs-client
+        Copyright lizeb@chromium.org
+        Copyright pasko@chromium.org
+        Copyright yusufo@chromium.org
+        Apache License 2.0
+
+        <item>flexbox-layout</item>
+        https://github.com/google/flexbox-layout
+        Copyright Google Inc
+        Apache License 2.0
+
+        <item>Glide</item>
+        https://github.com/bumptech/glide
+        Copyright 2014 Google, Inc.
+        Copyright 2012 Jake Wharton
+        Copyright 2011 The Android Open Source Project
+        Copyright (c) 2013 Xcellent Creations, Inc.
+        Copyright (c) 1994 Anthony Dekker
+
+        <item>glide-transformations</item>
+        https://github.com/wasabeef/glide-transformations
+        Copyright 2017 Wasabeef
+        Apache License 2.0
+
+        <item>gpuimage</item>
+        https://github.com/BradLarson/GPUImage
+        Copyright (c) 2012, Brad Larson, Ben Cochran, Hugues Lismonde, Keitaroh Kobayashi, Alaric Cole, Matthew Clark, Jacob Gundersen, Chris Williams.
+        All rights reserved.
+
+        <item>Gson</item>
+        https://github.com/google/gson
+        Copyright 2008 Google Inc.
+        Apache License 2.0
+
+        <item>parceler</item>
+        https://github.com/johncarl81/parceler
+        Copyright 2011-2015 John Ericksen
+        Copyright 2011-2015 John Ericksen
+
+        <item>retrofit2</item>
+        https://github.com/square/retrofit
+        Copyright 2013 Square, Inc.
+        Apache License 2.0
+
+        <item>retrofit2:converter-gson</item>
+        https://github.com/square/retrofit
+        Copyright 2013 Square, Inc.
+        Apache License 2.0
+
+        <item>ShimmerRecyclerView</item>
+        https://github.com/sharish/ShimmerRecyclerView
+        Copyright (c) 2015, Facebook, Inc. All rights reserved.
+        Copyright 2017 Harish Sridharan
+        Apache License 2.0
+        BSD 3-clause "NEW" or "Revised" License
+
+        <item>stickyheaders</item>
+        https://github.com/ShamylZakariya/StickyHeaders
+        Copyright (c) 2016 Shamyl Zakariya
+        MIT License
+    </array>
 
 
 </resources>

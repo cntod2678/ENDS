@@ -3,21 +3,17 @@ package com.cdj.ends.ui.news.newssearch;
 /**
  * Created by Dongjin on 2017. 8. 8..
  */
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.TabItem;
-import android.widget.Spinner;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
@@ -44,18 +40,18 @@ import butterknife.Unbinder;
 public class NewsSearchFragment extends Fragment {
     @BindView(R.id.viewPager_category) ViewPager viewPagerCategory;
     @BindView(R.id.tabLayout_favorite_category) TabLayout tabLayoutFavoriteCategory;
-    @BindView(R.id.recvCategory_latest) RecyclerView recvCategoryLatest;
+    @BindView(R.id.recvCategory_favorite) RecyclerView recvCategoryFavorite;
     @BindView(R.id.btnSpand_recv_height) Button btnSpandRecvHeight;
     @BindView(R.id.txtDate_category) TextView txtDateCategory;
     Unbinder unbinder;
 
     private static final String TAG = "NewsSearchFragment";
 
-    private static final String CATEGORY_STATE = "CATEGORY_STATE";
+    private static final String STATE_SCROLL_POSITION = "STATE_SCROLL_POSITION";
 
     private static final int CATEGORY_PAGE_NUM = 5;
 
-    private CategoryLatestAdpater categoryLatestAdpater;
+    private CategoryLatestAdapter categoryLatestAdapter;
 
     private CategoryFavoriteAdapter categoryFavoriteAdapter;
 
@@ -84,14 +80,12 @@ public class NewsSearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
-
-        categoryLatestAdpater = new CategoryLatestAdpater(getActivity());
+        categoryLatestAdapter = new CategoryLatestAdapter(getActivity());
         categoriesLatestViewModel = new CategoriesViewModelImpl(getActivity());
         categoriesLatestViewModel.setUpdateCategoryLatestListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
             @Override
             public void onUpdatedViewModel(List<NewsItemViewModel> viewModel) {
-                categoryLatestAdpater.setData(viewModel);
+                categoryLatestAdapter.setData(viewModel);
             }
         });
 
@@ -110,7 +104,6 @@ public class NewsSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_search, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         return view;
     }
 
@@ -122,7 +115,6 @@ public class NewsSearchFragment extends Fragment {
         setRecv();
         setTabs();
     }
-
 
     @Override
     public void onStart() {
@@ -142,7 +134,8 @@ public class NewsSearchFragment extends Fragment {
     }
 
     private void setViewPager() {
-        viewPagerCategory.setCurrentItem(0);
+        viewPagerCategory.setAdapter(categoryLatestAdapter);
+
         timer = new Timer();
         final Handler handler = new Handler();
         final Runnable update = new Runnable() {
@@ -155,19 +148,18 @@ public class NewsSearchFragment extends Fragment {
             }
         };
 
-        timer .schedule(new TimerTask() { // task to be scheduled
+        timer.schedule(new TimerTask() { // task to be scheduled
             @Override
             public void run() {
                 handler.post(update);
             }
         }, 500, 3000);
-
-        viewPagerCategory.setAdapter(categoryLatestAdpater);
     }
 
     private void setRecv() {
-        recvCategoryLatest.setLayoutManager(staggeredGridLayoutManager);
-        recvCategoryLatest.setAdapter(categoryFavoriteAdapter);
+        recvCategoryFavorite.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
+        recvCategoryFavorite.setAdapter(categoryFavoriteAdapter);
+        recvCategoryFavorite.setNestedScrollingEnabled(false);
     }
 
     private void setTabs() {
@@ -179,16 +171,13 @@ public class NewsSearchFragment extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 
-        //tabLayoutFavoriteCategory.getTabAt(0).select();
     }
 
     @OnClick(R.id.btnSpand_recv_height)
@@ -198,43 +187,15 @@ public class NewsSearchFragment extends Fragment {
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             recv_height_flag = true;
             btnSpandRecvHeight.setSelected(true);
-            recvCategoryLatest.setNestedScrollingEnabled(false);
+
         } else {
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     (int) (getActivity().getApplicationContext().getResources().getDimension(R.dimen.recv_category_recv_original_height)));
             recv_height_flag = false;
             btnSpandRecvHeight.setSelected(false);
-            recvCategoryLatest.setNestedScrollingEnabled(true);
         }
 
-        recvCategoryLatest.setLayoutParams(params);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        int selectedCategory = tabLayoutFavoriteCategory.getSelectedTabPosition();
-        outState.putInt(CATEGORY_STATE, selectedCategory);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null) {
-            tabLayoutFavoriteCategory.getTabAt(savedInstanceState.getInt(CATEGORY_STATE)).select();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
+        recvCategoryFavorite.setLayoutParams(params);
     }
 
     @Override

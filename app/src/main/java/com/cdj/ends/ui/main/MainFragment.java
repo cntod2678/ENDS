@@ -3,6 +3,7 @@ package com.cdj.ends.ui.main;
 /**
  * Created by Dongjin on 2017. 8. 12..
  */
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -17,19 +18,26 @@ import android.view.ViewGroup;
 
 import com.cdj.ends.R;
 
-public class MainFragment extends Fragment {
-    private static final int VIEW_PAGER_CNT = 3;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-    private ViewPager viewPager_main;
+public class MainFragment extends Fragment {
+
+    private static final String TAG = "MainFragment";
+
+    private static String CURRENT_PAGE_NUM = "CURRENT_PAGE_NUM";
+
+    @BindView(R.id.viewPager_main) ViewPager viewPagerMain;
+    Unbinder unbinder;
+
     private MainFragmentAdapter mainPagerAdapter;
 
     private MainViewChange mainViewChange ;
 
-    private static String CURRENT_PAGE_NUM = "CURRENT_PAGE_NUM";
-
     private static int current_page;
 
-    public MainFragment () {}
+    public MainFragment() {}
 
     public static MainFragment newInstance(int page_num) {
         MainFragment mainFragment = new MainFragment();
@@ -72,25 +80,28 @@ public class MainFragment extends Fragment {
         } else {
             current_page = 1;
         }
+        mainPagerAdapter = new MainFragmentAdapter(getActivity().getSupportFragmentManager());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        viewPager_main = (ViewPager) view.findViewById(R.id.viewPager_main);
-        setViewPager();
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
-    private void setViewPager() {
-        mainPagerAdapter = new MainFragmentAdapter(getActivity().getSupportFragmentManager());
-        viewPager_main.setAdapter(mainPagerAdapter);
-        viewPager_main.setCurrentItem(current_page);
-        Log.d(CURRENT_PAGE_NUM, "curr : " + current_page);
-        viewPager_main.setOffscreenPageLimit(VIEW_PAGER_CNT);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setViewPager();
+    }
 
-        viewPager_main.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    private void setViewPager() {
+        viewPagerMain.setAdapter(mainPagerAdapter);
+        viewPagerMain.setCurrentItem(current_page);
+
+        viewPagerMain.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 mainViewChange.pageScrolled(position, positionOffset, positionOffsetPixels);
@@ -115,18 +126,8 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mainViewChange = null;
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

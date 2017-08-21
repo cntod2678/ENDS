@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,13 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class NewsKeywordFragment extends Fragment {
 
-    private SwipeRefreshLayout refreshLayout;
+    private static final String TAG = "NewsKeywordFragment";
 
     private ShimmerRecyclerView recvNewsKeyword;
 
@@ -39,9 +44,9 @@ public class NewsKeywordFragment extends Fragment {
 
     private NewsViewModel newsViewModel;
 
-    private LinearLayoutManager layoutManager;
-
-    private FloatingActionButton fabAddKeyword;
+    @BindView(R.id.fabAdd_keyword) FloatingActionButton fabAddKeyword;
+    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
+    Unbinder unbinder;
 
     public NewsKeywordFragment() {}
 
@@ -67,6 +72,7 @@ public class NewsKeywordFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         newsKeywordAdapter = new NewsKeywordAdapter();
         newsViewModel = new NewsViewModelImpl(getActivity().getApplicationContext());
         newsViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<NewsItemViewModel>>() {
@@ -80,22 +86,31 @@ public class NewsKeywordFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        newsViewModel.fetchNews();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_keyword, container, false);
-        initView(view);
-
+        unbinder = ButterKnife.bind(this, view);
+        recvNewsKeyword = (ShimmerRecyclerView) view.findViewById(R.id.recv_news_keyword);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setFab();
         setRecyler();
-        newsViewModel.fetchNews();
-        showRecvLoadiing();
+        //newsViewModel.fetchNews();
+        showRecvLoading();
+    }
 
+    private void setFab() {
         fabAddKeyword.setBackgroundTintList(ColorStateList.valueOf(Color
                 .parseColor("#CBA483")));
         fabAddKeyword.setOnClickListener(new View.OnClickListener() {
@@ -107,27 +122,20 @@ public class NewsKeywordFragment extends Fragment {
         });
     }
 
-    private void initView(View view) {
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-        recvNewsKeyword = (ShimmerRecyclerView) view.findViewById(R.id.recv_news_keyword);
-        fabAddKeyword = (FloatingActionButton) view.findViewById(R.id.fabAdd_keyword);
-    }
-
     private void setRecyler() {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 newsViewModel.refreshNews();
-                showRecvLoadiing();
+                showRecvLoading();
             }
         });
 
-        layoutManager = new LinearLayoutManager(getActivity());
-        recvNewsKeyword.setLayoutManager(layoutManager);
+        recvNewsKeyword.setLayoutManager(new LinearLayoutManager(getActivity()));
         recvNewsKeyword.setAdapter(newsKeywordAdapter);
     }
 
-    private void showRecvLoadiing() {
+    private void showRecvLoading() {
         recvNewsKeyword.showShimmerAdapter();
         recvNewsKeyword.postDelayed(new Runnable() {
             @Override
@@ -135,5 +143,11 @@ public class NewsKeywordFragment extends Fragment {
                 recvNewsKeyword.hideShimmerAdapter();
             }
         }, 1000);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

@@ -27,20 +27,20 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  * Created by Dongjin on 2017. 8. 16..
  */
 
-public class CategoryLatestAdpater extends PagerAdapter {
+public class CategoryLatestAdapter extends PagerAdapter {
 
     private Context mContext;
 
     private List<NewsItemViewModel> categories;
 
-    public CategoryLatestAdpater() { setList(Collections.<NewsItemViewModel> emptyList());}
+    public CategoryLatestAdapter() { setList(Collections.<NewsItemViewModel> emptyList());}
 
     @Override
     public int getCount() {
         return categories.size();
     }
 
-    public CategoryLatestAdpater(Context context) {
+    public CategoryLatestAdapter(Context context) {
         mContext = context;
         categories = new ArrayList<>();
         setList(Collections.<NewsItemViewModel> emptyList());

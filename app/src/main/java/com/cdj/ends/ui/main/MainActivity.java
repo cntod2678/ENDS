@@ -12,18 +12,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
 import com.cdj.ends.base.view.ViewPagerDotView;
+import com.cdj.ends.ui.news.scrap.ScrapFragment;
 import com.cdj.ends.ui.keyword.KeywordActivity;
-import com.cdj.ends.ui.settings.SettingFragment;
+import com.cdj.ends.ui.settings.ManageFragment;
 import com.cdj.ends.ui.word.WordActivity;
 
 import butterknife.BindView;
@@ -40,12 +39,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static int CURRENT_PAGE = 1;
 
     @BindView(R.id.toolbar_main) Toolbar toolbarMain;
+    @BindView(R.id.guide_main) LinearLayout guideMain;
 
-    private LinearLayout guideMain;
     private PageSwipeCommand dotViewIndicator;
     private DrawerLayout drawerLayout;
     private boolean mTerminateFlag = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(getIntent() != null) {
             CURRENT_PAGE = getIntent().getIntExtra(MAIN_PAGE, 1);
         }
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, MainFragment.newInstance(CURRENT_PAGE)).commit();
 
@@ -72,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        guideMain = (LinearLayout) findViewById(R.id.guide_main);
         dotViewIndicator = (ViewPagerDotView) findViewById(R.id.dotView_indicator);
     }
 
@@ -146,11 +142,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             guideMain.setVisibility(View.INVISIBLE);
             fragmentManager.beginTransaction()
-                    .add(R.id.main_frame, SettingFragment.newInstance()).addToBackStack(null)
+                    .replace(R.id.main_frame, ManageFragment.newInstance())
                     .commit();
         }
         else {
-            Toast.makeText(getApplicationContext(), "등록 안해줬다", Toast.LENGTH_SHORT).show();
+            if(fragmentManager.getBackStackEntryCount() >= 1) {
+                fragmentManager.popBackStack();
+            }
+            guideMain.setVisibility(View.INVISIBLE);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_frame, ScrapFragment.newInstance())
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
