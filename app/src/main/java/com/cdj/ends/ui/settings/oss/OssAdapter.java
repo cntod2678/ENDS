@@ -1,8 +1,20 @@
 package com.cdj.ends.ui.settings.oss;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.cdj.ends.R;
+import com.cdj.ends.base.util.ChromeTabActionBuilder;
+import com.cdj.ends.data.OpenSource;
+
+import java.util.List;
 
 /**
  * Created by Dongjin on 2017. 8. 20..
@@ -10,51 +22,85 @@ import android.view.ViewGroup;
 
 
 
-//    compile 'com.android.support:appcompat-v7:25.3.1'
-//            compile 'com.android.support.constraint:constraint-layout:1.0.2'
-//            compile 'com.android.support:design:25.3.1'
-//            compile 'com.android.support:recyclerview-v7:25.3.1'
-//            compile 'com.android.support:cardview-v7:25.3.1'
-//            compile 'com.android.support:support-v4:25.3.1'
-//            compile 'com.android.support:customtabs:25.3.1'
-//
-//            compile 'com.jakewharton:butterknife:8.8.0'
-//            compile 'com.google.code.gson:gson:2.7'
-//            compile 'com.squareup.retrofit2:retrofit:2.3.0'
-//            compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-//            compile 'org.parceler:parceler-api:1.1.9'
-//            compile 'com.github.bumptech.glide:glide:3.7.0'
-//            compile 'jp.wasabeef:glide-transformations:2.0.2'
-//            compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-//
-//            compile 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
-//            compile 'com.github.sharish:ShimmerRecyclerView:v1.0.1'
-//            compile 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
-//
-//            compile 'com.google.android:flexbox:0.3.0'
+public class OssAdapter extends RecyclerView.Adapter<OssAdapter.OpenSourceItemHolder> {
 
-public class OssAdapter extends RecyclerView.Adapter<OssAdapter.ViewHolder> {
+    private static final String TAG = "OssAdapter";
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    private List<OpenSource> mOpenSources;
+
+    public OssAdapter() {}
+
+    public OssAdapter(List<OpenSource> openSources) {
+        mOpenSources = openSources;
+        Log.d(TAG, openSources.size() + " ");
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public OpenSourceItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_open_source, parent, false);
+        OpenSourceItemHolder openSourceItemHolder = new OpenSourceItemHolder(view);
+        return openSourceItemHolder;
+    }
 
+    @Override
+    public void onBindViewHolder(OpenSourceItemHolder holder, int position) {
+        ((OpenSourceItemHolder) holder).bind(mOpenSources.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mOpenSources.size();
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class OpenSourceItemHolder extends RecyclerView.ViewHolder {
+        TextView txtOssName;
+        TextView txtOssUrl;
+        TextView txtOssCopyright;
+        TextView txtOssLicense;
 
-        public ViewHolder(View itemView) {
+        public OpenSourceItemHolder(View itemView) {
             super(itemView);
+            txtOssName = (TextView) itemView.findViewById(R.id.txtOss_name);
+            txtOssUrl = (TextView) itemView.findViewById(R.id.txtOss_url);
+            txtOssCopyright = (TextView) itemView.findViewById(R.id.txtOss_copyright);
+            txtOssLicense = (TextView) itemView.findViewById(R.id.txtOss_license);
+        }
+
+        public void bind(final OpenSource oss) {
+            txtOssName.setText(oss.getOss());
+
+
+            txtOssUrl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ChromeTabActionBuilder.openChromTab(itemView.getContext(), oss.getUrl());
+                }
+            });
+
+            SpannableString content = new SpannableString(oss.getUrl());
+            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+            txtOssUrl.setText(content);
+
+            String copyright = "";
+           for(int i = 0; i < oss.getCopyrights().size(); i++) {
+               copyright += oss.getCopyrights().get(i);
+               if(i+1 == oss.getCopyrights().size()) {
+                   break;
+               }
+               copyright += "\n";
+           }
+            txtOssCopyright.setText(copyright);
+
+            String license = "";
+            for(int i = 0; i < oss.getLicenses().size(); i++) {
+                license += oss.getLicenses().get(i);
+                if(i + 1 == oss.getLicenses().size()) {
+                    break;
+                }
+                license += "\n";
+            }
+            txtOssLicense.setText(license);
         }
     }
 }

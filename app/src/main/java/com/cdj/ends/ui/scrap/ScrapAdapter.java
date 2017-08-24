@@ -1,5 +1,6 @@
-package com.cdj.ends.ui.news.scrap;
+package com.cdj.ends.ui.scrap;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -10,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cdj.ends.R;
-import com.cdj.ends.ui.news.scrap.viewmodel.ScrapItemViewModel;
+import com.cdj.ends.ui.scrap.viewmodel.ScrapItemViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,10 +24,24 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHolder> {
 
+    private Context mContext;
+
     private List<ScrapItemViewModel> mScrapList;
+
+    private DeleteScrap deleteScrap;
+
+    public interface DeleteScrap {
+        void deleteScrap(String title, String date);
+    }
 
     public ScrapAdapter() {
         setList(Collections.<ScrapItemViewModel>emptyList());
+    }
+
+    public ScrapAdapter(Context context) {
+        mContext = context;
+        setList(Collections.<ScrapItemViewModel>emptyList());
+        deleteScrap = (DeleteScrap) mContext;
     }
 
     @Override
@@ -59,6 +74,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
         CardView itemScrap;
         TextView txtScrapDate;
         TextView txtDeleteScrap;
+        TextView txtScrapAuthor;
         ImageView imgScrap;
 
         public ScrapItemHolder(View itemView) {
@@ -66,6 +82,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
             itemScrap = (CardView) itemView.findViewById(R.id.item_scrap);
             txtScrapDate = (TextView) itemView.findViewById(R.id.txtScrap_date);
             txtDeleteScrap = (TextView) itemView.findViewById(R.id.txtDelete_scrap);
+            txtScrapAuthor = (TextView) itemView.findViewById(R.id.txtScrapAuthor);
             imgScrap = (ImageView) itemView.findViewById(R.id.imgScrap);
         }
 
@@ -79,6 +96,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
 
             Glide.with(itemView.getContext())
                     .load(viewModel.getUrlToImage())
+                    .override(600, 300)
                     .into(imgScrap);
 
             txtScrapDate.setText(viewModel.getScrapDate());
@@ -86,10 +104,13 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
             txtDeleteScrap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    deleteScrap.deleteScrap(viewModel.getTitle(), viewModel.getScrapDate());
                     mScrapList.remove(viewModel);
                     notifyDataSetChanged();
                 }
             });
+
+            txtScrapAuthor.setText(viewModel.getAuthor());
 
         }
     }

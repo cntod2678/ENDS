@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.news.scrap.viewmodel;
+package com.cdj.ends.ui.scrap.viewmodel;
 
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 import com.cdj.ends.data.Scrap;

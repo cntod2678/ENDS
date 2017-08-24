@@ -1,4 +1,4 @@
-package com.cdj.ends.ui.news.scrap.viewmodel;
+package com.cdj.ends.ui.scrap.viewmodel;
 
 import android.view.View;
 

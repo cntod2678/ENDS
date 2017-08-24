@@ -1,10 +1,11 @@
-package com.cdj.ends.ui.news.scrap;
+package com.cdj.ends.ui.scrap;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,9 @@ import com.cdj.ends.R;
 import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 import com.cdj.ends.data.Scrap;
-import com.cdj.ends.ui.news.NewsItemViewModel;
-import com.cdj.ends.ui.news.scrap.viewmodel.ScrapItemViewModel;
-import com.cdj.ends.ui.news.scrap.viewmodel.ScrapViewModel;
-import com.cdj.ends.ui.news.scrap.viewmodel.ScrapViewModelImpl;
+import com.cdj.ends.ui.scrap.viewmodel.ScrapItemViewModel;
+import com.cdj.ends.ui.scrap.viewmodel.ScrapViewModel;
+import com.cdj.ends.ui.scrap.viewmodel.ScrapViewModelImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,8 @@ import io.realm.RealmResults;
  */
 
 public class ScrapFragment extends Fragment {
+
+    private static final String TAG = "ScrapFragment";
 
     @BindView(R.id.recv_scrap) RecyclerView recvScrap;
     Unbinder unbinder;
@@ -67,7 +69,7 @@ public class ScrapFragment extends Fragment {
             mScrapList.add(scrap);
         }
 
-        scrapAdapter = new ScrapAdapter();
+        scrapAdapter = new ScrapAdapter(getActivity());
         scrapViewModel = new ScrapViewModelImpl(getActivity().getApplicationContext());
         scrapViewModel.setUpdateViewModelListener(new NotifyUpdateViewModelListener<List<ScrapItemViewModel>>() {
             @Override

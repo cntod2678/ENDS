@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -82,7 +83,7 @@ public class CategoryLatestAdapter extends PagerAdapter {
 
         Glide.with(mContext)
                 .load(categories.get(position).getUrlToImage())
-                .bitmapTransform(new BlurTransformation(mContext, 23))
+                .bitmapTransform( new BlurTransformation( mContext ) )
                 .centerCrop()
                 .into(imgCategory);
 

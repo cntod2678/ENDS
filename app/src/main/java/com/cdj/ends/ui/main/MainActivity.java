@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,19 +20,24 @@ import android.widget.Toast;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.command.PageSwipeCommand;
+import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.base.view.ViewPagerDotView;
-import com.cdj.ends.ui.news.scrap.ScrapFragment;
+import com.cdj.ends.data.Scrap;
+import com.cdj.ends.ui.scrap.ScrapAdapter;
+import com.cdj.ends.ui.scrap.ScrapFragment;
 import com.cdj.ends.ui.keyword.KeywordActivity;
-import com.cdj.ends.ui.settings.ManageFragment;
+import com.cdj.ends.ui.settings.SettingFragment;
 import com.cdj.ends.ui.word.WordActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static com.cdj.ends.ui.main.MainFragmentAdapter.PAGE_NUM;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-    MainFragment.MainViewChange {
+    MainFragment.MainViewChange, ScrapAdapter.DeleteScrap {
 
     private static final String TAG = "MainActivity";
 
@@ -45,11 +51,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private boolean mTerminateFlag = false;
 
+    Handler mKillHandler;
+
+    private Realm mRealm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Realm.init(this);
+        mRealm = RealmBuilder.getRealmInstance();
 
         if(getIntent() != null) {
             CURRENT_PAGE = getIntent().getIntExtra(MAIN_PAGE, 1);
@@ -60,6 +73,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initView();
         setToolbar();
         setNavDrawer();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        /* 종료버튼이 한번 더 눌리지 않으면 Flag 값 복원 */
+        mKillHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.what == 0) {
+                    mTerminateFlag = false;
+                }
+            }
+        };
     }
 
     @Override
@@ -137,18 +165,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         else if (id == R.id.nav_manage) {
-            if(fragmentManager.getBackStackEntryCount() >= 1 ) {
-                fragmentManager.popBackStack();
-            }
             guideMain.setVisibility(View.INVISIBLE);
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_frame, ManageFragment.newInstance())
+                    .replace(R.id.main_frame, SettingFragment.newInstance())
                     .commit();
         }
         else {
-            if(fragmentManager.getBackStackEntryCount() >= 1) {
-                fragmentManager.popBackStack();
-            }
             guideMain.setVisibility(View.INVISIBLE);
             fragmentManager.beginTransaction()
                     .replace(R.id.main_frame, ScrapFragment.newInstance())
@@ -176,14 +198,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dotViewIndicator.onPageScrollStateChanged(state);
     }
 
-    /* 종료버튼이 한번 더 눌리지 않으면 Flag 값 복원 */
-    Handler mKillHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if(msg.what == 0) {
-                mTerminateFlag = false;
-            }
-        }
-    };
+    @Override
+    public void deleteScrap(String title, String date) {
+        RealmResults<Scrap> deleteScrapList = mRealm.where(Scrap.class).equalTo("title", title)
+                .equalTo("scrapDate", date).findAll();
 
+        if(deleteScrapList.size() != 0) {
+            mRealm.beginTransaction();
+            deleteScrapList.deleteFirstFromRealm();
+            Log.d(TAG, title + ", " + date + " : " + "success");
+            mRealm.commitTransaction();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mKillHandler != null) {
+            mKillHandler.removeMessages(0);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
+    }
 }

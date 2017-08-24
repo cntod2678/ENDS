@@ -18,15 +18,15 @@ import retrofit2.http.QueryMap;
  */
 
 public interface NewsCallService {
-    @GET("articles/")
-    Call<NewsDTO> newsKeyword(@QueryMap Map<String, String> map);
+//    @GET("articles/")
+//    Call<NewsDTO> newsKeyword(@QueryMap Map<String, String> map);
 
     @GET("/articles")
     Call<List<News>> newsKeywords(@Query("keyword") List<String> keyword);
 
 //    @GET("sources/")
 //    Call<NewsSourceDTO> getSources(@Query("language") String language);
-//
+
     @GET("/sources")
     Call<List<SourceDTO>> getSources();
 

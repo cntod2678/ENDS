@@ -17,9 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small_4"
         android:layout_marginLeft="@dimen/margin_normal_8"
-        android:textSize="@dimen/text_title"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        android:text="title"/>
+        android:text="category"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

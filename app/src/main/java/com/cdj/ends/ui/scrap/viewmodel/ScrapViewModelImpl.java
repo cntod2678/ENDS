@@ -1,9 +1,8 @@
-package com.cdj.ends.ui.news.scrap.viewmodel;
+package com.cdj.ends.ui.scrap.viewmodel;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.cdj.ends.base.util.RealmBuilder;
 import com.cdj.ends.base.viewmodel.NotifyUpdateViewModelListener;
 import com.cdj.ends.data.Scrap;
 
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by Dongjin on 2017. 8. 21..

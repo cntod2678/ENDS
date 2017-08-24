@@ -1,7 +1,12 @@
 package com.cdj.ends.ui.settings;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.support.constraint.ConstraintLayout;
 
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.RealmBuilder;
@@ -25,19 +31,21 @@ import io.realm.Realm;
  * Created by Dongjin on 2017. 8. 19..
  */
 
-public class ManageFragment extends Fragment {
+public class SettingFragment extends Fragment {
 
+    @BindView(R.id.container_sendDevelopers) ConstraintLayout containerSend;
+    @BindView(R.id.container_oss) ConstraintLayout containerOss;
     @BindView(R.id.btnOpenSource) Button btnOpenSource;
     @BindView(R.id.btnDelete_cache) Button btnDeleteCache;
     Unbinder unbinder;
 
     private Realm mRealm;
 
-    public ManageFragment() {}
+    public SettingFragment() {}
 
-    public static ManageFragment newInstance() {
+    public static SettingFragment newInstance() {
         Bundle args = new Bundle();
-        ManageFragment fragment = new ManageFragment();
+        SettingFragment fragment = new SettingFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,7 +71,12 @@ public class ManageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    @OnClick(R.id.btnOpenSource)
+    @OnClick(R.id.container_sendDevelopers)
+    public void onSendToDeveloperClicked(View view) {
+        sendEmail();
+    }
+
+    @OnClick(R.id.container_oss)
     public void onOpenSourceClicked(View view) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_frame, OssFragment.newInstance()).addToBackStack(null).commit();
@@ -91,6 +104,42 @@ public class ManageFragment extends Fragment {
             }
         });
         dialog.show();
+    }
+
+
+    private void sendEmail() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:cntod2678@naver.com"));
+        String email = getEmail(getActivity().getApplicationContext());
+
+        intent.putExtra(Intent.EXTRA_CC, (email != null)? email:"");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "오류 보고");
+
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private String getEmail(Context context) {
+        AccountManager accountManager = AccountManager.get(context);
+        Account account = getAccount(accountManager);
+
+        if (account == null) {
+            return null;
+        } else {
+            return account.name;
+        }
+    }
+
+    private Account getAccount(AccountManager accountManager) {
+        Account[] accounts = accountManager.getAccountsByType("com.google");
+        Account account;
+        if (accounts.length > 0) {
+            account = accounts[0];
+        } else {
+            account = null;
+        }
+        return account;
     }
 
     @Override

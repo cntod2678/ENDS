@@ -66,16 +66,16 @@ public class KeywordActivity extends AppCompatActivity {
 //        mRealm.delete(Keyword.class);
 //        mRealm.commitTransaction();
 
-        RealmResults<Keyword> keywords = mRealm.where(Keyword.class).equalTo("keyword", "issue").findAll();
-        if(keywords.size() == 0) {
-            mRealm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    Keyword newKeyword = realm.createObject(Keyword.class);
-                    newKeyword.setKeyword("issue");
-                }
-            });
-        }
+//        RealmResults<Keyword> keywords = mRealm.where(Keyword.class).equalTo("keyword", "issue").findAll();
+//        if(keywords.size() == 0) {
+//            mRealm.executeTransaction(new Realm.Transaction() {
+//                @Override
+//                public void execute(Realm realm) {
+//                    Keyword newKeyword = realm.createObject(Keyword.class);
+//                    newKeyword.setKeyword("issue");
+//                }
+//            });
+//        }
 
         setKeywords();
     }
@@ -171,6 +171,10 @@ public class KeywordActivity extends AppCompatActivity {
         }
         if(keyword.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
             Toast.makeText(getApplicationContext(), "한글을 변환해서 추가해주세요", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(keyword.matches("[0-9]")) {
+            Toast.makeText(getApplicationContext(), "숫자를 제거해주세요", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

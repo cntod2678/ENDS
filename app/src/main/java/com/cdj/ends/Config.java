@@ -5,7 +5,7 @@ package com.cdj.ends;
  */
 
 public class Config {
-    public static final String BASE_URL = "https://newsapi.org/v1/";
+    //public static final String BASE_URL = "https://newsapi.org/v1/";
 
     public static final String TRANS_GOOGLE_BASE_URL = "https://www.googleapis.com/language/translate/v2/";
 
@@ -14,6 +14,5 @@ public class Config {
     public static final String TRANS_NAVER_BASE_URL = "http://m.endic.naver.com/search.nhn?searchOption=all&query=";
 
     public static final String LOCAL_HOST_URL = "http://172.20.10.2:3000/";
-//    public static final String LOCAL_HOST_URL = "http://192.168.0.25:3000/";
-
+//    public static final String LOCAL_HOST_URL = "http://13.124.190.144:9000/";
 }

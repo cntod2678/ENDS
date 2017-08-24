@@ -77,16 +77,16 @@
                 android:text="@string/change_detail_view"
                 android:onClick="onChangeWebPageClicked"/>
 
-            <Button
-                android:id="@+id/btnEdu"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtChange_detail"
-                android:layout_marginTop="@dimen/news_detail_btnEdu_margin"
-                android:text="@string/btn_text_edu"
-                tools:layout_editor_absoluteX="24dp" />
+            <!--<Button-->
+                <!--android:id="@+id/btnEdu"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/txtChange_detail"-->
+                <!--android:layout_marginTop="@dimen/news_detail_btnEdu_margin"-->
+                <!--android:text="@string/btn_text_edu"-->
+                <!--tools:layout_editor_absoluteX="24dp" />-->
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>

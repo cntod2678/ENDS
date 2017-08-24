@@ -24,9 +24,9 @@ public class NewsKeywordAPI extends RetrofitManagerAPI<NewsCallService, NewsDTO>
         newsCallService = createCallService();
     }
 
-    public void requestNewsItem(Map<String, String> map, Callback<NewsDTO> callback) {
-        newsCallService.newsKeyword(map).enqueue(callback);
-    }
+//    public void requestNewsItem(Map<String, String> map, Callback<NewsDTO> callback) {
+//        newsCallService.newsKeyword(map).enqueue(callback);
+//    }
 
     public void requestNewsKeyword(List<String> keywords, Callback<List<News>> callback) {
         newsCallService.newsKeywords(keywords).enqueue(callback);

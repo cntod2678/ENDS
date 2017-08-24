@@ -3,17 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_normal_8"
+    android:layout_marginBottom="@dimen/margin_normal_big_12">
 
     <TextView
+        android:id="@+id/txtOss_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtOss_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue" />
+
+    <TextView
+        android:id="@+id/txtOss_copyright"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
+        android:id="@+id/txtOss_license"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
