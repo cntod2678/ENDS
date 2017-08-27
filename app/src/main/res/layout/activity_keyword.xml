@@ -35,53 +35,82 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="16dp"
-            android:background="@drawable/custom_edit_background"
+            android:orientation="vertical"
             android:paddingBottom="6dp"
             android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/btnTrans_keyword"
-                android:padding="5dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="@dimen/margin_small_4"
-                android:layout_marginLeft="@dimen/margin_normal_big_12"
-                android:layout_marginRight="@dimen/margin_normal_big_12"
-                android:layout_gravity="center_vertical"
-                android:background="@android:drawable/ic_menu_revert"
-                android:onClick="onTransKeywordClicked"/>
-
             <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edit_keyword"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="@string/hint_add_keyword"
-                    android:textColorHint="@color/colorNormal"
-                    android:textColorHighlight="@color/colorNormal"
-                    android:textColor="@color/colorPrimary"
-                    android:background="@null"
-                    android:inputType="textCapWords"
-                    android:lines="1"
-                    android:maxLines="1"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_keyword"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_add_keyword"
+                        android:textColorHint="@color/colorNormal"
+                        android:textColor="@color/colorPrimary"
+                        app:colorControlNormal="@color/colorAccent"
+                        app:colorControlActivated="@color/colorAccent"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapWords"
+                        android:lines="1"
+                        android:maxLines="1"/>
+
+                    <ImageView
+                        android:id="@+id/imgvTrans_keyword"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_margin="@dimen/margin_normal_big_12"
+                        android:src="@drawable/ic_convert"
+                        android:onClick="onTransKeywordClicked"/>
+                </LinearLayout>
+
+
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/btnAdd_keyword"
-                android:padding="5dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="@dimen/margin_small_4"
-                android:layout_marginRight="@dimen/margin_normal_big_12"
-                android:layout_marginLeft="6dp"
-                android:layout_gravity="center_vertical"
-                android:background="@android:drawable/ic_menu_search"
-                android:onClick="onAddKeywordClicked"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_normal_big_12">
+
+                <Button
+                    android:id="@+id/btnSearch_word"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_normal_big_12"
+                    android:layout_marginRight="@dimen/margin_normal_big_12"
+                    style="@style/keywordButton"
+                    android:background="@drawable/button_keyword_shape"
+                    android:layout_gravity="center_vertical"
+                    android:onClick="onSearchWordClicked"
+                    android:text="단어찾기" />
+
+                <Button
+                    android:id="@+id/btnAdd_keyword"
+                    android:padding="5dp"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/margin_normal_big_12"
+                    android:layout_marginRight="@dimen/margin_normal_big_12"
+                    android:layout_gravity="center_vertical"
+                    style="@style/keywordButton"
+                    android:background="@drawable/button_keyword_shape"
+                    android:text="추가하기"
+                    android:onClick="onAddKeywordClicked"/>
+            </LinearLayout>
         </LinearLayout>
 
         <include layout="@layout/content_keyword" />

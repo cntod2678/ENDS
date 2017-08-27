@@ -15,16 +15,16 @@
         android:paddingRight="24dp"
         android:paddingTop="12dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnScrap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_margin="@dimen/margin_normal_big_12"
-            android:src="@drawable/ic_menu_share"
+            android:src="@drawable/ic_scrap"
             android:background="@color/transparent"
             android:onClick="onScrapClicked"/>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,10 +33,10 @@
             android:background="@color/transparent"
             android:onClick="onShareClicked"/>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnChange_translation_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_margin="@dimen/margin_normal_big_12"
             android:background="@color/transparent"
             android:onClick="onChangeTranslationModeClicked"
@@ -76,17 +76,6 @@
                 android:layout_marginRight="8dp"
                 android:text="@string/change_detail_view"
                 android:onClick="onChangeWebPageClicked"/>
-
-            <!--<Button-->
-                <!--android:id="@+id/btnEdu"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/txtChange_detail"-->
-                <!--android:layout_marginTop="@dimen/news_detail_btnEdu_margin"-->
-                <!--android:text="@string/btn_text_edu"-->
-                <!--tools:layout_editor_absoluteX="24dp" />-->
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>

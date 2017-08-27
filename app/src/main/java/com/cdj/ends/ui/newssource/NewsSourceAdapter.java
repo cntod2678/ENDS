@@ -97,7 +97,7 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ne
             Glide.with(itemView.getContext())
                     .load(viewModel.getImgUrl())
                     .fitCenter()
-                    .placeholder(R.drawable.aljazeeraenglish)
+                    .placeholder(R.mipmap.ic_logo_2)
                     .into(imgSourceLogo);
         }
     }

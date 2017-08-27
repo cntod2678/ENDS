@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#2E374D</color>
     <color name="colorAccent">#CBA483</color>
     <color name="colorNormal">#90a4ae</color>
-    <!-- b0bec5 90a4ae 607D8B-->
+
+    <color name="colorRevised">#CBA483</color>
 
     <color name="transparent">#00000000</color>
     <color name="transparent_gray">#bbc1c1c1</color>

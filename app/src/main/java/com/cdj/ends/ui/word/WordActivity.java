@@ -63,40 +63,10 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
         Realm.init(this);
         mRealm = RealmBuilder.getRealmInstance();
 
-        RealmResults<Word> dateGroupByWords = mRealm.where(Word.class).distinct("date").sort("date", Sort.DESCENDING);
-        for(int idx = 0; idx < dateGroupByWords.size(); idx++) {
-            Section section = new Section();
-            section.index = idx;
-            section.header = dateGroupByWords.get(idx).getDate();
+        setData();
+        setRecv();
+        setToolbar();
 
-            RealmResults<Word> words = mRealm.where(Word.class).equalTo("date", dateGroupByWords.get(idx).getDate()).findAll();
-            section.footer = Integer.toString(words.size());
-
-            for(Word word : words) {
-                section.items.add(word);
-            }
-            mSections.add(section);
-        }
-
-        mWordAdapter = new WordAdapter(this, mSections, true);
-        recvWord.setLayoutManager(new StickyHeaderLayoutManager());
-        recvWord.setAdapter(mWordAdapter);
-
-        recvWord.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                mGestureDetector.onTouchEvent(e);
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-            }
-        });
 
         mGestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -144,13 +114,53 @@ public class WordActivity extends AppCompatActivity implements ActionMode.Callba
             }
         });
 
-        setToolbar();
+
+    }
+
+    private void setData() {
+        RealmResults<Word> dateGroupByWords = mRealm.where(Word.class).distinct("date").sort("date", Sort.DESCENDING);
+        for(int idx = 0; idx < dateGroupByWords.size(); idx++) {
+            Section section = new Section();
+            section.index = idx;
+            section.header = dateGroupByWords.get(idx).getDate();
+
+            RealmResults<Word> words = mRealm.where(Word.class).equalTo("date", dateGroupByWords.get(idx).getDate()).findAll();
+            section.footer = Integer.toString(words.size());
+
+            for(Word word : words) {
+                section.items.add(word);
+            }
+            mSections.add(section);
+        }
+    }
+
+    private void setRecv() {
+        mWordAdapter = new WordAdapter(this, mSections, true);
+        recvWord.setLayoutManager(new StickyHeaderLayoutManager());
+        recvWord.setAdapter(mWordAdapter);
+
+        recvWord.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                mGestureDetector.onTouchEvent(e);
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+            }
+        });
     }
 
     private void setToolbar() {
         setSupportActionBar(toolbarWord);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("단어복습");
 
         if (toolbarWord != null) {
             toolbarWord.setNavigationOnClickListener(new View.OnClickListener() {

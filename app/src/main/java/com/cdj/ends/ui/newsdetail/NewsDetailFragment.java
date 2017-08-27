@@ -55,16 +55,16 @@ public class NewsDetailFragment extends Fragment  {
     private final static String TAG = "NewsDetailFragment";
 
     @BindView(R.id.imgMain_news) ImageView imgMainNews;
-    @BindView(R.id.btnChange_translation_mode) ImageButton btnTranslationMode;
-    @BindView(R.id.btnShare) ImageButton btnShare;
-    @BindView(R.id.btnScrap) ImageButton btnScrap;
+    @BindView(R.id.btnChange_translation_mode) ImageView btnTranslationMode;
+    @BindView(R.id.btnShare) ImageView btnShare;
+    @BindView(R.id.btnScrap) ImageView btnScrap;
     @BindView(R.id.txtDetail_source) TextView txtDetailSource;
     @BindView(R.id.toolbar_news_detail) Toolbar toolbarNewsDetail;
     @BindView(R.id.txtChange_detail) TextView txtChangeDetail;
     private Unbinder unbinder;
 
     private static News mNews;
-    private static boolean translationFlag = true;
+    private boolean translationFlag = false;
 
     private ScrapWordListener scrapWordListener;
 
@@ -154,8 +154,7 @@ public class NewsDetailFragment extends Fragment  {
     private void setView() {
         Glide.with(getActivity())
                 .load(mNews.getUrlToImage())
-                .override(600, 400)
-                .centerCrop()
+                .fitCenter()
                 .into(imgMainNews);
 
         txtDetailSource.setText(mNews.getSource());
@@ -170,8 +169,6 @@ public class NewsDetailFragment extends Fragment  {
     public void onScrapClicked(View view) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setMessage("스크랩북에 추가하시겠습니까?");
-
-        // OK 버튼 이벤트
         dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 scrapWordListener.scrap(mNews);
@@ -200,14 +197,14 @@ public class NewsDetailFragment extends Fragment  {
     public void onChangeTranslationModeClicked(View view) {
         Fragment fragment = null;
 
-        if(translationFlag) {
-            fragment = DetailEnModeFragment.newInstance(mNews);
-            btnTranslationMode.setSelected(false);
-            translationFlag = false;
-        } else {
+        if(!translationFlag) {
             fragment = DetailEnKoModeFragment.newInstance(mNews);
             btnTranslationMode.setSelected(true);
             translationFlag = true;
+        } else {
+            fragment = DetailEnModeFragment.newInstance(mNews);
+            btnTranslationMode.setSelected(false);
+            translationFlag = false;
         }
 
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();

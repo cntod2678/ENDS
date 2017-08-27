@@ -10,7 +10,6 @@
     android:paddingRight="8dp"
     android:paddingTop="24dp">
 
-    <!-- 이메일 구독 -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/container_receive_email"
         android:layout_width="0dp"
@@ -37,6 +36,7 @@
             android:text="이메일 수신"/>
 
         <Switch
+            android:id="@+id/switchEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
@@ -46,14 +46,19 @@
             android:textOn="On"
             android:textOff="Off"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/divider"/>
     </android.support.constraint.ConstraintLayout>
 
-    <!-- 캐시 삭제 -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/container_cache"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/container_receive_email"
+        android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -80,9 +85,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtCache"
+            android:layout_marginTop="@dimen/margin_small_4"
             android:onClick="onDeleteCacheClicked"/>
 
         <TextView
+            android:id="@+id/txtCacheGuide"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,10 +99,16 @@
             android:layout_marginLeft="@dimen/text_indent"
             android:layout_marginRight="@dimen/text_indent"
             android:text="@string/notice_delete_cache"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtCacheGuide"
+            android:layout_marginTop="@dimen/margin_normal_8"
+            android:background="@color/divider"/>
     </android.support.constraint.ConstraintLayout>
 
-
-    <!-- 개발자에게 보고 -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/container_sendDevelopers"
         android:layout_width="0dp"
@@ -103,6 +116,7 @@
         app:layout_constraintTop_toBottomOf="@id/container_cache"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
         android:onClick="onSendToDeveloperClicked">
 
         <View
@@ -138,11 +152,8 @@
             android:layout_height="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/divider"/>
-
     </android.support.constraint.ConstraintLayout>
 
-
-    <!-- 오픈소스 라이선스스 -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/container_oss"
         android:layout_width="0dp"

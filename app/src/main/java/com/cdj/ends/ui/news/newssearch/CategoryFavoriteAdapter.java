@@ -76,6 +76,7 @@ public class CategoryFavoriteAdapter extends RecyclerView.Adapter<CategoryFavori
             Glide.with(itemView.getContext())
                     .load(viewModel.getUrlToImage())
                     .centerCrop()
+                    .placeholder(R.mipmap.ic_logo_2)
                     .into(imgItemCategory);
 
             txtCategoryItemTitle.setText(viewModel.getTitle());

@@ -111,7 +111,7 @@ public class NewsSearchFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setDate();
-        setViewPager();
+        setViewPager(view);
         setRecv();
         setTabs();
     }
@@ -133,7 +133,7 @@ public class NewsSearchFragment extends Fragment {
         txtDateCategory.setText(strDate);
     }
 
-    private void setViewPager() {
+    private void setViewPager(View view) {
         viewPagerCategory.setAdapter(categoryLatestAdapter);
 
         timer = new Timer();
@@ -187,12 +187,13 @@ public class NewsSearchFragment extends Fragment {
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             recv_height_flag = true;
             btnSpandRecvHeight.setSelected(true);
-
+            btnSpandRecvHeight.setText("접기");
         } else {
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     (int) (getActivity().getApplicationContext().getResources().getDimension(R.dimen.recv_category_recv_original_height)));
             recv_height_flag = false;
             btnSpandRecvHeight.setSelected(false);
+            btnSpandRecvHeight.setText("펼치기");
         }
 
         recvCategoryFavorite.setLayoutParams(params);

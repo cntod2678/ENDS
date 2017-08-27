@@ -21,6 +21,25 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
+    <style name="keywordButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@color/colorAccent</item>
+
+        <!-- button text style -->
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="normal_button" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@color/colorNormal</item>
+
+        <!-- button text style -->
+        <item name="android:text">펼치기</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
     <style name="ToolBarWithNavigationBack">
         <item name="navigationIcon">@drawable/ic_arrow_back_white_24dp</item>
     </style>

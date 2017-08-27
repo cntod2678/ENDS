@@ -1,6 +1,5 @@
 package com.cdj.ends.ui.word;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
@@ -10,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cdj.ends.Config;
 import com.cdj.ends.R;
 import com.cdj.ends.base.util.ChromeTabActionBuilder;
 import com.cdj.ends.data.Word;
@@ -22,6 +21,7 @@ import org.zakariya.stickyheaders.SectioningAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cdj.ends.Config.TRANS_NAVER_BASE_URL;
 /**
  * Created by Dongjin on 2017. 8. 18..
  */
@@ -54,7 +54,7 @@ public class WordAdapter extends SectioningAdapter {
         TextView txtSectionHeader;
         ImageButton collapseButton;
 
-        public HeaderViewHolder(View itemView, boolean showAdapterPosition) {
+        public HeaderViewHolder(View itemView) {
             super(itemView);
             txtSectionHeader = (TextView) itemView.findViewById(R.id.txtSection_header);
             collapseButton = (ImageButton) itemView.findViewById(R.id.collapseButton);
@@ -81,21 +81,21 @@ public class WordAdapter extends SectioningAdapter {
     class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
         TextView txtOriginWord;
         TextView txtTranslatedWord;
-        ImageButton imgBtnSearchMore;
+        ImageView imgBtnSearchMore;
 
-        public ItemViewHolder(View itemView, boolean showAdapterPosition) {
+        public ItemViewHolder(View itemView) {
             super(itemView);
 
             txtOriginWord = (TextView) itemView.findViewById(R.id.txtOrigin_word);
             txtTranslatedWord = (TextView) itemView.findViewById(R.id.txtTranslated_word);
-            imgBtnSearchMore = (ImageButton) itemView.findViewById(R.id.imgBtn_search_more);
+            imgBtnSearchMore = (ImageView) itemView.findViewById(R.id.imgBtn_search_more);
         }
     }
 
     class FooterViewHolder extends SectioningAdapter.FooterViewHolder {
         TextView txtWordNums;
 
-        public FooterViewHolder(View itemView, boolean showAdapterPosition) {
+        public FooterViewHolder(View itemView) {
             super(itemView);
             txtWordNums = (TextView) itemView.findViewById(R.id.txtWord_nums);
         }
@@ -115,7 +115,6 @@ public class WordAdapter extends SectioningAdapter {
                 Log.d(TAG, "onVisitSelectedSectionItem() called with: " + "sectionIndex = [" + sectionIndex + "], itemIndex = [" + itemIndex + "]");
                 Section section = mSectionList.get(sectionIndex);
                 if (section != null) {
-                    //todo
                     List<Word> deleteWordList = new ArrayList<Word>();
                     deleteWordList.add(section.items.get(itemIndex));
                     Log.d(TAG, "선택된 삭제 " +  deleteWordList.size());
@@ -123,16 +122,13 @@ public class WordAdapter extends SectioningAdapter {
 
                     section.items.remove(itemIndex);
                     notifySectionItemRemoved(sectionIndex, itemIndex);
+                    section.footer = Integer.toString(section.items.size());
+                    notifySectionFooterChanged(sectionIndex);
                 }
             }
 
             @Override
             public void onVisitSelectedFooter(int sectionIndex) {
-                Section section = mSectionList.get(sectionIndex);
-                if (section != null) {
-                    section.footer = null;
-                    notifySectionFooterRemoved(sectionIndex);
-                }
             }
         });
 
@@ -166,19 +162,19 @@ public class WordAdapter extends SectioningAdapter {
     @Override
     public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_word_header, parent, false);
-        return new HeaderViewHolder(view, showAdapterPositions);
+        return new HeaderViewHolder(view);
     }
 
     @Override
     public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_word_item, parent, false);
-        return new ItemViewHolder(view, showAdapterPositions);
+        return new ItemViewHolder(view);
     }
 
     @Override
     public FooterViewHolder onCreateFooterViewHolder(ViewGroup parent, int footerType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_word_footer, parent, false);
-        return new FooterViewHolder(view, showAdapterPositions);
+        return new FooterViewHolder(view);
     }
 
     @Override
@@ -188,7 +184,6 @@ public class WordAdapter extends SectioningAdapter {
 
         hvh.txtSectionHeader.setText(s.header);
 
-        hvh.itemView.setActivated(isSectionSelected(sectionIndex));
         hvh.updateSectionCollapseToggle(isSectionCollapsed(sectionIndex));
     }
 
@@ -198,12 +193,11 @@ public class WordAdapter extends SectioningAdapter {
         ItemViewHolder ivh = (ItemViewHolder) viewHolder;
         ivh.txtOriginWord.setText(s.items.get(itemIndex).getWord());
         ivh.txtTranslatedWord.setText(s.items.get(itemIndex).getTranslatedWord());
-        ivh.imgBtnSearchMore.setImageResource(R.drawable.ic_menu_camera);
 
         ivh.imgBtnSearchMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChromeTabActionBuilder.openChromTab(mContext, Config.TRANS_NAVER_BASE_URL + s.items.get(itemIndex).getWord());
+                ChromeTabActionBuilder.openChromTab(mContext, TRANS_NAVER_BASE_URL + s.items.get(itemIndex).getWord());
             }
         });
 
@@ -215,9 +209,5 @@ public class WordAdapter extends SectioningAdapter {
         Section s = mSectionList.get(sectionIndex);
         FooterViewHolder fvh = (FooterViewHolder) viewHolder;
         fvh.txtWordNums.setText("외워야 할 단어 : " + s.footer);
-
-        fvh.itemView.setActivated(isSectionFooterSelected(sectionIndex));
     }
-
-
 }

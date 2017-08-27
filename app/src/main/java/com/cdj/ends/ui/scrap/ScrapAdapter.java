@@ -75,6 +75,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
         TextView txtScrapDate;
         TextView txtDeleteScrap;
         TextView txtScrapAuthor;
+        TextView txtScrapTitle;
         ImageView imgScrap;
 
         public ScrapItemHolder(View itemView) {
@@ -83,6 +84,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
             txtScrapDate = (TextView) itemView.findViewById(R.id.txtScrap_date);
             txtDeleteScrap = (TextView) itemView.findViewById(R.id.txtDelete_scrap);
             txtScrapAuthor = (TextView) itemView.findViewById(R.id.txtScrapAuthor);
+            txtScrapTitle = (TextView) itemView.findViewById(R.id.txtScrap_title);
             imgScrap = (ImageView) itemView.findViewById(R.id.imgScrap);
         }
 
@@ -96,7 +98,8 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
 
             Glide.with(itemView.getContext())
                     .load(viewModel.getUrlToImage())
-                    .override(600, 300)
+                    .centerCrop()
+                    .placeholder(R.mipmap.ic_logo_2)
                     .into(imgScrap);
 
             txtScrapDate.setText(viewModel.getScrapDate());
@@ -111,7 +114,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapItemHol
             });
 
             txtScrapAuthor.setText(viewModel.getAuthor());
-
+            txtScrapTitle.setText(viewModel.getTitle());
         }
     }
 }

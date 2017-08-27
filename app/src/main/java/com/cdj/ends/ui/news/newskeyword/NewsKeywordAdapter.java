@@ -98,7 +98,7 @@ public class NewsKeywordAdapter extends RecyclerView.Adapter<NewsKeywordAdapter.
             Glide.with(itemView.getContext())
                     .load(viewModel.getUrlToImage())
                     .centerCrop()
-                    .placeholder(R.drawable.abc)
+                    .placeholder(R.mipmap.ic_logo_2)
                     .into(imgNews);
         }
     }

@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-
         /* 종료버튼이 한번 더 눌리지 않으면 Flag 값 복원 */
         mKillHandler = new Handler() {
             @Override
@@ -139,22 +138,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_source) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra(MAIN_PAGE, 0);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
         else if (id == R.id.nav_keyword) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra(MAIN_PAGE, 1);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
         else if (id == R.id.nav_search) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra(MAIN_PAGE, 2);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
         else if (id == R.id.nav_word) {
             Intent intent = new Intent(getApplicationContext(), WordActivity.class);
@@ -165,12 +170,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         else if (id == R.id.nav_manage) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle("설정");
             guideMain.setVisibility(View.INVISIBLE);
             fragmentManager.beginTransaction()
                     .replace(R.id.main_frame, SettingFragment.newInstance())
                     .commit();
         }
         else {
+            // id == R.id.nav_scrap
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle("스크랩 북");
             guideMain.setVisibility(View.INVISIBLE);
             fragmentManager.beginTransaction()
                     .replace(R.id.main_frame, ScrapFragment.newInstance())

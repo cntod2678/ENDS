@@ -1,50 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container_category_latest"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/search_viewPager_height">
+    android:layout_height="200dp">
 
-    <ImageView
-        android:id="@+id/imgCategory"
+    <FrameLayout
+        android:id="@+id/container_latest_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="@dimen/search_viewPager_height">
 
-    <TextView
-        android:id="@+id/txtCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small_4"
-        android:layout_marginLeft="@dimen/margin_normal_8"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:text="category"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        <ImageView
+            android:id="@+id/imgCategory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
-            android:id="@+id/txtCategory_title"
-            android:layout_width="match_parent"
+            android:id="@+id/txtCategory"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:maxLines="2"
-            android:ellipsize="end"
+            android:layout_marginTop="@dimen/margin_small_4"
+            android:layout_marginLeft="@dimen/margin_normal_8"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:text="category"/>
 
-        <com.cdj.ends.base.view.ViewPagerDotView
-            android:id="@+id/viewIndicicator_category"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_small_8"
-            app:layout_constraintTop_toBottomOf="@id/txtCategory_title"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/height_small_8">
 
-    </android.support.constraint.ConstraintLayout>
-</FrameLayout>
+            <TextView
+                android:id="@+id/txtCategory_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:text="title"/>
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>
+
 

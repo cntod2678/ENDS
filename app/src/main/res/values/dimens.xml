@@ -60,8 +60,10 @@
     <!-- news search -->
     <dimen name="search_viewPager_height">200dp</dimen>
 
-    <dimen name="recv_category_recv_original_height">300dp</dimen>
+    <dimen name="recv_category_recv_original_height">320dp</dimen>
     <dimen name="recv_category_recv_spanded_height">800dp</dimen>
 
     <dimen name="text_indent">8dp</dimen>
+
+    <dimen name="icon_size">24dp</dimen>
 </resources>

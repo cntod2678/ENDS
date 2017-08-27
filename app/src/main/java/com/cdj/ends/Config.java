@@ -13,6 +13,8 @@ public class Config {
 
     public static final String TRANS_NAVER_BASE_URL = "http://m.endic.naver.com/search.nhn?searchOption=all&query=";
 
+    public static final String TRANS_NAVER_MAIN_URL = "http://m.endic.naver.com/main.nhn";
+
     public static final String LOCAL_HOST_URL = "http://172.20.10.2:3000/";
 //    public static final String LOCAL_HOST_URL = "http://13.124.190.144:9000/";
 }

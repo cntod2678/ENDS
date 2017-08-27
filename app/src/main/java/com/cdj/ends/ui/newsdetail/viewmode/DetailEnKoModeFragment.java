@@ -38,18 +38,9 @@ public class DetailEnKoModeFragment extends Fragment implements WordClickListene
 
     String translatedText = "";
 
-//    private static DetailEnKoModeFragment detailEnKoModeFragment;
-
     public DetailEnKoModeFragment() {}
 
     public static DetailEnKoModeFragment newInstance(News news) {
-//        if(detailEnKoModeFragment == null) {
-//            synchronized (DetailEnKoModeFragment.class) {
-//                if(detailEnKoModeFragment == null) {
-//                    detailEnKoModeFragment = new DetailEnKoModeFragment();
-//                }
-//            }
-//        }
         DetailEnKoModeFragment detailEnKoModeFragment = new DetailEnKoModeFragment();
         Bundle args = new Bundle();
         args.putParcelable(News.class.getName(), Parcels.wrap(news));
